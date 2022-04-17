@@ -3,25 +3,26 @@ const mysql = require('mysql');
 const path = require('path');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
-// const router = require('./routes');
+const router = require('./routes');
 const dotenv = require('dotenv');
-
-dotenv.config();
-
+const cors = require('cors'); 
 
 var app = express();
 
-// var indexRouter = require('./routes/index');
-// var usersRouter = require('./routes/users');
-// var usrappendRouter = require('./routes/usrappend');
+app.use(bodyParser.urlencoded({extended:true}));
+app.use(bodyParser.json());
+app.use(morgan('dev'));
+app.use(cors());
+
+//app.set("View engine","ejs");
+//app.set('views', path.join(__dirname, 'views'));
+
+const port = process.env.PORT || 8000;
+
+app.use('/', router);
 
 
-// app.use('/',indexRouter);
-// app.use('/users',usersRouter);
-// app.use('/usrappend', usrappendRouter);
-
-// app.set('view engine', 'ejs');
-// app.engine('html', require('ejs').renderFile);
+dotenv.config();
 
 const connectionPool = mysql.createPool({
   host: process.env.DB_HOST,
@@ -32,13 +33,14 @@ const connectionPool = mysql.createPool({
   insecureAuth: true,
 });
 
-app.use(bodyParser.urlencoded({extended:true}));
-app.use(bodyParser.json());
-
-const port = process.env.PORT || 80;
-
 exports.getConnectionPool = (callback) => {
   connectionPool.getConnection((err, conn) => {
     if(!err) callback(conn);
   })
 }
+
+app.listen(8000,()=> {
+  console.log('hello');
+})
+
+console.log("hihi");
