@@ -1,0 +1,25 @@
+{
+  "name": "storyforme_server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/StoryForMe/StoryForMe_Server.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/StoryForMe/StoryForMe_Server/issues"
+  },
+  "homepage": "https://github.com/StoryForMe/StoryForMe_Server#readme",
+  "dependencies": {
+    "dotenv": "^16.0.0",
+    "express": "^4.17.3",
+    "morgan": "^1.10.0",
+    "mysql": "^2.18.1"
+  }
+}
