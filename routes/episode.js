@@ -15,7 +15,7 @@ exports.getEpisodeList = (sid, callback) => {
 						title: episode["title"],
 						state: episode["state"],
 						comment_num: comment_num,
-						date: episode["date"],
+						date: episode["date"].toStringByFormatting(new Date(), '.'),
 						image: episode["image"],
 						hits: episode["hits"]
 					}
