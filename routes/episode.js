@@ -9,26 +9,24 @@ exports.getEpisodeList = (sid, callback) => {
 			if(err) console.log("getEpisodeList err");
 			else {
 				var result = [];
-				for(var [i, episode] of episodes.entries()) {
-					comment.getEpisodeCommentNum(sid, episode["id"], (comment_num) => {
-						var tmp = {
-							id : episode["id"],
-							title: episode["title"],
-							state: episode["state"],
-							comment_num: comment_num,
-							date: episode["date"],
-							image: episode["image"],
-							hits: episode["hits"]
-						}
-						result.push(tmp);
-						if (i == episodes.length - 1)
-						{
-							console.log(result);
-							callback(result);
-						}
-					});
+				function getCommentNumCallback(comment_num, episode, next_index) {
+					var tmp = {
+						id : episode["id"],
+						title: episode["title"],
+						state: episode["state"],
+						comment_num: comment_num,
+						date: episode["date"],
+						image: episode["image"],
+						hits: episode["hits"]
+					}
+					result.push(tmp);
+					if (next_index == episodes.length) {
+						console.log(result);
+						callback(result);
+					}
+					else comment.getEpisodeCommentNum(sid, episodes, next_index, getCommentNumCallback);
 				}
-				
+				comment.getEpisodeCommentNum(sid, episodes, 0, getCommentNumCallback);
 			}
 		})
 	})
