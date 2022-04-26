@@ -7,6 +7,7 @@ exports.getEpisodeList = (sid, callback) => {
 		conn.query(sql, function(err, episodes) {
 			conn.release();
 			if(err) console.log("getEpisodeList err");
+			else if (!episodes) callback([]);
 			else {
 				var result = [];
 				// episode마다 comment 개수 가져오기. 
