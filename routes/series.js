@@ -14,6 +14,7 @@ router.get('/:id', (req, res) => {
 			else if(!series) console.log("no exist series");
 			else {
 				console.log(series);
+				console.log(series["uid"]);
 				var result = {
 					title: series["title"],
 					image: series["image"],
