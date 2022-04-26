@@ -1,6 +1,6 @@
 const app = require('../app');
 
-exports.getNickname = (uid) => {
+exports.getNickname = async (uid) => {
 	return app.getConnectionPool((conn) => {
 		var sql = "select nickname from USER where id=" + uid;
 		conn.query(sql, function(err, [row]) {

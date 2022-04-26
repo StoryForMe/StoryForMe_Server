@@ -1,7 +1,7 @@
 const app = require('../app');
 const comment = require('./comment');
 
-exports.getEpisodeList = (sid) => {
+exports.getEpisodeList = async (sid) => {
 	return app.getConnectionPool((conn) => {
 		var sql = "select * from EPISODE where sid=" + sid;
 		conn.query(sql, function(err, episodes) {
