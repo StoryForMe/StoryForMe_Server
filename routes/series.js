@@ -9,6 +9,7 @@ router.get('/:id', (req, res) => {
 	app.getConnectionPool((conn) => {
 		var sql = "select * from SERIES where id=" + req.params.id;
 		conn.query(sql, function(err, series) {
+			conn.release();
 			if(err) console.log("err");
 			else if(!series) console.log("no exist series");
 			else {
@@ -28,7 +29,6 @@ router.get('/:id', (req, res) => {
 				res.json(result);
 			}
 	   })
-	   conn.release();
 	})
 })
 
