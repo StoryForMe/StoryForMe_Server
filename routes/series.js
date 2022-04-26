@@ -21,7 +21,7 @@ router.get('/:id', (req, res) => {
 				})
 
 				var _keywords;
-				var sql = "select content from KEYWORD as k join REPRESENT as r on k.id=r.kid where sid=" + sid;
+				var sql = "select content from KEYWORD as k join REPRESENT as r on k.id=r.kid where sid=" + req.params.id;
 				conn.query(sql, function(err, keywords) {
 					conn.release();
 					if(err) console.log("getSeriesKeyWord err");
@@ -29,7 +29,7 @@ router.get('/:id', (req, res) => {
 				})
 				
 				var _episodes;
-				var sql = "select * from EPISODE where sid=" + sid;
+				var sql = "select * from EPISODE where sid=" + req.params.id;
 				conn.query(sql, function(err, episodes) {
 					conn.release();
 					if(err) console.log("getEpisodeList err");
@@ -45,7 +45,7 @@ router.get('/:id', (req, res) => {
 								hits: episode.hits
 							})
 						}
-						return _episodes = result;
+						_episodes = result;
 					}
 				})
 
