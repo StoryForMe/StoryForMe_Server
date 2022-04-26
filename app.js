@@ -31,6 +31,7 @@ const connectionPool = mysql.createPool({
   port: process.env.DB_PORT,
   database: process.env.DB_NAME,
   insecureAuth: true,
+  dateStrings: 'date'
 });
 
 exports.getConnectionPool = (callback) => {

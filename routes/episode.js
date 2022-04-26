@@ -15,15 +15,12 @@ exports.getEpisodeList = (sid, callback) => {
 						title: episode["title"],
 						state: episode["state"],
 						comment_num: comment_num,
-						date: episode["date"].toStringByFormatting(new Date(), '.'),
+						date: episode["date"],
 						image: episode["image"],
 						hits: episode["hits"]
 					}
 					result.push(tmp);
-					if (next_index == episodes.length) {
-						console.log(result);
-						callback(result);
-					}
+					if (next_index == episodes.length) callback(result);
 					else comment.getEpisodeCommentNum(sid, episodes, next_index, getCommentNumCallback);
 				}
 				comment.getEpisodeCommentNum(sid, episodes, 0, getCommentNumCallback);

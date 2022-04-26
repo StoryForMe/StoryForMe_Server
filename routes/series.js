@@ -29,7 +29,6 @@ router.get('/:id', (req, res) => {
 								keywords: keywords,
 								episodes: episodes
 							}
-							console.log(result);
 							res.json(result);
 						});
 					});
