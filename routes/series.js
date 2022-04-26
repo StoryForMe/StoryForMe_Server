@@ -11,7 +11,7 @@ router.get('/:id', (req, res) => {
 		conn.query(sql, function(err, [series]) {
 			conn.release();
 			if(err) console.log("err");
-			else if(!series) console.log("no exist series");
+			else if(!series) {console.log("no exist series"); res.json({validation: 0});}
 			else {
 				user.getNickname(series["uid"], (nickname) => {
 					keyword.getSeriesKeyWord(req.params.id, (keywords) => {
