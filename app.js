@@ -31,6 +31,7 @@ const connectionPool = mysql.createPool({
   port: process.env.DB_PORT,
   database: process.env.DB_NAME,
   insecureAuth: true,
+  dateStrings: 'date'		// date format을 'yyyy-mm-dd hh:MM:ss'로 바꿔줌.
 });
 
 exports.getConnectionPool = (callback) => {
