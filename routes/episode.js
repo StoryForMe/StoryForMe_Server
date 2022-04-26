@@ -19,7 +19,7 @@ exports.getEpisodeList = (sid) => {
 						hits: episode["hits"]
 					})
 				}
-				console.log(episode);
+				console.log(result);
 				return (result);
 			}
 		})
