@@ -6,7 +6,7 @@ exports.getEpisodeCommentNum = (esid, episodes, index, callback) => {
 		conn.query(sql, function(err, comments) {
 			conn.release();
 			if(err) console.log("getEpisodeCommentNum err");
-			else callback(comments.length, episodes[index], index + 1);
+			else callback(comments.length, episodes[index], index + 1);		// 다음 episode의 index를 넘겨줌.
 		})
 	})
 }

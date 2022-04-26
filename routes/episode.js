@@ -9,6 +9,7 @@ exports.getEpisodeList = (sid, callback) => {
 			if(err) console.log("getEpisodeList err");
 			else {
 				var result = [];
+				// episode마다 comment 개수 가져오기. 
 				function getCommentNumCallback(comment_num, episode, next_index) {
 					var tmp = {
 						id : episode["id"],
@@ -20,7 +21,10 @@ exports.getEpisodeList = (sid, callback) => {
 						hits: episode["hits"]
 					}
 					result.push(tmp);
+
+					// 마지막 episode면 callback함수 호출
 					if (next_index == episodes.length) callback(result);
+					// 마지막 episode가 아니면 다음 에피소드의 comment 개수를 가져옴.
 					else comment.getEpisodeCommentNum(sid, episodes, next_index, getCommentNumCallback);
 				}
 				comment.getEpisodeCommentNum(sid, episodes, 0, getCommentNumCallback);
