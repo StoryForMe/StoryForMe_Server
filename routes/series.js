@@ -4,7 +4,7 @@ const app = require('../app');
 
 router.get('/:id', (req, res) => {
 	app.getConnectionPool((conn) => {
-		var sql = "select * from series where id=" + id;
+		var sql = "select * from series where id=" + req.params.id;
 		conn.query(sql, function(err, rows) {
 			res.json(rows);
 	   })
