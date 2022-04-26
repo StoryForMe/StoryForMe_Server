@@ -1,7 +1,7 @@
 const app = require('../app');
 const comment = require('./comment');
 
-exports.getEpisodeList = async (sid) => {
+exports.getEpisodeList = (sid, callback) => {
 	return app.getConnectionPool((conn) => {
 		var sql = "select * from EPISODE where sid=" + sid;
 		conn.query(sql, function(err, episodes) {
@@ -10,17 +10,20 @@ exports.getEpisodeList = async (sid) => {
 			else {
 				var result = [];
 				for(var episode of episodes) {
-					result.push({
+					var tmp = {
 						title: episode["title"],
 						state: episode["state"],
-						comment_num: comment.getEpisodeCommentNum(sid, episode["id"]),
 						date: episode["date"],
 						image: episode["image"],
 						hits: episode["hits"]
-					})
+					}
+					comment.getEpisodeCommentNum(sid, episode["id"], (comment_num) => {
+						tmp["comment_num"] = comment_num;
+						result.push(tmp);
+					});
 				}
 				console.log(result);
-				return (result);
+				callback(result);
 			}
 		})
 	})

@@ -23,14 +23,11 @@ router.get('/:id', (req, res) => {
 					coin_full_num: series["coin_full_num"],
 					ad_days: series["ad_days"],
 				}
-				user.getNickname(series["uid"]).then((nickname) => {
-					console.log(nickname);
+				user.getNickname(series["uid"], (nickname) => {
 					result["nickname"] = nickname;
-					keyword.getSeriesKeyWord(req.params.id).then((keywords) => {
-						console.log(keywords);
+					keyword.getSeriesKeyWord(req.params.id, (keywords) => {
 						result["keywords"] = keywords;
-						episode.getEpisodeList(req.params.id).then((episodes) => {
-							console.log(episodes);
+						episode.getEpisodeList(req.params.id, (episodes) => {
 							result["episodes"] = episodes;
 							console.log(result);
 							res.json(result);

@@ -1,6 +1,6 @@
 const app = require('../app');
 
-exports.getEpisodeCommentNum = async (esid, eid) => {
+exports.getEpisodeCommentNum = (esid, eid, callback) => {
 	return app.getConnectionPool((conn) => {
 		var sql = "select * from COMMENT where eid=" + eid + " and esid=" + esid;
 		conn.query(sql, function(err, comments) {
@@ -8,7 +8,7 @@ exports.getEpisodeCommentNum = async (esid, eid) => {
 			if(err) console.log("getEpisodeCommentNum err");
 			else{
 				console.log(comments.length);
-				return (comments.length);
+				callback(comments.length);
 			}
 		})
 	})
