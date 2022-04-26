@@ -25,7 +25,7 @@ router.get('/:id', (req, res) => {
 					keywords: keyword.getSeriesKeyWord(req.params.id),
 					episodes: episode.getEpisodeList(req.params.id)
 				}
-				res.json(series);
+				res.json(result);
 			}
 	   })
 	   conn.release();

@@ -8,7 +8,7 @@ exports.getEpisodeList = (sid) => {
 			if(err) console.log("err");
 			else {
 				var result = [];
-				episodes.array.forEach(episode => {
+				for(var episode of episodes) {
 					result.push({
 						title: episode.title,
 						state: episode.state,
@@ -17,7 +17,7 @@ exports.getEpisodeList = (sid) => {
 						image: episode.image,
 						hits: episode.hits
 					})
-				});
+				}
 				return (result);
 			}
 		})
