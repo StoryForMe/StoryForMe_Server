@@ -6,7 +6,10 @@ exports.getEpisodeCommentNum = (esid, eid) => {
 		conn.query(sql, function(err, comments) {
 			conn.release();
 			if(err) console.log("getEpisodeCommentNum err");
-			else return (comments.length);
+			else{
+				console.log(comments.length);
+				return (comments.length);
+			}
 		})
 	})
 }

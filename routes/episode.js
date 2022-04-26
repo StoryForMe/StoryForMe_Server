@@ -11,14 +11,15 @@ exports.getEpisodeList = (sid) => {
 				var result = [];
 				for(var episode of episodes) {
 					result.push({
-						title: episode.title,
-						state: episode.state,
-						comment_num: comment.getEpisodeCommentNum(sid, episode.id),
-						date: episode.date,
-						image: episode.image,
-						hits: episode.hits
+						title: episode["title"],
+						state: episode["state"],
+						comment_num: comment.getEpisodeCommentNum(sid, episode["id"]),
+						date: episode["date"],
+						image: episode["image"],
+						hits: episode["hits"]
 					})
 				}
+				console.log(episode);
 				return (result);
 			}
 		})

@@ -6,7 +6,10 @@ exports.getSeriesKeyWord = (sid) => {
 		conn.query(sql, function(err, keywords) {
 			conn.release();
 			if(err) console.log("getSeriesKeyWord err");
-			else return (keywords);
+			else{
+				console.log(keywords);
+				return (keywords);
+			}
 		})
 	})
 }
