@@ -1,4 +1,5 @@
 const app = require('../app');
+const comment = require('./comment');
 
 exports.getEpisodeList = (sid) => {
 	app.getConnectionPool((conn) => {
@@ -11,7 +12,7 @@ exports.getEpisodeList = (sid) => {
 					result.push({
 						title: episode.title,
 						state: episode.state,
-						comment_num: getEpisodeCommentNum(sid, episode.id),
+						comment_num: comment.getEpisodeCommentNum(sid, episode.id),
 						date: episode.date,
 						image: episode.image,
 						hits: episode.hits

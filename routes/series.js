@@ -2,6 +2,8 @@ var express = require('express');
 var router = express.Router();
 const app = require('../app');
 const keyword = require('./keyword');
+const user = require('./user');
+const episode = require('./episode');
 
 router.get('/:id', (req, res) => {
 	app.getConnectionPool((conn) => {
@@ -14,14 +16,14 @@ router.get('/:id', (req, res) => {
 					title: series.title,
 					image: series.image,
 					introduction: series.introduction,
-					writer: getNickname(series.uid),
+					writer: user.getNickname(series.uid),
 					uid: series.uid,
 					zzimkkong: series.zzimkkong,
 					coin_num: series.coin_num,
 					coin_full_num: series.coin_full_num,
 					ad_days: series.ad_days,
 					keywords: keyword.getSeriesKeyWord(req.params.id),
-					episodes: getEpisodeList(req.params.id)
+					episodes: episode.getEpisodeList(req.params.id)
 				}
 				res.json(series);
 			}
