@@ -5,7 +5,7 @@ exports.getNickname = (uid) => {
 		var sql = "select nickname from USER where id=" + uid;
 		conn.query(sql, function(err, nickname) {
 			conn.release();
-			if(err) console.log("getNickname err");
+			if(err) {console.log(err); console.log("getNickname err");}
 			else return (nickname);
 		})
 	})
