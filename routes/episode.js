@@ -19,6 +19,7 @@ exports.getEpisodeList = (sid, callback) => {
 							image: episode["image"],
 							hits: episode["hits"]
 						}
+						console.log(tmp);
 						result.push(tmp);
 					});
 				}
