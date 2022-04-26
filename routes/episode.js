@@ -5,7 +5,7 @@ exports.getEpisodeList = (sid) => {
 	app.getConnectionPool((conn) => {
 		var sql = "select * from EPISODE where sid=" + sid;
 		conn.query(sql, function(err, episodes) {
-			if(err) console.log("err");
+			if(err) console.log("getEpisodeList err");
 			else {
 				var result = [];
 				for(var episode of episodes) {
