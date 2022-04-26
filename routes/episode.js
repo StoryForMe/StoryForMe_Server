@@ -10,15 +10,15 @@ exports.getEpisodeList = (sid, callback) => {
 			else {
 				var result = [];
 				for(var episode of episodes) {
-					var tmp = {
-						title: episode["title"],
-						state: episode["state"],
-						date: episode["date"],
-						image: episode["image"],
-						hits: episode["hits"]
-					}
 					comment.getEpisodeCommentNum(sid, episode["id"], (comment_num) => {
-						tmp["comment_num"] = comment_num;
+						var tmp = {
+							title: episode["title"],
+							state: episode["state"],
+							comment_num: comment_num,
+							date: episode["date"],
+							image: episode["image"],
+							hits: episode["hits"]
+						}
 						result.push(tmp);
 					});
 				}

@@ -13,22 +13,22 @@ router.get('/:id', (req, res) => {
 			if(err) console.log("err");
 			else if(!series) console.log("no exist series");
 			else {
-				var result = {
-					title: series["title"],
-					image: series["image"],
-					introduction: series["introduction"],
-					uid: series["uid"],
-					zzimkkong: series["zzimkkong"],
-					coin_num: series["coin_num"],
-					coin_full_num: series["coin_full_num"],
-					ad_days: series["ad_days"],
-				}
 				user.getNickname(series["uid"], (nickname) => {
-					result["nickname"] = nickname;
 					keyword.getSeriesKeyWord(req.params.id, (keywords) => {
-						result["keywords"] = keywords;
 						episode.getEpisodeList(req.params.id, (episodes) => {
-							result["episodes"] = episodes;
+							var result = {
+								title: series["title"],
+								image: series["image"],
+								introduction: series["introduction"],
+								writer: nickname,
+								uid: series["uid"],
+								zzimkkong: series["zzimkkong"],
+								coin_num: series["coin_num"],
+								coin_full_num: series["coin_full_num"],
+								ad_days: series["ad_days"],
+								keywords: keywords,
+								episodes: episodes
+							}
 							console.log(result);
 							res.json(result);
 						});
