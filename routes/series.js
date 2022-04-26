@@ -33,10 +33,19 @@ router.get('/:id', (req, res) => {
 					else {
 						var result = [];
 						for(var episode of episodes) {
+							var comment_num;
+							app.getConnectionPool((conn) => {
+								var sql = "select * from COMMENT where eid=" + episode.id + " and esid=" + req.params.id;
+								conn.query(sql, function(err, comments) {
+									conn.release();
+									if(err) console.log("getEpisodeCommentNum err");
+									else comment_num = comments.length;
+								})
+							})
 							result.push({
 								title: episode.title,
 								state: episode.state,
-								comment_num: comment.getEpisodeCommentNum(sid, episode.id),
+								comment_num: comment_num,
 								date: episode.date,
 								image: episode.image,
 								hits: episode.hits
