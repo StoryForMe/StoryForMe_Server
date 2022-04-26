@@ -6,10 +6,7 @@ exports.getNickname = (uid, callback) => {
 		conn.query(sql, function(err, [row]) {
 			conn.release();
 			if(err) console.log("getNickname err");
-			else{
-				console.log(row["nickname"]);
-				callback(row["nickname"]);
-			}
+			else callback(row["nickname"]);
 		})
 	})
 }

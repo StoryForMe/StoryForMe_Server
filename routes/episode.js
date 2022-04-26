@@ -20,12 +20,9 @@ exports.getEpisodeList = (sid, callback) => {
 							image: episode["image"],
 							hits: episode["hits"]
 						}
-						console.log(tmp);
 						result.push(tmp);
-						console.log(result);
 						if (i == episodes.length - 1)
 						{
-							console.log("for end");
 							console.log(result);
 							callback(result);
 						}

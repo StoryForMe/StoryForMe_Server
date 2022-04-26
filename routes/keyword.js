@@ -11,7 +11,6 @@ exports.getSeriesKeyWord = async (sid, callback) => {
 				for (var row of rows) {
 					keywords.push(row["content"]);
 				}
-				console.log(keywords);
 				callback(keywords);
 			}
 		})
