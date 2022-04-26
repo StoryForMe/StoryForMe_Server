@@ -15,7 +15,6 @@ router.get('/:id', (req, res) => {
 				var _nickname;
 				var sql = "select nickname from USER where id=" + series.uid;
 				conn.query(sql, function(err, nickname) {
-					conn.release();
 					if(err) console.log("getNickname err");
 					else _nickname = nickname;
 				})
@@ -23,7 +22,6 @@ router.get('/:id', (req, res) => {
 				var _keywords;
 				var sql = "select content from KEYWORD as k join REPRESENT as r on k.id=r.kid where sid=" + req.params.id;
 				conn.query(sql, function(err, keywords) {
-					conn.release();
 					if(err) console.log("getSeriesKeyWord err");
 					else _keywords = keywords;
 				})
@@ -31,7 +29,6 @@ router.get('/:id', (req, res) => {
 				var _episodes;
 				var sql = "select * from EPISODE where sid=" + req.params.id;
 				conn.query(sql, function(err, episodes) {
-					conn.release();
 					if(err) console.log("getEpisodeList err");
 					else {
 						var result = [];
