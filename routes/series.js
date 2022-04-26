@@ -15,15 +15,15 @@ router.get('/:id', (req, res) => {
 			else {
 				console.log(series);
 				var result = {
-					title: series.title,
-					image: series.image,
-					introduction: series.introduction,
-					writer: user.getNickname(series.uid),
-					uid: series.uid,
-					zzimkkong: series.zzimkkong,
-					coin_num: series.coin_num,
-					coin_full_num: series.coin_full_num,
-					ad_days: series.ad_days,
+					title: series["title"],
+					image: series["image"],
+					introduction: series["introduction"],
+					writer: user.getNickname(series["uid"]),
+					uid: series["uid"],
+					zzimkkong: series["zzimkkong"],
+					coin_num: series["coin_num"],
+					coin_full_num: series["coin_full_num"],
+					ad_days: series["ad_days"],
 					keywords: keyword.getSeriesKeyWord(req.params.id),
 					episodes: episode.getEpisodeList(req.params.id)
 				}
