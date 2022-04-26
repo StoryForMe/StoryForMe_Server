@@ -7,8 +7,12 @@ exports.getSeriesKeyWord = (sid) => {
 			conn.release();
 			if(err) console.log("getSeriesKeyWord err");
 			else{
-				console.log(rows.map('content'));
-				return (rows.map('content'));
+				var keywords = [];
+				for (var row of rows) {
+					keywords.push(row["content"]);
+				}
+				console.log(keywords);
+				return (keywords);
 			}
 		})
 	})
