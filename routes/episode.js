@@ -9,9 +9,10 @@ exports.getEpisodeList = (sid, callback) => {
 			if(err) console.log("getEpisodeList err");
 			else {
 				var result = [];
-				for(var episode of episodes) {
+				for(var [i, episode] of episodes.entries()) {
 					comment.getEpisodeCommentNum(sid, episode["id"], (comment_num) => {
 						var tmp = {
+							id : episode["id"],
 							title: episode["title"],
 							state: episode["state"],
 							comment_num: comment_num,
@@ -21,10 +22,16 @@ exports.getEpisodeList = (sid, callback) => {
 						}
 						console.log(tmp);
 						result.push(tmp);
+						console.log(result);
+						if (i == episodes.length - 1)
+						{
+							console.log("for end");
+							console.log(result);
+							callback(result);
+						}
 					});
 				}
-				console.log(result);
-				callback(result);
+				
 			}
 		})
 	})
