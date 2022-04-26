@@ -8,7 +8,7 @@ const episode = require('./episode');
 router.get('/:id', (req, res) => {
 	app.getConnectionPool((conn) => {
 		var sql = "select * from SERIES where id=" + req.params.id;
-		conn.query(sql, function(err, series) {
+		conn.query(sql, function(err, [series]) {
 			conn.release();
 			if(err) console.log("err");
 			else if(!series) console.log("no exist series");
