@@ -38,15 +38,11 @@ router.get('/:id', (req, res) => {
 	})
 })
 
-router.get('/:id/:login', (req, res) => {
-	console.log("이지원 바보");
-})
-
 router.post('/', (req, res) => {
-	console.log("post series");
 	app.getConnectionPool((conn) => {
-		var sql = "insert into SERIES SET ?";
-		conn.query(sql, req.body, function(err, results, fields) {
+		var sql = "insert into SERIES (title, introdunction, image) values (?, ?, ?)";
+		var values = [req.body.title, req.body.introduction, req.body.image];
+		conn.query(sql, values, function(err, results, fields) {
 			conn.release();
 			if(err) console.log(err);
 			else
