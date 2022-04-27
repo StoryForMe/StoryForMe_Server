@@ -14,7 +14,7 @@ router.get('/:id', (req, res) => {
 			else if(!series) {console.log("no exist series"); res.json({validation: 0});}
 			else {
 				user.getNickname(series["uid"], (nickname) => {
-					keyword.getSeriesKeyWord(req.params.id, (keywords) => {
+					keyword.getSeriesKeyword(req.params.id, (keywords) => {
 						episode.getEpisodeList(req.params.id, (episodes) => {
 							var result = {
 								title: series["title"],
@@ -64,11 +64,24 @@ router.post('/', (req, res) => {
 		conn.query(sql, values, function(err, results) {
 			conn.release();
 			if(err) console.log(err);
-			else
-			{
-				res.json({
-					sid: results.insertId
-				})
+			else {
+				var kid_list = []
+				function getKeywordIdCallback(kid, next_index) {
+					kid_list.push(kid)
+					if (next_index == req.body.keywords)
+						keyword.postSeriesKeyword(results.insertId, kid_list, 0, postSeriesKeywordCallback);
+					else 
+						keyword.getKeywordId(req.body.keywords, next_index, getKeywordIdCallback);
+				}
+				function postSeriesKeywordCallback(next_index) {
+					if (next_index == kid_list.length) {
+						res.json({
+							sid: results.insertId
+						})
+					}
+					else keyword.postSeriesKeyword(sid, kid_list, next_index, postSeriesKeywordCallback);
+				}
+				keyword.getKeywordId(req.body.keyword, 0, getKeywordIdCallback);
 			}
 		})
 	})
