@@ -35,8 +35,14 @@ exports.getKeywordId = (keywords, index, callback) => {
 			conn.release();
 			if (err) console.log(err);
 			else{
-				if(id_list.length == 0) postKeyword(keywords[index], (kid) => { callback(kid, index + 1); });
-				else callback(id_list[0], index + 1);
+				if(id_list.length == 0){
+					console.log(keywords[index] + "없음")
+					postKeyword(keywords[index], (kid) => { callback(kid, index + 1); });
+				}
+				else{
+					console.log(keywords[index] + "찾음. id = "+ id_list[0]);
+					callback(id_list[0], index + 1);
+				}
 			}
 		})
 	})
@@ -49,6 +55,7 @@ postKeyword = (keyword, callback) => {
 			conn.release();
 			if (err) console.log(err);
 			else {
+				console.log("insert" + keyword + "성공");
 				callback(results.insertId);
 			}
 		})

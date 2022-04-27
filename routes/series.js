@@ -64,6 +64,11 @@ router.post('/', (req, res) => {
 		conn.query(sql, values, function(err, results) {
 			conn.release();
 			if(err) console.log(err);
+			else if (req.body.keywords.length == 0) {
+				res.json({
+					sid: results.insertId
+				})
+			}
 			else {
 				var kid_list = []
 				function getKeywordIdCallback(kid, next_index) {
