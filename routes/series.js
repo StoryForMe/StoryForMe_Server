@@ -42,12 +42,17 @@ router.post('/', (req, res) => {
 	app.getConnectionPool((conn) => {
 		var sql = "insert into SERIES (title, introduction, keywords, image) values ( ?, ?, ?, ? )";
 		var values = [req.body.title, req.body.introduction, req.body.keywords, req.body.image];
-		conn.query(sql, values, function(err, result) {
+		conn.query(sql, values, function(err, results, fields) {
 			conn.release();
 			if(err) console.log("err");
-			res.json({
-				sid: result.insertId
-			})
+			else
+			{
+				console.log(results);
+				console.log(fields);
+				res.json({
+					sid: results.insertId
+				})
+			}
 		})
 	})
 })
