@@ -41,7 +41,7 @@ exports.getKeywordId = (keywords, index, callback) => {
 				}
 				else{
 					console.log(keywords[index] + "찾음. id = "+ keyword_list[0]["id"]);
-					callback(id_list[0]["id"], index + 1);
+					callback(keyword_list[0]["id"], index + 1);
 				}
 			}
 		})
