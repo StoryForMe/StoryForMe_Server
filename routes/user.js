@@ -8,7 +8,7 @@ router.get('/:login/:email', (req, res) => {
     console.log(sql);
     conn.query(sql, function(err, [user]) {
       conn.release();
-      console.log(user);
+      console.log(user[0][id]);
       if(err) console.log("error");
       else if(!user[0]) {
         var result = {
