@@ -74,7 +74,7 @@ router.post('/', (req, res) => {
 				var kid_list = []
 				function getKeywordIdCallback(kid, next_index) {
 					kid_list.push(kid)
-					if (next_index == req.body.keywords)
+					if (next_index == req.body.keywords.length)
 						keyword.postSeriesKeyword(results.insertId, kid_list, 0, postSeriesKeywordCallback);
 					else 
 						keyword.getKeywordId(req.body.keywords, next_index, getKeywordIdCallback);

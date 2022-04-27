@@ -36,11 +36,11 @@ exports.getKeywordId = (keywords, index, callback) => {
 			if (err) console.log(err);
 			else{
 				if(id_list.length == 0){
-			//		console.log(keywords[index] + "없음")
+					console.log(keywords[index] + "없음")
 					postKeyword(keywords[index], (kid) => { callback(kid, index + 1); });
 				}
 				else{
-			//		console.log(keywords[index] + "찾음. id = "+ id_list[0]);
+					console.log(keywords[index] + "찾음. id = "+ id_list[0]);
 					callback(id_list[0], index + 1);
 				}
 			}
