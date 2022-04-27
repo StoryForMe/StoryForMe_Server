@@ -38,7 +38,12 @@ router.get('/:id', (req, res) => {
 	})
 })
 
+router.get('/:id/:login-me', (req, res) => {
+	console.log("이지원 바보");
+})
+
 router.post('/', (req, res) => {
+	console.log("post series");
 	app.getConnectionPool((conn) => {
 		var sql = "insert into SERIES SET ?";
 		conn.query(sql, req.body, function(err, results, fields) {
