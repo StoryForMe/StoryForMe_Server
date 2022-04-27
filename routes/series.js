@@ -63,6 +63,7 @@ router.post('/', (req, res) => {
 		}
 		conn.query(sql, values, function(err, results) {
 			conn.release();
+			console.log(req.body.keywords);
 			if(err) console.log(err);
 			else if (req.body.keywords.length == 0) {
 				res.json({
