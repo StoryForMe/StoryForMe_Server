@@ -1,4 +1,5 @@
 const router = require('.');
+var router = express.Router();
 const app = require('../app');
 
 router.get('/:login-method/:email', (req, res) => {
