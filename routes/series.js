@@ -43,7 +43,7 @@ router.post('/', (req, res) => {
 		var sql = "insert into SERIES SET ?";
 		conn.query(sql, req.body, function(err, results, fields) {
 			conn.release();
-			if(err) console.log("err");
+			if(err) console.log(err);
 			else
 			{
 				console.log(results);
