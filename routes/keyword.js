@@ -30,18 +30,18 @@ exports.postSeriesKeyword = (sid, kid_list, index, callback) => {
 
 exports.getKeywordId = (keywords, index, callback) => {
 	app.getConnectionPool((conn) => {
-		var sql = "select id from KEYWORD where content='" + keywords[index] + "'";
-		conn.query(sql, function(err, id_list) {
+		var sql = "select * from KEYWORD where content='" + keywords[index] + "'";
+		conn.query(sql, function(err, keyword_list) {
 			conn.release();
 			if (err) console.log(err);
 			else{
-				if(id_list.length == 0){
+				if(keyword_list.length == 0){
 					console.log(keywords[index] + "없음")
 					postKeyword(keywords[index], (kid) => { callback(kid, index + 1); });
 				}
 				else{
-					console.log(keywords[index] + "찾음. id = "+ id_list[0]);
-					callback(id_list[0], index + 1);
+					console.log(keywords[index] + "찾음. id = "+ keyword_list[0]["id"]);
+					callback(id_list[0]["id"], index + 1);
 				}
 			}
 		})
