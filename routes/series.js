@@ -40,7 +40,7 @@ router.get('/:id', (req, res) => {
 
 router.post('/', (req, res) => {
 	app.getConnectionPool((conn) => {
-		var sql = "insert into SERIES (title, introdunction, image) values (?, ?, ?)";
+		var sql = "insert into SERIES (title, introdunction, image) values ('?', '?', '?')";
 		var values = [req.body.title, req.body.introduction, req.body.image];
 		conn.query(sql, values, function(err, results, fields) {
 			conn.release();
