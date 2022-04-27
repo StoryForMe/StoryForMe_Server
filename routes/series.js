@@ -40,8 +40,27 @@ router.get('/:id', (req, res) => {
 
 router.post('/', (req, res) => {
 	app.getConnectionPool((conn) => {
-		var sql = "insert into SERIES (title, introduction, image) values (?, ?, ?)";
-		var values = [req.body.title, req.body.introduction, req.body.image];
+		var sql = "insert into SERIES SET ?";
+		var values = {
+			title: req.body.title,
+			image: req.body.image,
+			recent_update: new Date(),
+			hits: 0,
+			hits_week: 0,
+			hits_month: 0,
+			introduction: req.body.introduction,
+			zzimkkong: 0,
+			zzimkkong_week: 0,
+			zzimkkong_month: 0,
+			is_end: 0,
+			ad_days: 0,
+			coin_num: 0,
+			coin_full_num: 0,
+			episode_num: 0,
+			uid: req.body.uid,
+			fname: req.body.fname,
+			lname: req.body.lname
+		}
 		conn.query(sql, values, function(err, results, fields) {
 			conn.release();
 			if(err) console.log(err);
