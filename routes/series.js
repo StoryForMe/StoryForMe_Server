@@ -87,7 +87,7 @@ router.post('/', (req, res) => {
 							sid: results.insertId
 						})
 					}
-					else keyword.postSeriesKeyword(sid, kid_list, next_index, postSeriesKeywordCallback);
+					else keyword.postSeriesKeyword(results.insertId, kid_list, next_index, postSeriesKeywordCallback);
 				}
 				keyword.getKeywordId(req.body.keywords, 0, getKeywordIdCallback);
 			}
