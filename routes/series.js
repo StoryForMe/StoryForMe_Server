@@ -40,9 +40,8 @@ router.get('/:id', (req, res) => {
 
 router.post('/', (req, res) => {
 	app.getConnectionPool((conn) => {
-		var sql = "insert into SERIES (title, introduction, keywords, image) values ( ?, ?, ?, ? )";
-		var values = [req.body.title, req.body.introduction, req.body.keywords, req.body.image];
-		conn.query(sql, values, function(err, results, fields) {
+		var sql = "insert into SERIES SET ?";
+		conn.query(sql, req.body, function(err, results, fields) {
 			conn.release();
 			if(err) console.log("err");
 			else
