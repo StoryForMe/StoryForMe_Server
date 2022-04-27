@@ -34,8 +34,10 @@ exports.getKeywordId = (keywords, index, callback) => {
 		conn.query(sql, function(err, id_list) {
 			conn.release();
 			if (err) console.log(err);
-			else if (!id_list) postKeyword(keywords[index], (kid) => { callback(kid, index + 1); });
-			else callback(id_list[0], index + 1);
+			else{
+				if(id_list.length == 0) postKeyword(keywords[index], (kid) => { callback(kid, index + 1); });
+				else callback(id_list[0], index + 1);
+			}
 		})
 	})
 }
