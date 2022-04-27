@@ -3,6 +3,7 @@ var router = express.Router();
 const app = require('../app');
 
 router.get('/:login-method/:email', (req, res) => {
+  console.log("ddd");
   app.getConnectionPool((conn) => {
     console.log(req.params.login-method, req.params.email);
     var sql = "select * from USER where login_method=" + req.params.login-method + "and email=" + req.params.email;
