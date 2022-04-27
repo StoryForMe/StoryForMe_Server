@@ -8,16 +8,16 @@ router.get('/:login/:email', (req, res) => {
     console.log(sql);
     conn.query(sql, function(err, [user]) {
       conn.release();
-      console.log(user[0]["id"]);
+      console.log(user["id"]);
       if(err) console.log("error");
-      else if(!user[0]) {
+      else if(!user) {
         var result = {
           id: -1
         }
         res.json(result);
       } else {
         var result = {
-          id: user[0]["id"]
+          id: user["id"]
         }
         res.json(result);
       }
