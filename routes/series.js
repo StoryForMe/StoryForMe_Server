@@ -61,13 +61,11 @@ router.post('/', (req, res) => {
 			fname: req.body.fname,
 			lname: req.body.lname
 		}
-		conn.query(sql, values, function(err, results, fields) {
+		conn.query(sql, values, function(err, results) {
 			conn.release();
 			if(err) console.log(err);
 			else
 			{
-				console.log(results);
-				console.log(fields);
 				res.json({
 					sid: results.insertId
 				})
