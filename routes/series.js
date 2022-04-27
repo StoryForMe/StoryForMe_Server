@@ -81,7 +81,7 @@ router.post('/', (req, res) => {
 					}
 					else keyword.postSeriesKeyword(sid, kid_list, next_index, postSeriesKeywordCallback);
 				}
-				keyword.getKeywordId(req.body.keyword, 0, getKeywordIdCallback);
+				keyword.getKeywordId(req.body.keywords, 0, getKeywordIdCallback);
 			}
 		})
 	})
