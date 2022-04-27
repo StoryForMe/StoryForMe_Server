@@ -4,9 +4,9 @@ const app = require('../app');
 
 router.get('/:login/:email', (req, res) => {
   app.getConnectionPool((conn) => {
-    var sql = "select * from USER where login_method=" + req.params.login + " and email='" + req.params.email +"'";
+    var sql = "select id from USER where login_method=" + req.params.login + " and email='" + req.params.email +"'";
     console.log(sql);
-    conn.query(sql, function(err, user) {
+    conn.query(sql, function(err, id) {
       conn.release();
       console.log(user);
       if(err) console.log("error");
@@ -17,7 +17,7 @@ router.get('/:login/:email', (req, res) => {
         res.json(result);
       } else {
         var result = {
-          id: user["id"]
+          id: id
         }
         res.json(result);
       }
