@@ -38,7 +38,7 @@ router.get('/:id', (req, res) => {
 	})
 })
 
-router.get('/:id/:login-me', (req, res) => {
+router.get('/:id/:login', (req, res) => {
 	console.log("이지원 바보");
 })
 
