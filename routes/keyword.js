@@ -30,7 +30,7 @@ exports.postSeriesKeyword = (sid, kid_list, index, callback) => {
 
 exports.getKeywordId = (keywords, index, callback) => {
 	app.getConnectionPool((conn) => {
-		var sql = "select id from KEYWORD content=" + keywords[index];
+		var sql = "select id from KEYWORD content='" + keywords[index] + "'";
 		conn.query(sql, function(err, id_list) {
 			conn.release();
 			if (err) console.log(err);
