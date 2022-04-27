@@ -1,9 +1,9 @@
 var express = require('express');
 var router = express.Router();
 const app = require('../app');
-const keyword = require('./keyword');
-const user = require('./user');
-const episode = require('./episode');
+const keyword = require('../utils/keyword');
+const user = require('../utils/user');
+const episode = require('../utils/episode');
 
 router.get('/:id', (req, res) => {
 	app.getConnectionPool((conn) => {
