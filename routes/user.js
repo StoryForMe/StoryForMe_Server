@@ -33,3 +33,5 @@ exports.getNickname = (uid, callback) => {
 		})
 	})
 }
+
+module.exports = router;
