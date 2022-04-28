@@ -49,7 +49,7 @@ exports.getUserKeyword = async (uid, callback) => {
 		var sql = "select content from KEYWORD as k join LIKE as l on k.id=l.kid where uid=" + uid;
 		conn.query(sql, function(err, rows) {
 			conn.release();
-			if(err) console.log("getUserKeyWord err");
+			if(err) console.log("getUserKeyWord err: " + err);
 			else{
 				var keywords = [];
 				for (var row of rows) {
