@@ -34,8 +34,6 @@ router.get('/:id', (req, res) => {
         console.log("no exist user");
       } else {
         keyword.getUserKeyword(req.params.id, (keywords) => {
-          console.log(user);
-          console.log(keywords);
           var result = {
             nickname: user["nickname"],
             introduce: user["introduce"],
@@ -45,6 +43,7 @@ router.get('/:id', (req, res) => {
             coin: user["coin"],
             keywords: keywords
           }
+          res.json(result);
         })
       }
     })
