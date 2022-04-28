@@ -46,11 +46,11 @@ exports.getKeywordId = (keywords, index, callback) => {
 
 exports.getUserKeyword = async (uid, callback) => {
 	return app.getConnectionPool((conn) => {
-		var sql = "select content from KEYWORD as k join LIKE as l on k.id=l.kid where uid=" + uid;
+		var sql = "select content from KEYWORD as k join `LIKE` as l on k.id=l.kid where uid=" + uid;
 		conn.query(sql, function(err, rows) {
 			conn.release();
-			if(err) console.log("getUserKeyWord err: " + err);
-			else{
+			if(err) console.log("getUserKeyword " + err);
+			else {
 				var keywords = [];
 				for (var row of rows) {
 					keywords.push(row["content"]);
