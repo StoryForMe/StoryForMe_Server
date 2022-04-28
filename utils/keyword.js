@@ -56,6 +56,7 @@ exports.getUserKeyword = async (uid, callback) => {
 				for (var row of rows) {
 					keywords.push(row["content"]);
 				}
+        console.log(keywords);
 				callback(keywords);
 			}
 		})
