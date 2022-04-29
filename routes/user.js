@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 const app = require('../app');
 const keyword = require('../utils/keyword');
+const keyword = require('../utils/user');
 
 router.get('/:id/character', (req, res) => {
   app.getConnectionPool((conn) => {
@@ -17,6 +18,28 @@ router.get('/:id/character', (req, res) => {
           lname: user["lname"]
         }
         res.json(result);
+      }
+    })
+  })
+})
+
+router.get('/:id/zzimkkong/writer', (req, res) => {
+  app.getConnectionPool((conn) => {
+    var sql = "select * from USER where id=" + req.params.id;
+    conn.query(sql, function(err, [user]) {
+      conn.release();
+      if(err) console.log("[USER] get character " + err);
+      else if(!user) {
+        console.log("no exist user.")
+      } else {
+        user.getZzimkkongWriter(req.params.id, (writers) => {
+          console.log(writers);
+          var result = {
+            nickname: writers["nickname"],
+            profile_image: writers["profile_image"]
+          }
+          res.json(result);
+        })
       }
     })
   })

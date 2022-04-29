@@ -70,6 +70,7 @@ exports.getKeywordId = (keywords, index, callback) => {
 /*************************** USER ****************************/
 /*************************************************************/
 
+// uid애 해당하는 user가 like로 등록한 keyword들을 가져옴
 exports.getUserKeyword = async (uid, callback) => {
 	return app.getConnectionPool((conn) => {
 		var sql = "select content from KEYWORD as k join `LIKE` as l on k.id=l.kid where uid=" + uid;
