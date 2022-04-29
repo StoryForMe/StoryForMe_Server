@@ -28,8 +28,8 @@ router.get('/:id/zzimkkong/writer', (req, res) => {
     conn.query(sql, function(err, writers) {
       conn.release();
       if(err) console.log("[USER] get zzimkkong writer " + err);
-      else if(!user) {
-        console.log("no exist user.")
+      else if(!writers) {
+        console.log("no exist zzimkkong writers.")
       } else {
         result = {
           nickname: writers["nickname"],
