@@ -4,6 +4,7 @@ const app = require('../app');
 const keyword = require('../utils/keyword');
 
 router.get('/:login/:email', (req, res) => {
+  console.log("user get login api");
   app.getConnectionPool((conn) => {
     var sql = "select * from USER where login_method=" + req.params.login + " and email='" + req.params.email +"'";
     conn.query(sql, function(err, [user]) {
@@ -25,6 +26,7 @@ router.get('/:login/:email', (req, res) => {
 })
 
 router.get('/:id', (req, res) => {
+  console.log("user get api");
   app.getConnectionPool((conn) => {
     var sql = "select * from USER where id=" + req.params.id;
     conn.query(sql, function(err, [user]) {
@@ -51,6 +53,7 @@ router.get('/:id', (req, res) => {
 })
 
 router.get('/:id/character', (req, res) => {
+  console.log("user get character api");
   app.getConnectionPool((conn) => {
     var sql = "select fname, lname from USER where id=" + req.params.id;
     conn.query(sql, function(err, [user]) {
