@@ -135,4 +135,19 @@ router.put('/', (req, res) => {
 	})
 })
 
+router.put('/end', (req,res) => {
+	app.getConnectionPool((conn) => {
+		var sql = "update SERIES SET is_end=" + req.body.is_end + " where id=" + req.body.id;
+		conn.query(sql, function(err, results) {
+			conn.release();
+			if(err) console.log(err);
+			else {
+				res.json({
+					result: 1
+				});
+			}
+		})
+	})
+})
+
 module.exports = router;
