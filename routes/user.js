@@ -31,6 +31,7 @@ router.get('/:id/zzimkkong/writer', (req, res) => {
       else if(!writers) {
         console.log("no exist zzimkkong writers.")
       } else {
+        console.log(writers);
         result = {
           nickname: writers["nickname"],
           profile_image: writers["profile_image"]
