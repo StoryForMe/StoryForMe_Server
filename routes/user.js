@@ -31,10 +31,6 @@ router.get('/:id/zzimkkong/writer', (req, res) => {
       else if(!writers) {
         console.log("no exist zzimkkong writers.")
       } else {
-        console.log(writers);
-        // var zkwriters = [];
-				// for (var writer of writers) {
-				// 	zkwriters.push(writers["nickname"]);
         result = {
           writers: writers
         }
