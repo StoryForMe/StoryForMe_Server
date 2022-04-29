@@ -40,6 +40,24 @@ router.get('/:id/zzimkkong/writer', (req, res) => {
   })
 })
 
+router.get('/:id/zzimkkong/series', (req, res) => {
+  app.getConnectionPool((conn) => {
+    var sql = "select title, recent_update, hits, zzimkkong, episode_num from SERIES as s join ZZIMKKONG_SERIES as z on u.id=z.sid where uid=" + req.params.id;
+    conn.query(sql, function(err, series) {
+      conn.release();
+      if(err) console.log("[USER] get zzimkkong series " + err);
+      else if(!series) {
+        console.log("no exist zzimkkong series.")
+      } else {
+        result = {
+          series: series
+        }
+        res.json(result);
+      }
+    })
+  })
+})
+
 router.get('/:login/:email', (req, res) => {
   app.getConnectionPool((conn) => {
     var sql = "select * from USER where login_method=" + req.params.login + " and email='" + req.params.email +"'";
