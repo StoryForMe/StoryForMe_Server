@@ -53,19 +53,12 @@ router.get('/:id/zzimkkong/series', (req, res) => {
         for (var i of series) {
           console.log(i);
           keyword.getSeriesKeyword(i["sid"], (keywords) => {
-            var seriesResult = {
-              title: i["title"],
-              keywords: keywords,
-              recent_update: i["recent_update"],
-              hits: i["hits"],
-              zzimkkong: i["zzimkkong"],
-              episode_num: i["episode_num"]
-            }
-            temp.push(seriesResult);
+            i.keywords = keywords;
+            console.log(i);
           })
         }
         var result = {
-          series: temp
+          series: series
         }
         res.json(result);
       }
