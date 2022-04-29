@@ -52,15 +52,15 @@ router.get('/:id', (req, res) => {
   })
 })
 
-router.get('/character/:id', (req, res) => {
+router.get('/:id/character', (req, res) => {
   console.log("user get character api");
   app.getConnectionPool((conn) => {
-    var sql = "select fname, lname from USER where id=" + req.params.id;
+    var sql = "select * from USER where id=" + req.params.id;
     conn.query(sql, function(err, [user]) {
       conn.release();
       if(err) console.log("[USER] get character " + err);
       else if(!user) {
-        console.log("no exist user");
+        console.log("no exist user.")
       } else {
         var result = {
           fname: user["fname"],
@@ -68,7 +68,6 @@ router.get('/character/:id', (req, res) => {
         }
         res.json(result);
       }
-
     })
   })
 })
