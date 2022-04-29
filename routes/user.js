@@ -52,7 +52,7 @@ router.get('/:id', (req, res) => {
   })
 })
 
-router.get('/:id/character', (req, res) => {
+router.get('/character/:id', (req, res) => {
   console.log("user get character api");
   app.getConnectionPool((conn) => {
     var sql = "select fname, lname from USER where id=" + req.params.id;
