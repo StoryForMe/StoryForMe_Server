@@ -64,11 +64,7 @@ router.post('/', (req, res) => {
 		conn.query(sql, values, function(err, results) {
 			conn.release();
 			if(err) console.log(err);
-			else if (req.body.keywords.length == 0) {
-				res.json({
-					sid: results.insertId
-				})
-			}
+			else if (req.body.keywords.length == 0) res.json({ sid: results.insertId })
 			else {
 				var kid_list = []
 				function getKeywordIdCallback(kid, next_index) {
@@ -79,11 +75,7 @@ router.post('/', (req, res) => {
 						keyword.getKeywordId(req.body.keywords, next_index, getKeywordIdCallback);
 				}
 				function postSeriesKeywordCallback(next_index) {
-					if (next_index == kid_list.length) {
-						res.json({
-							sid: results.insertId
-						})
-					}
+					if (next_index == kid_list.length) res.json({ sid: results.insertId })
 					else keyword.postSeriesKeyword(results.insertId, kid_list, next_index, postSeriesKeywordCallback);
 				}
 				keyword.getKeywordId(req.body.keywords, 0, getKeywordIdCallback);
@@ -105,13 +97,8 @@ router.put('/', (req, res) => {
 		conn.query(sql, values, function(err, results) {
 			conn.release();
 			if(err) console.log(err);
-			else if (req.body.keywords.length == 0) {
-				keyword.updateSeriesKeyword(req.body.id, null, () => {
-					res.json({
-						result: 1
-					})
-				})
-			}
+			else if (req.body.keywords.length == 0)
+				keyword.updateSeriesKeyword(req.body.id, null, () => { res.json({ result: 1 }) })
 			else {
 				var kid_list = []
 				function getKeywordIdCallback(kid, next_index) {
@@ -122,11 +109,7 @@ router.put('/', (req, res) => {
 						keyword.getKeywordId(req.body.keywords, next_index, getKeywordIdCallback);
 				}
 				function postSeriesKeywordCallback(next_index) {
-					if (next_index == kid_list.length) {
-						res.json({
-							result: 1
-						})
-					}
+					if (next_index == kid_list.length) res.json({ result: 1 })
 					else keyword.postSeriesKeyword(req.body.id, kid_list, next_index, postSeriesKeywordCallback);
 				}
 				keyword.getKeywordId(req.body.keywords, 0, getKeywordIdCallback);
@@ -141,11 +124,18 @@ router.put('/end', (req,res) => {
 		conn.query(sql, function(err, results) {
 			conn.release();
 			if(err) console.log(err);
-			else {
-				res.json({
-					result: 1
-				});
-			}
+			else res.json({ result: 1 });
+		})
+	})
+})
+
+router.delete('/:id', (req, res) => {
+	app.getConnectionPool((conn) => {
+		var sql = "delete from SERIES where id=" + req.params.id;
+		conn.query(sql, function(err, results) {
+			conn.release();
+			if(err) console.log(err);
+			else res.json({ result: 1 });
 		})
 	})
 })
