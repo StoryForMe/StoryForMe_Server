@@ -2,7 +2,6 @@ var express = require('express');
 var router = express.Router();
 const app = require('../app');
 const keyword = require('../utils/keyword');
-const user = require('../utils/user');
 
 router.get('/:id/character', (req, res) => {
   app.getConnectionPool((conn) => {
@@ -25,21 +24,18 @@ router.get('/:id/character', (req, res) => {
 
 router.get('/:id/zzimkkong/writer', (req, res) => {
   app.getConnectionPool((conn) => {
-    var sql = "select * from USER where id=" + req.params.id;
-    conn.query(sql, function(err, [user]) {
+    var sql = "select nickname, profile_image from USER as u join ZZIMKKONG_WRITER as z on u.id=z.wid where uid=" + uid;
+    conn.query(sql, function(err, writers) {
       conn.release();
-      if(err) console.log("[USER] get character " + err);
+      if(err) console.log("[USER] get zzimkkong writer " + err);
       else if(!user) {
         console.log("no exist user.")
       } else {
-        user.getZzimkkongWriter(req.params.id, (writers) => {
-          console.log(writers);
-          var result = {
-            nickname: writers["nickname"],
-            profile_image: writers["profile_image"]
-          }
-          res.json(result);
-        })
+        result = {
+          nickname: writers["nickname"],
+          profile_image: writers["profile_image"]
+        }
+        res.json(result);
       }
     })
   })
