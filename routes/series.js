@@ -92,4 +92,47 @@ router.post('/', (req, res) => {
 	})
 })
 
+router.put('/', (req, res) => {
+	app.getConnectionPool((conn) => {
+		var sql = "update SERIES SET ? where id=" + req.body.id;
+		var values = {
+			title: req.body.title,
+			introduction: req.body.introduction,
+			image: req.body.image,
+			fname: req.body.fname,
+			lname: req.body.lname
+		}
+		conn.query(sql, values, function(err, results) {
+			conn.release();
+			if(err) console.log(err);
+			else if (req.body.keywords.length == 0) {
+				keyword.updateSeriesKeyword(req.body.id, null, () => {
+					res.json({
+						result: 1
+					})
+				})
+			}
+			else {
+				var kid_list = []
+				function getKeywordIdCallback(kid, next_index) {
+					kid_list.push(kid)
+					if (next_index == req.body.keywords.length) 
+						keyword.updateSeriesKeyword(req.body.id, kid_list, postSeriesKeywordCallback);
+					else 
+						keyword.getKeywordId(req.body.keywords, next_index, getKeywordIdCallback);
+				}
+				function postSeriesKeywordCallback(next_index) {
+					if (next_index == kid_list.length) {
+						res.json({
+							result: 1
+						})
+					}
+					else keyword.postSeriesKeyword(req.body.id, kid_list, next_index, postSeriesKeywordCallback);
+				}
+				keyword.getKeywordId(req.body.keywords, 0, getKeywordIdCallback);
+			}
+		})
+	})
+})
+
 module.exports = router;
