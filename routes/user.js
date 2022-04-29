@@ -49,10 +49,9 @@ router.get('/:id/zzimkkong/series', (req, res) => {
       else if(!series) {
         console.log("no exist zzimkkong series.")
       } else {
-        var result = [];
+        var temp = [];
         for (var i of series) {
           keyword.getSeriesKeyword(i["sid"], (keywords) => {
-            // console.log(i["title"] + " " + keywords);
             var seriesResult = {
               title: i["title"],
               keywords: keywords,
@@ -61,8 +60,11 @@ router.get('/:id/zzimkkong/series', (req, res) => {
               zzimkkong: i["zzimkkong"],
               episode_num: i["episode_num"]
             }
-            result.push(seriesResult);
+            temp.push(seriesResult);
           })
+        }
+        var result = {
+          series: temp
         }
         res.json(result);
       }
