@@ -61,6 +61,7 @@ router.get('/:id/zzimkkong/series', (req, res) => {
               episode_num: i["episode_num"]
             }
             temp.push(seriesResult);
+            console.log(temp);
           })
         }
         var result = {
