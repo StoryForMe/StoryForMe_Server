@@ -22,6 +22,24 @@ router.get('/:id/character', (req, res) => {
   })
 })
 
+router.get('/:id/zzimkkong/writer', (req, res) => {
+  app.getConnectionPool((conn) => {
+    var sql = "select nickname, profile_image from USER as u join ZZIMKKONG_WRITER as z on u.id=z.wid where uid=" + req.params.id;
+    conn.query(sql, function(err, writers) {
+      conn.release();
+      if(err) console.log("[USER] get zzimkkong writer " + err);
+      else if(!writers) {
+        console.log("no exist zzimkkong writers.")
+      } else {
+        result = {
+          writers: writers
+        }
+        res.json(result);
+      }
+    })
+  })
+})
+
 router.get('/:login/:email', (req, res) => {
   app.getConnectionPool((conn) => {
     var sql = "select * from USER where login_method=" + req.params.login + " and email='" + req.params.email +"'";
