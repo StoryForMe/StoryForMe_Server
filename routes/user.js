@@ -51,6 +51,7 @@ router.get('/:id/zzimkkong/series', (req, res) => {
       } else {
         var temp = [];
         for (var i of series) {
+          console.log(i);
           keyword.getSeriesKeyword(i["sid"], (keywords) => {
             var seriesResult = {
               title: i["title"],
@@ -61,7 +62,6 @@ router.get('/:id/zzimkkong/series', (req, res) => {
               episode_num: i["episode_num"]
             }
             temp.push(seriesResult);
-            console.log(temp);
           })
         }
         var result = {
