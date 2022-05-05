@@ -6,7 +6,9 @@ exports.getEpisodeNum = async (sid, callback) => {
 		conn.query(sql, function(err, episode_num) {
 			conn.release();
 			if(err) console.log(err);
-			else { callback(episode_num); }
+			else { 
+				console.log(episode_num)
+				callback(episode_num); }
 		})
 	})
 }
