@@ -3,7 +3,7 @@ const comment = require('./comment');
 
 // sid에 해당하는 시리즈의 에피소드 정보 목록을 가져옴.
 exports.getEpisodeList = (sid, callback) => {
-	return app.getConnectionPool((conn) => {
+	app.getConnectionPool((conn) => {
 		var sql = "select * from EPISODE where sid=" + sid;
 		conn.query(sql, function(err, episodes) {
 			conn.release();
