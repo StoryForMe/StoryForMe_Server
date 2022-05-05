@@ -3,6 +3,30 @@ var router = express.Router();
 const app = require('../app');
 const series = require('../utils/series');
 
+router.get('/:sid/:eid', (req, res) => {
+	app.getConnectionPool((conn) => {
+		var sql = "select * from EPISODE where id=" + req.params.eid + " and sid=" + req.params.sid;
+		conn.query(sql, function(err, episode) {
+			conn.release();
+			if(err) console.log(err);
+			else if(!episode) {console.log("no exist episode"); res.json({validation: 0});}
+			else {	
+				series.getCharacter(req.params.sid, (fname, lname) => {
+					res.json({
+						title: episode[0]["title"],
+						music: episode[0]["music"],
+						image: episode[0]["image"],
+						content: episode[0]["content"],
+						state: episode[0]["state"],
+						fname: fname,
+						lname: lname
+					});
+				})
+			}
+	   })
+	})
+})
+
 router.post('/', (req,res) => {
 	app.getConnectionPool((conn) => {
 		series.getEpisodeNum(req.body.sid, (episode_num) => {
