@@ -29,7 +29,7 @@ router.get('/:sid/:eid', (req, res) => {
 
 router.get('/:sid/:eid/comment', (req, res) => {
 	app.getConnectionPool((conn) => {
-		var sql = "select * from COMNENT where eid=" + req.params.eid + " and esid=" + req.params.sid;
+		var sql = "select * from COMMENT where eid=" + req.params.eid + " and esid=" + req.params.sid;
 		conn.query(sql, function(err, comment) {
 			conn.release();
 			if(err) console.log(err);
