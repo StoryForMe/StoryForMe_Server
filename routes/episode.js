@@ -93,8 +93,9 @@ router.put('/', (req,res) => {
 			conn.release();
 			if(err) console.log(err);
 			else { 
-				console.log(results);
-				res.json({ result: 1 }); }
+				if (results.affectedRows == 0) res.json({ result: 0 }); 
+				else res.json({ result: 1 }); 
+			}
 		})	
 		
 	})
