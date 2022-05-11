@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 const app = require('../app');
 const series = require('../utils/series');
+const comment = require('../utils/comment');
 
 router.get('/:sid/:eid', (req, res) => {
 	app.getConnectionPool((conn) => {
@@ -22,6 +23,31 @@ router.get('/:sid/:eid', (req, res) => {
 						lname: lname
 					});
 				})
+			}
+	   })
+	})
+})
+
+router.get('/:sid/:eid/comment', (req, res) => {
+	app.getConnectionPool((conn) => {
+		var sql = "select * from COMMENT where eid=" + req.params.eid + " and esid=" + req.params.sid;
+		conn.query(sql, function(err, comments) {
+			conn.release();
+			if(err) console.log(err);
+			else if(!comments) {console.log("no exist comment"); res.json({validation: 0});}
+			else {
+				var _comments = [];
+				function getNameCallback(name, _comment, next_index) {
+					_comments.push({
+						uid: _comment["uid"],
+						name: name,
+						content: _comment["content"],
+						date: _comment["date"]
+					});
+					if (next_index == comments.length) res.json(_comments);
+					else comment.getName(comments, next_index, getNameCallback);
+				}
+				comment.getName(comments, 0, getNameCallback);
 			}
 	   })
 	})
