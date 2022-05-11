@@ -38,16 +38,14 @@ router.get('/:sid/:eid/comment', (req, res) => {
 			else {
 				var _comments = [];
 				function getNameCallback(name, _comment, next_index) {
+					_comments.push({
+						uid: _comment["uid"],
+						name: name,
+						content: _comment["content"],
+						date: _comment["date"]
+					});
 					if (next_index == comments.length) res.json(_comments);
-					else {
-						_comments.push({
-							uid: _comment["uid"],
-							name: name,
-							content: _comment["content"],
-							date: _comment["date"]
-						});
-						comment.getName(comments, next_index, getNameCallback);
-					}
+					else comment.getName(comments, next_index, getNameCallback);
 				}
 				comment.getName(comments, 0, getNameCallback);
 			}
