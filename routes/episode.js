@@ -27,6 +27,25 @@ router.get('/:sid/:eid', (req, res) => {
 	})
 })
 
+router.get('/:sid/:eid/comment', (req, res) => {
+	app.getConnectionPool((conn) => {
+		var sql = "select * from COMNENT where eid=" + req.params.eid + " and esid=" + req.params.sid;
+		conn.query(sql, function(err, comment) {
+			conn.release();
+			if(err) console.log(err);
+			else if(!comment) {console.log("no exist comment"); res.json({validation: 0});}
+			else {	
+				res.json({
+					uid: episode[0]["uid"],
+					name: episode[0]["name"],
+					content: episode[0]["content"],
+					date: episode[0]["date"]
+				});
+			}
+	   })
+	})
+})
+
 router.post('/', (req,res) => {
 	app.getConnectionPool((conn) => {
 		series.getEpisodeNum(req.body.sid, (episode_num) => {
