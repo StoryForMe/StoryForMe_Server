@@ -101,4 +101,19 @@ router.put('/', (req,res) => {
 	})
 })
 
+router.put('/state', (req,res) => {
+	app.getConnectionPool((conn) => {
+		var sql = "update EPISODE SET state=" + req.body.state + " where id=" + req.body.eid + " and sid=" + req.body.sid;
+		conn.query(sql, function(err, results) {
+			conn.release();
+			if(err) console.log(err);
+			else { 
+				if (results.affectedRows == 0) res.json({ result: 0 }); 
+				else res.json({ result: 1 }); 
+			}
+		})	
+		
+	})
+})
+
 module.exports = router;
