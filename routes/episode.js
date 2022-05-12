@@ -71,7 +71,7 @@ router.post('/', (req,res) => {
 			}
 			conn.query(sql, values, function(err, results) {
 				conn.release();
-				if(err) console.log(err);
+				if(err) {console.log(err); res.json({result: -1})}
 				else { console.log(results); res.json({ result: 1 }); }
 			})	
 		})
