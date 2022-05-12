@@ -107,12 +107,22 @@ router.put('/state', (req,res) => {
 		conn.query(sql, function(err, results) {
 			conn.release();
 			if(err) console.log(err);
-			else { 
-				if (results.affectedRows == 0) res.json({ result: 0 }); 
-				else res.json({ result: 1 }); 
-			}
+			else if (results.affectedRows == 0) res.json({ result: 0 }); 
+			else res.json({ result: 1 }); 
 		})	
 		
+	})
+})
+
+router.delete('/:sid/:eid', (req, res) => {
+	app.getConnectionPool((conn) => {
+		var sql = "delete from EPISODE where id=" + req.params.eid + " and sid=" + req.params.sid;
+		conn.query(sql, function(err, results) {
+			conn.release();
+			if(err) console.log(err);
+			else if (results.affectedRows == 0) res.json({ result: 0 }); 
+			else res.json({ result: 1 }); 
+		})
 	})
 })
 
