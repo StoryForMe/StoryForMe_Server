@@ -97,6 +97,7 @@ router.put('/', (req, res) => {
 		conn.query(sql, values, function(err, results) {
 			conn.release();
 			if(err) console.log(err);
+			else if (results.affectedRows == 0) res.json({ result: 0 }); 
 			else if (req.body.keywords.length == 0)
 				keyword.updateSeriesKeyword(req.body.id, null, () => { res.json({ result: 1 }) })
 			else {
@@ -124,7 +125,8 @@ router.put('/end', (req,res) => {
 		conn.query(sql, function(err, results) {
 			conn.release();
 			if(err) console.log(err);
-			else res.json({ result: 1 });
+			else if (results.affectedRows == 0) res.json({ result: 0 }); 
+			else res.json({ result: 1 }); 
 		})
 	})
 })
@@ -135,7 +137,8 @@ router.delete('/:id', (req, res) => {
 		conn.query(sql, function(err, results) {
 			conn.release();
 			if(err) console.log(err);
-			else res.json({ result: 1 });
+			else if (results.affectedRows == 0) res.json({ result: 0 }); 
+			else res.json({ result: 1 }); 
 		})
 	})
 })
