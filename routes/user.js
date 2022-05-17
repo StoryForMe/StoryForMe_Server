@@ -49,15 +49,15 @@ router.get('/:id/series', (req, res) => {
       if(err) console.log(err);
       else {
         response = []
-        for (series of seriesList) {
-          keyword.getSeriesKeyword(series["id"], (keywords) => {
+        for (s of seriesList) {
+          keyword.getSeriesKeyword(s["id"], (keywords) => {
             var result = {
-              title: series["title"],
+              title: s["title"],
               keywords: keywords,
-              recent_update: series["recent_update"],
-              hits: series["hits"],
-              zzimkkong: series["zzimkkong"],
-              episode_num: series["episode_num"]
+              recent_update: s["recent_update"],
+              hits: s["hits"],
+              zzimkkong: s["zzimkkong"],
+              episode_num: s["episode_num"]
             }
 
             response.push(result);
