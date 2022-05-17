@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 const app = require('../app');
 const keyword = require('../utils/keyword');
+const series = require('../utils/series');
 
 router.get('/:id/character', (req, res) => {
   app.getConnectionPool((conn) => {
@@ -56,6 +57,34 @@ router.get('/:login/:email', (req, res) => {
           id: user["id"]
         }
         res.json(result);
+      }
+    })
+  })
+})
+
+router.get('/:id/series', (req, res) => {
+  app.getConnectionPool((conn) => {
+    var sql = "select * from SERIES where uid=" + uid;
+    conn.query(sql, function(err, [seriesList]) {
+      conn.release();
+      if(err) console.log(err);
+      else {
+        response = []
+        for (series of seriesList) {
+          keyword.getSeriesKeyword(series["id"], (keywords) => {
+            var result = {
+              title: series["title"],
+              keywords: keywords,
+              recent_update: series["recent_update"],
+              hits: series["hits"],
+              zzimkkong: series["zzimkkong"],
+              episode_num: series["episode_num"]
+            }
+
+            response.push(result);
+          })
+        }
+        res.json(response);
       }
     })
   })
