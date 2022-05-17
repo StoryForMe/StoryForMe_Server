@@ -40,6 +40,7 @@ router.get('/:sid/:eid/comment', (req, res) => {
 				function getNameCallback(name, _comment, next_index) {
 					_comments.push({
 						uid: _comment["uid"],
+						cid: _comment["id"],
 						name: name,
 						content: _comment["content"],
 						date: _comment["date"]

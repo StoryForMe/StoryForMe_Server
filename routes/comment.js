@@ -15,8 +15,20 @@ router.post('/', (req,res) => {
 		conn.query(sql, values, function(err, results) {
 			conn.release();
 			if(err) console.log(err); 
-			else res.json({ result: 1 });
+			else console.log(results); res.json({ result: 1 });
 		})	
+	})
+})
+
+router.put('/', (req, res) => {
+	app.getConnectionPool((conn) => {
+		var sql = "update COMMENT SET content=" + req.body.content + " where id=" + req.body.id;
+		conn.query(sql, function(err, results) {
+			conn.release();
+			if (err) console.log(err);
+			else if (results.affectedRows == 0) res.json({ result: 0 }); 
+			else res.json({ result: 1 });
+		})
 	})
 })
 
