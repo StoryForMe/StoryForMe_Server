@@ -29,8 +29,7 @@ exports.getIs_zzimkkong = (uid, sid, callback) => {
 		conn.query(sql, function(err, zzimkkongs) {
 			conn.release();
 			if (err) console.log(err);
-			else if(!zzimkkongs) callback(0);
-			else callback(1);
+			else if(!zzimkkongs) callback(zzimkkongs.length);
 		})
 	})
 }
