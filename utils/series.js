@@ -26,8 +26,8 @@ exports.getEpisodeNum = (sid, callback) => {
 
 // 옵션에 따라 정렬기준을 다르게 함.
 exports.get_series_list_sql = [
-	"select * from SERIES order by recent_update",
-	"select *, zzimkkong_week + hits_week as week from SERIES order by week",
-	"select *, zzimkkong_month + hits_month as month from SERIES order by month",
-	"select *, zzimkkong + hits as total from SERIES order by total"
+	"select * from SERIES order by recent_update desc",
+	"select *, zzimkkong_week + hits_week as week from SERIES order by week desc",
+	"select *, zzimkkong_month + hits_month as month from SERIES order by month desc",
+	"select *, zzimkkong + hits as total from SERIES order by total desc"
 ]
