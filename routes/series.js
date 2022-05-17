@@ -23,7 +23,7 @@ router.get('/list/:option/:uid', (req, res) => {
 									id: series_list[index]["id"],
 									title: series_list[index]["title"],
 									writer: nickname,
-									uid: series_list["uid"],
+									uid: series_list[index]["uid"],
 									image: series_list["image"],
 									keywords: keywords,
 									hits: series_list[index]["hits"],
