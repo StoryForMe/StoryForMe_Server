@@ -8,25 +8,11 @@ const series = require('../utils/series');
 
 router.get('/list/:option/:uid', (req, res) => {
 	app.getConnectionPool((conn) => {
-		var sql = "select * from SERIES";
-		conn.query(sql, function(err, series_list) {
+		conn.query(series.get_series_list_sql[req.params.option], function(err, series_list) {
 			conn.release();
 			if(err) console.log("err");
 			else if(!series_list) {console.log("no exist series"); res.json({validation: 0});}
 			else {
-				series_list = series_list.sort((a, b) => {
-					switch(req.params.option) {
-						case 0:		// 최신순
-							a["recent_update"] - b["recent_update"];
-						case 1:		// 주간 랭킹
-							(a["hits_week"] + a["zzimkkong_week"]) - (b["hits_week"] + b["zzimkkong_week"]);
-						case 2:		// 월간 랭킹
-							(a["hits_month"] + a["zzimkkong_month"]) - (b["hits_month"] + b["zzimkkong_month"]);
-						case 3:		// 명예의 전당 (총 조회수, 찜꽁수)
-							(a["hits"] + a["zzimkkong"]) - (b["hits"] + b["zzimkkong"]);
-					}
-				});
-				console.log(series_list);
 				results = [];
 				// 각각의 시리즈에 대해 필요한 정보들을 가져와서 results에 추가해줌.
 				function getNicknameIterCallback(nickname, index) {
