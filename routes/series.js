@@ -5,6 +5,45 @@ const keyword = require('../utils/keyword');
 const user = require('../utils/user');
 const episode = require('../utils/episode');
 
+router.get('/list/:option/:uid', (req, res) => {
+	app.getConnectionPool((conn) => {
+		var sql = "select * from SERIES";
+		conn.query(sql, function(err, series_list) {
+			conn.release();
+			if(err) console.log("err");
+			else if(!series_list) {console.log("no exist series"); res.json({validation: 0});}
+			else {
+				results = [];
+				function getNicknameIterCallback(nickname, index) {
+					series.getEpisodeNum(series_list[index]["id"], (episode_num) => {
+						user.getIs_zzimkkong(series_list[index]["uid"], series_list[index]["id"], (is_zzimkkong) => {
+							keyword.getSeriesKeyword(series_list[index]["id"], (keywords) => {
+								results.push({
+									id: series_list[index]["id"],
+									title: series["title"],
+									writer: nickname,
+									uid: series["uid"],
+									image: series["image"],
+									keywords: keywords,
+									hits: series_list[index]["hits"],
+									zzimkkong: series["zzimkkong"],
+									episode_num: episode_num,
+									is_zzimkkong: is_zzimkkong,
+									is_end: series_list[index]["is_end"]
+								});
+								if (index < series_list.length - 1)
+									user.getNicknameIter(series_list[index + 1]["uid"], index + 1, getNicknameIterCallback)
+								else res.json( {series_list: results });
+							});
+						});
+					});
+				}
+				user.getNicknameIter(series_list[0]["uid"], 0, getNicknameIterCallback)
+			}
+	   })
+	})
+})
+
 router.get('/:id', (req, res) => {
 	app.getConnectionPool((conn) => {
 		var sql = "select * from SERIES where id=" + req.params.id;
