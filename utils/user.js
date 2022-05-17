@@ -25,7 +25,7 @@ exports.getNicknameIter = (uid, index, callback) => {
 
 exports.getIs_zzimkkong = (uid, sid, callback) => {
 	app.getConnectionPool((conn) => {
-		var sql = "select * from ZZMINKKONG_SERIES where uid=" + uid + " and sid=" + sid;
+		var sql = "select * from ZZIMKKONG_SERIES where uid=" + uid + " and sid=" + sid;
 		conn.query(sql, function(err, zzimkkongs) {
 			conn.release();
 			if (err) console.log(err);
