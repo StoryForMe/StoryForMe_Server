@@ -39,7 +39,7 @@ router.post('/', (req,res) => {
 
 router.put('/', (req, res) => {
 	app.getConnectionPool((conn) => {
-		var sql = "update COMMENT SET content=" + req.body.content + " where id=" + req.body.id;
+		var sql = "update COMMENT SET content='" + req.body.content + "' where id=" + req.body.id;
 		conn.query(sql, function(err, results) {
 			conn.release();
 			if (err) console.log(err);
