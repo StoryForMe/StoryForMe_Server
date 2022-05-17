@@ -44,7 +44,7 @@ router.get('/:id/zzimkkong/writer', (req, res) => {
 router.get('/:id/series', (req, res) => {
   app.getConnectionPool((conn) => {
     var sql = "select * from SERIES where uid=" + req.params.id;
-    conn.query(sql, function(err, [seriesList]) {
+    conn.query(sql, function(err, seriesList) {
       conn.release();
       if(err) console.log(err);
       else {
