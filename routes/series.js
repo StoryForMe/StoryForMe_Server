@@ -4,6 +4,46 @@ const app = require('../app');
 const keyword = require('../utils/keyword');
 const user = require('../utils/user');
 const episode = require('../utils/episode');
+const series = require('../utils/series');
+
+router.get('/list/:option/:uid', (req, res) => {
+	app.getConnectionPool((conn) => {
+		conn.query(series.get_series_list_sql[req.params.option], function(err, series_list) {
+			conn.release();
+			if(err) console.log("err");
+			else if(!series_list) {console.log("no exist series"); res.json({validation: 0});}
+			else {
+				results = [];
+				// 각각의 시리즈에 대해 필요한 정보들을 가져와서 results에 추가해줌.
+				function getNicknameIterCallback(nickname, index) {
+					series.getEpisodeNum(series_list[index]["id"], (episode_num) => {
+						user.getIs_zzimkkong(req.params.uid, series_list[index]["id"], (is_zzimkkong) => {
+							keyword.getSeriesKeyword(series_list[index]["id"], (keywords) => {
+								results.push({
+									id: series_list[index]["id"],
+									title: series_list[index]["title"],
+									writer: nickname,
+									uid: series_list[index]["uid"],
+									image: series_list["image"],
+									keywords: keywords,
+									hits: series_list[index]["hits"],
+									zzimkkong: series_list[index]["zzimkkong"],
+									episode_num: episode_num,
+									is_zzimkkong: is_zzimkkong,
+									is_end: series_list[index]["is_end"]
+								});
+								if (index < series_list.length - 1)
+									user.getNicknameIter(series_list[index + 1]["uid"], index + 1, getNicknameIterCallback)
+								else res.json( {series_list: results });
+							});
+						});
+					});
+				}
+				user.getNicknameIter(series_list[0]["uid"], 0, getNicknameIterCallback)
+			}
+	   })
+	})
+})
 
 router.get('/:id', (req, res) => {
 	app.getConnectionPool((conn) => {

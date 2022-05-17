@@ -4,10 +4,32 @@ const app = require('../app');
 exports.getNickname = (uid, callback) => {
 	app.getConnectionPool((conn) => {
 		var sql = "select nickname from USER where id=" + uid;
-		conn.query(sql, function(err, [row]) {
+		conn.query(sql, function(err, users) {
 			conn.release();
-			if(err) console.log("getNickname err");
-			else callback(row["nickname"]);
+			if(err) console.log(err);
+			else callback(users[0]["nickname"]);
+		})
+	})
+}
+
+exports.getNicknameIter = (uid, index, callback) => {
+	app.getConnectionPool((conn) => {
+		var sql = "select nickname from USER where id=" + uid;
+		conn.query(sql, function(err, users) {
+			conn.release();
+			if(err) console.log(err);
+			else callback(users[0]["nickname"], index);
+		})
+	})
+}
+
+exports.getIs_zzimkkong = (uid, sid, callback) => {
+	app.getConnectionPool((conn) => {
+		var sql = "select * from ZZIMKKONG_SERIES where uid=" + uid + " and sid=" + sid;
+		conn.query(sql, function(err, zzimkkongs) {
+			conn.release();
+			if (err) console.log(err);
+			else if(zzimkkongs) callback(zzimkkongs.length);
 		})
 	})
 }
