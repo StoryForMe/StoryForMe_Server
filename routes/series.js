@@ -26,6 +26,7 @@ router.get('/list/:option/:uid', (req, res) => {
 							(a["hits"] + a["zzimkkong"]) - (b["hits"] + b["zzimkkong"]);
 					}
 				});
+				console.log(series_list);
 				results = [];
 				// 각각의 시리즈에 대해 필요한 정보들을 가져와서 results에 추가해줌.
 				function getNicknameIterCallback(nickname, index) {
