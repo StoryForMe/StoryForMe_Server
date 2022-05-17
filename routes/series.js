@@ -13,6 +13,7 @@ router.get('/list/:option/:uid', (req, res) => {
 			if(err) console.log("err");
 			else if(!series_list) {console.log("no exist series"); res.json({validation: 0});}
 			else {
+				console.log(series.get_series_list_sql[req.params.option]);
 				console.log(series_list);
 				results = [];
 				// 각각의 시리즈에 대해 필요한 정보들을 가져와서 results에 추가해줌.
