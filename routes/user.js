@@ -48,7 +48,7 @@ router.get('/:id/series', (req, res) => {
       conn.release();
       if(err) console.log(err);
       else {
-        response = []
+        var response = []
         for (s of seriesList) {
           keyword.getSeriesKeyword(s["id"], (keywords) => {
             var result = {
