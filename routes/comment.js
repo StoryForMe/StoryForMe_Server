@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const app = require('../app');
+const comment = require('../utils/comment')
 
 router.post('/', (req,res) => {
 	app.getConnectionPool((conn) => {
@@ -13,9 +14,25 @@ router.post('/', (req,res) => {
 			date: new Date()
 		}
 		conn.query(sql, values, function(err, results) {
-			conn.release();
 			if(err) console.log(err); 
-			else console.log(results); res.json({ result: 1 });
+			else {
+				sql = "select * from COMMENT where id=" + results.insertId;
+				conn.query(sql, function(err, comments) {
+					conn.release();
+					if (err) console.log(err);
+					else {
+						comment.getName(comments[0]["uid"], (name) => {
+							res.json({
+								uid: comments[0]["uid"],
+								cid: comments[0]["id"],
+								name: name,
+								content: comments[0]["content"],
+								date: comments[0]["date"]
+							})
+						})
+					}
+				})
+			}
 		})	
 	})
 })

@@ -46,9 +46,9 @@ router.get('/:sid/:eid/comment', (req, res) => {
 						date: _comment["date"]
 					});
 					if (next_index == comments.length) res.json(_comments);
-					else comment.getName(comments, next_index, getNameCallback);
+					else comment.getNameIter(comments, next_index, getNameCallback);
 				}
-				comment.getName(comments, 0, getNameCallback);
+				comment.getNameIter(comments, 0, getNameCallback);
 			}
 	   })
 	})

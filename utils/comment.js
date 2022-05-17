@@ -12,14 +12,25 @@ exports.getEpisodeCommentNum = (esid, episodes, index, callback) => {
 	})
 }
 
-// 댓글 작성자 이름 가져옴.
-exports.getName = (comments, index, callback) => {
+// 댓글 목록에서 작성자 이름을 하나씩 가져옴.
+exports.getNameIter = (comments, index, callback) => {
 	app.getConnectionPool((conn) => {
 		var sql = "select * from USER where id=" + comments[index]["uid"];
 		conn.query(sql, function(err, users) {
 			conn.release();
 			if (err) console.log(err);
 			else callback(users[0]["nickname"], comments[index], index + 1);
+		})
+	})
+}
+
+exports.getName = (uid, callback) => {
+	app.getConnectionPool((conn) => {
+		var sql = "select * from USER where id=" + uid;
+		conn.query(sql, function(err, users) {
+			conn.release();
+			if (err) console.log(err);
+			else callback(users[0]["nickname"]);
 		})
 	})
 }
