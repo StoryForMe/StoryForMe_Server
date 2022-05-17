@@ -4,6 +4,7 @@ const app = require('../app');
 const keyword = require('../utils/keyword');
 const user = require('../utils/user');
 const episode = require('../utils/episode');
+const series = require('../utils/series');
 
 router.get('/list/:option/:uid', (req, res) => {
 	app.getConnectionPool((conn) => {
