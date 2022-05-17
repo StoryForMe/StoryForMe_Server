@@ -14,7 +14,7 @@ router.get('/list/:option/:uid', (req, res) => {
 			if(err) console.log("err");
 			else if(!series_list) {console.log("no exist series"); res.json({validation: 0});}
 			else {
-				series_list.sort((a, b) => {
+				series_list = series_list.sort((a, b) => {
 					switch(req.params.option) {
 						case 0:		// 최신순
 							a["recent_update"] - b["recent_update"];
