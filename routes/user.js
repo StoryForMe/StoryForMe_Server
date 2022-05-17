@@ -49,8 +49,10 @@ router.get('/:id/series', (req, res) => {
       if(err) console.log(err);
       else {
         var response = []
-        for (s of seriesList) {
-          keyword.getSeriesKeyword(s["id"], (keywords) => {
+
+        // 비동기 처리 하기
+        function getKeywordCallback(sid, next_index) {
+          keyword.getSeriesKeyword(sid, (keywords) => {
             var result = {
               title: s["title"],
               keywords: keywords,
@@ -59,7 +61,6 @@ router.get('/:id/series', (req, res) => {
               zzimkkong: s["zzimkkong"],
               episode_num: s["episode_num"]
             }
-
             response.push(result);
           })
         }
