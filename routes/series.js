@@ -20,13 +20,13 @@ router.get('/list/:option/:uid', (req, res) => {
 							keyword.getSeriesKeyword(series_list[index]["id"], (keywords) => {
 								results.push({
 									id: series_list[index]["id"],
-									title: series["title"],
+									title: series_list[index]["title"],
 									writer: nickname,
-									uid: series["uid"],
-									image: series["image"],
+									uid: series_list["uid"],
+									image: series_list["image"],
 									keywords: keywords,
 									hits: series_list[index]["hits"],
-									zzimkkong: series["zzimkkong"],
+									zzimkkong: series_list["zzimkkong"],
 									episode_num: episode_num,
 									is_zzimkkong: is_zzimkkong,
 									is_end: series_list[index]["is_end"]
