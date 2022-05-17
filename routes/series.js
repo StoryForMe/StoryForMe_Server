@@ -16,7 +16,7 @@ router.get('/list/:option/:uid', (req, res) => {
 				results = [];
 				function getNicknameIterCallback(nickname, index) {
 					series.getEpisodeNum(series_list[index]["id"], (episode_num) => {
-						user.getIs_zzimkkong(series_list[index]["uid"], series_list[index]["id"], (is_zzimkkong) => {
+						user.getIs_zzimkkong(uid, series_list[index]["id"], (is_zzimkkong) => {
 							keyword.getSeriesKeyword(series_list[index]["id"], (keywords) => {
 								results.push({
 									id: series_list[index]["id"],
