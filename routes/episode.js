@@ -14,6 +14,7 @@ router.get('/:sid/:eid', (req, res) => {
 			else {	
 				series.getCharacter(req.params.sid, (fname, lname) => {
 					res.json({
+						uid: episode[0]["uid"],
 						title: episode[0]["title"],
 						music: episode[0]["music"],
 						image: episode[0]["image"],

@@ -50,4 +50,16 @@ router.put('/', (req, res) => {
 	})
 })
 
+router.delete('/:id', (req, res) => {
+	app.getConnectionPool((conn) => {
+		var sql = "delete from COMMENT where id=" + req.params.id;
+		conn.query(sql, function(err, results) {
+			conn.release();
+			if(err) console.log(err);
+			else if (results.affectedRows == 0) res.json({ result: 0 }); 
+			else res.json({ result: 1 }); 
+		})
+	})
+})
+
 module.exports = router;
