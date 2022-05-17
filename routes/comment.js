@@ -16,6 +16,7 @@ router.post('/', (req,res) => {
 		conn.query(sql, values, function(err, results) {
 			if(err) console.log(err); 
 			else {
+				// 방금 새로 만들어진 comment를 response로 보냄.
 				sql = "select * from COMMENT where id=" + results.insertId;
 				conn.query(sql, function(err, comments) {
 					conn.release();
