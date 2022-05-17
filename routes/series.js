@@ -14,7 +14,20 @@ router.get('/list/:option/:uid', (req, res) => {
 			if(err) console.log("err");
 			else if(!series_list) {console.log("no exist series"); res.json({validation: 0});}
 			else {
+				series_list.sort((a, b) => {
+					switch(req.params.option) {
+						case 0:		// 최신순
+							a["recent_update"] - b["recent_update"];
+						case 1:		// 주간 랭킹
+							(a["hits_week"] + a["zzimkkong_week"]) - (b["hits_week"] + b["zzimkkong_week"]);
+						case 2:		// 월간 랭킹
+							(a["hits_month"] + a["zzimkkong_month"]) - (b["hits_month"] + b["zzimkkong_month"]);
+						case 3:		// 명예의 전당 (총 조회수, 찜꽁수)
+							(a["hits"] + a["zzimkkong"]) - (b["hits"] + b["zzimkkong"]);
+					}
+				});
 				results = [];
+				// 각각의 시리즈에 대해 필요한 정보들을 가져와서 results에 추가해줌.
 				function getNicknameIterCallback(nickname, index) {
 					series.getEpisodeNum(series_list[index]["id"], (episode_num) => {
 						user.getIs_zzimkkong(req.params.uid, series_list[index]["id"], (is_zzimkkong) => {
@@ -27,7 +40,7 @@ router.get('/list/:option/:uid', (req, res) => {
 									image: series_list["image"],
 									keywords: keywords,
 									hits: series_list[index]["hits"],
-									zzimkkong: series_list["zzimkkong"],
+									zzimkkong: series_list[index]["zzimkkong"],
 									episode_num: episode_num,
 									is_zzimkkong: is_zzimkkong,
 									is_end: series_list[index]["is_end"]
