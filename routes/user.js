@@ -153,4 +153,37 @@ router.get('/:id', (req, res) => {
   })
 })
 
+router.post('/', (req, res) => {
+  app.getConnectionPool((conn) => {
+    var sql = "insert into USER SET ?";
+    var values = {
+      kakao_id: req.body.kakao_id,
+      nickname: req.body.nickname,
+      fname: req.body.fname,
+      lname: req.body.lname,
+      profile_image: req.body.profile_image
+    }
+    conn.query(sql, values, function(err, results) {
+      conn.release();
+      if(err) console.log(err);
+      else if (req.body.keywords.length == 0) res.json({ id: results.insertId })
+      else {
+        var kid_list = []
+        function getKeywordIdCallback(kid, next_index) {
+          kid_list.push(kid)
+          if (next_index == req.body.keywords.length)
+            keyword.postSeriesKeyword(results.insertId, kid_list, 0, postSeriesKeywordCallback);
+          else
+            keyword.getKeywordId(req.body.keywords, next_index, getKeywordIdCallback);
+        }
+        function postSeriesKeywordCallback(next_index) {
+          if (next_index == kid_list.length) res.json({ sid: results.insertId })
+          else keyword.getSeriesKeyword(results.insertId, kid_list, next_index, postSeriesKeywordCallback);
+        }
+        keyword.getKeywordId(req.body.keywords, 0, getKeywordIdCallback);
+      }
+    })
+  })
+})
+
 module.exports = router;
