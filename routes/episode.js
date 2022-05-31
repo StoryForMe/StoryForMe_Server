@@ -12,6 +12,7 @@ router.get('/:id', (req, res) => {
 			if(err) console.log(err);
 			else if(!episode) {console.log("no exist episode"); res.json({validation: 0});}
 			else {	
+				console.log(episode)
 				series.updateHits(episode[0]["sid"], (result) => {
 					if (result == 1) {
 						series.getCharacter(episode[0]["sid"], (fname, lname) => {
