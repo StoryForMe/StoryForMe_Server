@@ -110,7 +110,7 @@ router.get('/:id/series', (req, res) => {
           results.push({
             title: seriesList[index]["title"],
             keywords: keywords,
-            recent_update: seriesList[index]["title"],
+            recent_update: seriesList[index]["recent_update"],
             hits: seriesList[index]["hits"],
             zzimkkong: seriesList[index]["zzimkkong"],
             episode_num: seriesList[index]["episode_num"]
@@ -148,6 +148,46 @@ router.get('/:id', (req, res) => {
           }
           res.json(result);
         })
+      }
+    })
+  })
+})
+
+router.post('/', (req, res) => {
+  app.getConnectionPool((conn) => {
+    var sql = "insert into USER SET ?";
+    var values = {
+      kakao_id: req.body.kakao_id,
+      nickname: req.body.nickname,
+      fname: req.body.fname,
+      lname: req.body.lname,
+      profile_image: req.body.profile_image
+    }
+    conn.query(sql, values, function(err, results) {
+      conn.release();
+      if(err) {
+        if (err.code == 'ER_DUP_ENTRY') {
+          res.json({ 
+            error: "E003",
+            error_message: "kakao id 중복"
+          })
+        }
+      }
+      else if (req.body.keywords.length == 0) res.json({ id: results.insertId })
+      else {
+        var kid_list = []
+        function getKeywordIdCallback(kid, next_index) {
+          kid_list.push(kid)
+          if (next_index == req.body.keywords.length)
+            keyword.postUserKeyword(results.insertId, kid_list, 0, postUserKeywordCallback);
+          else
+            keyword.getKeywordId(req.body.keywords, next_index, getKeywordIdCallback);
+        }
+        function postUserKeywordCallback(next_index) {
+          if (next_index == kid_list.length) res.json({ id: results.insertId })
+          else keyword.postUserKeyword(results.insertId, kid_list, next_index, postUserKeywordCallback);
+        }
+        keyword.getKeywordId(req.body.keywords, 0, getKeywordIdCallback);
       }
     })
   })
