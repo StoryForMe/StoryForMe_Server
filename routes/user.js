@@ -193,7 +193,7 @@ router.post('/', (req, res) => {
   })
 })
 
-router.put('/:id', (req, res) => {
+router.put('/', (req, res) => {
   app.getConnectionPool((conn) => {
     var sql = "update USER SET ? where id=" + req.body.id;
     var values = {
