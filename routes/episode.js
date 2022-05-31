@@ -76,7 +76,14 @@ router.post('/', (req,res) => {
 		}
 		conn.query(sql, values, function(err, results) {
 			conn.release();
-			if(err) console.log(err); 
+			if(err) {
+				if (err.code == 'ER_DUP_ENTRY') {
+				  res.json({ 
+					error: "E004",
+					error_message: "chapter 중복"
+				  })
+				}
+			  }
 			else {
 				series.updateEpisodeNum(req.body.sid, 1, (result) => {
 					if (result == 1) {
