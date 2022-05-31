@@ -53,6 +53,8 @@ router.get('/:id/zzimkkong/series', (req, res) => {
         var results = []
         var index = 0
 
+        console.log(sids)
+
         function getSeriesKeyWordCallback(keywords) {
           series.getSeries(sids[index]["sid"], (series) => {
             results.push({
