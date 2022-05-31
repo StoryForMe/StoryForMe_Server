@@ -16,26 +16,25 @@ router.get('/list/:option/:uid', (req, res) => {
 				results = [];
 				// 각각의 시리즈에 대해 필요한 정보들을 가져와서 results에 추가해줌.
 				function getNicknameIterCallback(nickname, index) {
-					series.getEpisodeNum(series_list[index]["id"], (episode_num) => {
-						user.getIs_zzimkkong(req.params.uid, series_list[index]["id"], (is_zzimkkong) => {
-							keyword.getSeriesKeyword(series_list[index]["id"], (keywords) => {
-								results.push({
-									id: series_list[index]["id"],
-									title: series_list[index]["title"],
-									writer: nickname,
-									uid: series_list[index]["uid"],
-									image: series_list["image"],
-									keywords: keywords,
-									hits: series_list[index]["hits"],
-									zzimkkong: series_list[index]["zzimkkong"],
-									episode_num: episode_num,
-									is_zzimkkong: is_zzimkkong,
-									is_end: series_list[index]["is_end"]
-								});
-								if (index < series_list.length - 1)
-									user.getNicknameIter(series_list[index + 1]["uid"], index + 1, getNicknameIterCallback)
-								else res.json( {series_list: results });
+					user.getIs_zzimkkong(req.params.uid, series_list[index]["id"], (is_zzimkkong) => {
+						keyword.getSeriesKeyword(series_list[index]["id"], (keywords) => {
+							results.push({
+								id: series_list[index]["id"],
+								title: series_list[index]["title"],
+								writer: nickname,
+								uid: series_list[index]["uid"],
+								image: series_list["image"],
+								keywords: keywords,
+								hits: series_list[index]["hits"],
+								zzimkkong: series_list[index]["zzimkkong"],
+								episode_num: series_list[index]["episode_num"],
+								is_zzimkkong: is_zzimkkong,
+								is_end: series_list[index]["is_end"],
+								recent_update: series_list[index]["recent_update"]
 							});
+							if (index < series_list.length - 1)
+								user.getNicknameIter(series_list[index + 1]["uid"], index + 1, getNicknameIterCallback)
+							else res.json( {series_list: results });
 						});
 					});
 				}
@@ -67,6 +66,7 @@ router.get('/:id', (req, res) => {
 								coin_full_num: series["coin_full_num"],
 								ad_days: series["ad_days"],
 								keywords: keywords,
+								is_end: series["is_end"],
 								episodes: episodes
 							}
 							res.json(result);

@@ -4,10 +4,10 @@ const comment = require('./comment');
 // sid에 해당하는 시리즈의 에피소드 정보 목록을 가져옴.
 exports.getEpisodeList = (sid, callback) => {
 	app.getConnectionPool((conn) => {
-		var sql = "select * from EPISODE where sid=" + sid;
+		var sql = "select * from EPISODE where sid=" + sid + " order by chapter";
 		conn.query(sql, function(err, episodes) {
 			conn.release();
-			if(err) console.log("getEpisodeList err");
+			if(err) console.log(err);
 			else if (episodes.length == 0) callback([]);
 			else {
 				var result = [];
