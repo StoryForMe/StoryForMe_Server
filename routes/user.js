@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 const app = require('../app');
 const keyword = require('../utils/keyword');
+const series = require('../utils/series');
 
 router.get('/:id/character', (req, res) => {
   app.getConnectionPool((conn) => {
@@ -49,8 +50,27 @@ router.get('/:id/zzimkkong/series', (req, res) => {
       else if(!series) {
         console.log("no exist zzimkkong series.")
       } else {
-        // TODO: 어떻게 하면 keywords 배열을 넣을 수 있을까....
-        // 에라이... 안 해...
+        var results = []
+        var index = 0
+
+        function getSeriesKeyWordCallback(keywords) {
+          series.getSeries(sids[index], (series) => {
+            results.push({
+              title: series["title"],
+              keywords: keywords,
+              recent_update: series["recent_update"],
+              hits: series["hits"],
+              zzimkkong: series["zzimkkong"],
+              episode_num: series["episode_num"]
+            })
+            if (index < sids.length - 1) {
+              index++;
+              keyword.getSeriesKeyword(sids[index], getSeriesKeyWordCallback)
+            }
+            else res.json({ series_list: results })
+          })
+          keyword.getSeriesKeyword(sids[0], getSeriesKeyWordCallback)
+        }
       }
     })
   })
