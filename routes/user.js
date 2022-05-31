@@ -73,6 +73,38 @@ router.get('/:id/zzimkkong/series', (req, res) => {
     })
   })
 })
+        
+
+router.get('/:id/series', (req, res) => {
+  app.getConnectionPool((conn) => {
+    var sql = "select * from SERIES where uid=" + req.params.id;
+    conn.query(sql, function(err, seriesList) {
+      conn.release();
+      if(err) console.log(err);
+      else {
+        var results = []
+        var index = 0
+
+        function getSeriesKeywordIterCallback(keywords) {
+          results.push({
+            title: seriesList[index]["title"],
+            keywords: keywords,
+            recent_update: seriesList[index]["title"],
+            hits: seriesList[index]["hits"],
+            zzimkkong: seriesList[index]["zzimkkong"],
+            episode_num: seriesList[index]["episode_num"]
+          })
+          if (index < seriesList.length - 1) {
+            index++;
+            keyword.getSeriesKeyword(seriesList[index]["id"], getSeriesKeywordIterCallback)
+          }
+          else res.json({ series_list: results }) 
+        }
+        keyword.getSeriesKeyword(seriesList[0]["id"], getSeriesKeywordIterCallback)
+      }
+    })
+  })
+})
 
 router.get('/:login/:email', (req, res) => {
   app.getConnectionPool((conn) => {
