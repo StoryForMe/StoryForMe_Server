@@ -54,7 +54,7 @@ router.get('/:id/zzimkkong/series', (req, res) => {
         var index = 0
 
         function getSeriesKeyWordCallback(keywords) {
-          series.getSeries(sids[index], (series) => {
+          series.getSeries(sids[index]["sid"], (series) => {
             results.push({
               title: series["title"],
               keywords: keywords,
@@ -64,13 +64,12 @@ router.get('/:id/zzimkkong/series', (req, res) => {
               episode_num: series["episode_num"]
             })
             if (index < sids.length - 1) {
-              console.log(index)
               index++;
-              keyword.getSeriesKeyword(sids[index], getSeriesKeyWordCallback)
+              keyword.getSeriesKeyword(sids[index]["sid"], getSeriesKeyWordCallback)
             }
             else res.json({ series_list: results })
           })
-          keyword.getSeriesKeyword(sids[0], getSeriesKeyWordCallback)
+          keyword.getSeriesKeyword(sids[0]["sid"], getSeriesKeyWordCallback)
         }
       }
     })
