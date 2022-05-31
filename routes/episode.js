@@ -14,7 +14,7 @@ router.get('/:id', (req, res) => {
 			else {	
 				series.updateHits(episode[0]["sid"], (result) => {
 					if (result == 1) {
-						series.getCharacter(req.params.sid, (fname, lname) => {
+						series.getCharacter(episode[0]["sid"], (fname, lname) => {
 							res.json({
 								uid: episode[0]["uid"],
 								title: episode[0]["title"],
