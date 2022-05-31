@@ -166,7 +166,7 @@ router.post('/', (req, res) => {
     conn.query(sql, values, function(err, results) {
       conn.release();
       if(err) {
-        if (err) {
+        if (err.code == 'ER_DUP_ENTRY') {
           res.json({ 
             error: "E003",
             error_message: "kakao id 중복"
