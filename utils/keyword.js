@@ -104,7 +104,7 @@ exports.postUserKeyword = postUserKeyword;
 // uid에 해당하는 시리즈의 기존 키워드를 삭제한 뒤 새로운 키워드 목록 추가.
 exports.updateUserKeyword = (uid, kid_list, callback) => {
 	app.getConnectionPool((conn) => {
-		var sql = "delete from REPRESENT where uid=" + uid;
+		var sql = "delete from `LIKE` where uid=" + uid;
 		conn.query(sql, function(err, results) {
 			conn.release();
 			if (err) console.log(err);
