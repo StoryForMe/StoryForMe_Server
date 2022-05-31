@@ -193,6 +193,42 @@ router.post('/', (req, res) => {
   })
 })
 
+router.put('/:id', (req, res) => {
+  app.getConnectionPool((conn) => {
+    var sql = "update USER SET ? where id=" + req.body.id;
+    var values = {
+      nickname: req.body.nickname,
+      profile_image: req.body.profile_image,
+      fname: req.body.fname,
+      lname: req.body.lname,
+      introduction: req.body.introduction,
+      is_default_name: req.body.is_default_name
+    }
+    conn.query(sql, values, function(err, results) {
+      conn.release();
+      if(err) console.log(err);
+      else if (results.affectedRows == 0) res.json({ result: 0 });
+      else if (req.body.keywords.length == 0)
+        keyword.updateUserKeyword(req.body.id, null, () => { res.json({ result: 1 }) });
+      else {
+        var kid_list = []
+        function getKeywordIdCallback(kid, next_index) {
+          kid_list.push(kid)
+          if (next_index == req.body.keywords.length) 
+            keyword.updateUserKeyword(req.body.id, kid_list, postUserKeywordCallback);
+          else
+            keyword.getKeywordId(req.body.keywords, next_index, getKeywordIdCallback);
+        }
+        function postUserKeywordCallback(next_index) {
+          if (next_index == kid_list.length) res.json({ result: 1 })
+          else keyword.postUserKeyword(req.body.id, kid_list, next_index, postUserKeywordCallback);
+        }
+        keyword.getKeywordId(req.body.keywords, 0, getKeywordIdCallback);
+      }
+    })
+  })
+})
+
 router.delete('/:id', (req, res) => {
   app.getConnectionPool((conn) => {
     var sql = "delete from SERIES where id=" + req.params.id;
