@@ -28,7 +28,7 @@ function postSeriesKeyword (sid, kid, callback) {
 		conn.query(sql, function(err, results) {
 			conn.release();
 			if(err) console.log(err);
-			else callback(index + 1);
+			else callback();
 		})
 	})
 }
