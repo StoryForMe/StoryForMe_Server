@@ -107,18 +107,21 @@ router.post('/', (req, res) => {
 			else if (req.body.keywords.length == 0) res.json({ sid: results.insertId })
 			else {
 				var kid_list = []
-				function getKeywordIdCallback(kid, next_index) {
+				var index = 0;
+				function getKeywordIdCallback(kid) {
 					kid_list.push(kid)
-					if (next_index == req.body.keywords.length) 
-						keyword.postSeriesKeyword(results.insertId, kid_list, 0, postSeriesKeywordCallback);
+					if (index == req.body.keywords.length - 1) {
+						index = 0;
+						keyword.postSeriesKeyword(results.insertId, kid_list[index], postSeriesKeywordCallback);
+					}
 					else 
-						keyword.getKeywordId(req.body.keywords, next_index, getKeywordIdCallback);
+						keyword.getKeywordId(req.body.keywords[++index], getKeywordIdCallback);
 				}
-				function postSeriesKeywordCallback(next_index) {
-					if (next_index == kid_list.length) res.json({ sid: results.insertId })
-					else keyword.postSeriesKeyword(results.insertId, kid_list, next_index, postSeriesKeywordCallback);
+				function postSeriesKeywordCallback() {
+					if (index == kid_list.length - 1) res.json({ sid: results.insertId })
+					else keyword.postSeriesKeyword(results.insertId, kid_list[++index], postSeriesKeywordCallback);
 				}
-				keyword.getKeywordId(req.body.keywords, 0, getKeywordIdCallback);
+				keyword.getKeywordId(req.body.keywords[index], getKeywordIdCallback);
 			}
 		})
 	})

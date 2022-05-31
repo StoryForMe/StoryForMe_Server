@@ -49,17 +49,17 @@ exports.updateSeriesKeyword = (sid, kid_list, callback) => {
 }
 // keyword 목록을 받아 각각의 키워드에 해당하는 kid를 가져옴. 
 // 해당 키워드가 존재하지 않는다면 postKeyword를 호출해 해당 키워드를 추가한 뒤 그 키워드의 kid를 가져옴.
-exports.getKeywordId = (keywords, index, callback) => {
+exports.getKeywordId = (content, callback) => {
 	app.getConnectionPool((conn) => {
-		var sql = "select * from KEYWORD where content='" + keywords[index] + "'";
+		var sql = "select * from KEYWORD where content='" + content + "'";
 		conn.query(sql, function(err, keyword_list) {
 			conn.release();
 			if (err) console.log(err);
 			else{
 				if(keyword_list.length == 0)
-					postKeyword(keywords[index], (kid) => { callback(kid, index + 1); });
+					postKeyword(content, (kid) => { callback(kid); });
 				else
-					callback(keyword_list[0]["id"], index + 1);
+					callback(keyword_list[0]["id"]);
 			}
 		})
 	})
