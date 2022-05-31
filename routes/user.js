@@ -110,7 +110,7 @@ router.get('/:id/series', (req, res) => {
           results.push({
             title: seriesList[index]["title"],
             keywords: keywords,
-            recent_update: seriesList[index]["title"],
+            recent_update: seriesList[index]["recent_update"],
             hits: seriesList[index]["hits"],
             zzimkkong: seriesList[index]["zzimkkong"],
             episode_num: seriesList[index]["episode_num"]
@@ -166,7 +166,7 @@ router.post('/', (req, res) => {
     conn.query(sql, values, function(err, results) {
       conn.release();
       if(err) {
-        if (err == "ER_DUP_ENTRY") {
+        if (err) {
           res.json({ 
             error: "E003",
             error_message: "kakao id 중복"
