@@ -43,8 +43,8 @@ router.get('/:id/zzimkkong/writer', (req, res) => {
 
 router.get('/:id/zzimkkong/series', (req, res) => {
   app.getConnectionPool((conn) => {
-    var sql = "select sid from SERIES as s join ZZIMKKONG_SERIES as z on s.id=z.sid where z.uid=" + req.params.id;
-    conn.query(sql, function(err, sids) {
+    var sql = "select * from SERIES as s join ZZIMKKONG_SERIES as z on s.id=z.sid where z.uid=" + req.params.id;
+    conn.query(sql, function(err, series_list) {
       conn.release();
       if(err) console.log("[USER] get zzimkkong series " + err);
       else if(!series) {
@@ -56,23 +56,20 @@ router.get('/:id/zzimkkong/series', (req, res) => {
         console.log(sids)
 
         function getSeriesKeyWordCallback(keywords) {
-          series.getSeries(sids[index]["sid"], (series_info) => {
-            console.log(series_info)
-            results.push({
-              title: series_info["title"],
-              keywords: keywords,
-              recent_update: series_info["recent_update"],
-              hits: series_info["hits"],
-              zzimkkong: series_info["zzimkkong"],
-              episode_num: series_info["episode_num"]
-            })
-            if (index < sids.length - 1) {
-              index++;
-              keyword.getSeriesKeyword(sids[index]["sid"], getSeriesKeyWordCallback)
-            }
-            else res.json({ series_list: results })
+          results.push({
+            title: series_list[index]["title"],
+            keywords: keywords,
+            recent_update: series_list[index]["recent_update"],
+            hits: series_list[index]["hits"],
+            zzimkkong: series_list[index]["zzimkkong"],
+            episode_num: series_list[index]["episode_num"]
           })
-          keyword.getSeriesKeyword(sids[0]["sid"], getSeriesKeyWordCallback)
+          if (index < series_list.length - 1) {
+            index++;
+            keyword.getSeriesKeyword(series_list[index]["id"], getSeriesKeyWordCallback)
+          }
+          else res.json({ series_list: results })
+          keyword.getSeriesKeyword(sids[0]["id"], getSeriesKeyWordCallback)
         }
       }
     })
