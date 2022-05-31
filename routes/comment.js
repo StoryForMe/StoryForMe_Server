@@ -10,7 +10,6 @@ router.post('/', (req,res) => {
 			content: req.body.content,
 			uid: req.body.uid,
 			eid: req.body.eid,
-			esid: req.body.esid,
 			date: new Date()
 		}
 		conn.query(sql, values, function(err, results) {
