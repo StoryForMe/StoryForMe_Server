@@ -28,9 +28,9 @@ exports.getEpisodeList = (sid, callback) => {
 					// 마지막 episode면 callback함수 호출
 					if (next_index == episodes.length) callback(result);
 					// 마지막 episode가 아니면 다음 에피소드의 comment 개수를 가져옴.
-					else comment.getEpisodeCommentNum(sid, episodes, next_index, getCommentNumCallback);
+					else comment.getEpisodeCommentNum(episodes, next_index, getCommentNumCallback);
 				}
-				comment.getEpisodeCommentNum(sid, episodes, 0, getCommentNumCallback);
+				comment.getEpisodeCommentNum(episodes, 0, getCommentNumCallback);
 			}
 		})
 	})
