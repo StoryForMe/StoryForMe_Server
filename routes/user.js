@@ -178,7 +178,7 @@ router.post('/', (req, res) => {
         }
         function postUserKeywordCallback(next_index) {
           if (next_index == kid_list.length) res.json({ id: results.insertId })
-          else keyword.getUserKeyword(results.insertId, kid_list, next_index, postUserKeywordCallback);
+          else keyword.postUserKeyword(results.insertId, kid_list, next_index, postUserKeywordCallback);
         }
         keyword.getKeywordId(req.body.keywords, 0, getKeywordIdCallback);
       }
