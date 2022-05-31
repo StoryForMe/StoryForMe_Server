@@ -10,7 +10,7 @@ exports.getSeriesKeyword = (sid, callback) => {
 		var sql = "select content from KEYWORD as k join REPRESENT as r on k.id=r.kid where sid=" + sid;
 		conn.query(sql, function(err, rows) {
 			conn.release();
-			if(err) console.log("getSeriesKeyWord err");
+			if(err) console.log(err);
 			else{
 				var keywords = [];
 				for (var row of rows) {
