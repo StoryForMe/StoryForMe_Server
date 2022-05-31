@@ -50,6 +50,8 @@ router.get('/:id/zzimkkong/series', (req, res) => {
       else if(!series) {
         console.log("no exist zzimkkong series.")
       } else {
+        console.log(series_list)
+
         var results = []
         var index = 0
 
