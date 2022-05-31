@@ -62,11 +62,11 @@ router.get('/:id/series', (req, res) => {
           })
           if (index < seriesList.length - 1) {
             index++;
-            series.getSeriesKeyword(seriesList[index]["id"], getSeriesKeywordIterCallback)
+            keyword.getSeriesKeyword(seriesList[index]["id"], getSeriesKeywordIterCallback)
           }
           else res.json({ series_list: results }) 
         }
-        series.getSeriesKeyword(seriesList[0]["id"], getSeriesKeywordIterCallback)
+        keyword.getSeriesKeyword(seriesList[0]["id"], getSeriesKeywordIterCallback)
       }
     })
   })
