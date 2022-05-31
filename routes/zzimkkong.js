@@ -41,7 +41,7 @@ router.post('/series', (req, res) => {
 
 router.delete('/writer/:uid/:wid', (req, res) => {
   app.getConnectionPool((conn) => {
-    var sql = "delete from ZZIMKKONG_USER where uid=" + req.params.uid + ' and wid=' + req.params.wid;
+    var sql = "delete from ZZIMKKONG_WRITER where uid=" + req.params.uid + ' and wid=' + req.params.wid;
     conn.query(sql, function(err, results) {
       conn.release();
       if(err) console.log(err);
