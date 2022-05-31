@@ -79,7 +79,9 @@ router.post('/', (req,res) => {
 			if(err) console.log(err); 
 			else {
 				series.updateEpisodeNum(req.body.sid, 1, (result) => {
-					res.json({ result: result }); 
+					if (result == 1) {
+						res.json({ eid: results.insertId }); 
+					}
 				})
 			}
 		})	
