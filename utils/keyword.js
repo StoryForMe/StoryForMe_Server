@@ -22,13 +22,13 @@ exports.getSeriesKeyword = (sid, callback) => {
 	})
 }
 // sid에 해당하는 시리즈에 kid_list에 있는 kid에 해당하는 키워드를 추가.
-function postSeriesKeyword (sid, kid, callback) {
+function postSeriesKeyword (sid, kid_list, index, callback) {
 	app.getConnectionPool((conn) => {
-		var sql = "insert into REPRESENT values (" + sid + ", " + kid + ")";
+		var sql = "insert into REPRESENT values (" + sid + ", " + kid_list[index] + ")";
 		conn.query(sql, function(err, results) {
 			conn.release();
 			if(err) console.log(err);
-			else callback();
+			else callback(index + 1);
 		})
 	})
 }
@@ -49,17 +49,17 @@ exports.updateSeriesKeyword = (sid, kid_list, callback) => {
 }
 // keyword 목록을 받아 각각의 키워드에 해당하는 kid를 가져옴. 
 // 해당 키워드가 존재하지 않는다면 postKeyword를 호출해 해당 키워드를 추가한 뒤 그 키워드의 kid를 가져옴.
-exports.getKeywordId = (content, callback) => {
+exports.getKeywordId = (keywords, index, callback) => {
 	app.getConnectionPool((conn) => {
-		var sql = "select * from KEYWORD where content='" + content + "'";
+		var sql = "select * from KEYWORD where content='" + keywords[index] + "'";
 		conn.query(sql, function(err, keyword_list) {
 			conn.release();
 			if (err) console.log(err);
 			else{
 				if(keyword_list.length == 0)
-					postKeyword(content, (kid) => { callback(kid); });
+					postKeyword(keywords[index], (kid) => { callback(kid, index + 1); });
 				else
-					callback(keyword_list[0]["id"]);
+					callback(keyword_list[0]["id"], index + 1);
 			}
 		})
 	})
