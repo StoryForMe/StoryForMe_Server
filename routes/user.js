@@ -49,26 +49,24 @@ router.get('/:id/series', (req, res) => {
       if(err) console.log(err);
       else {
         var results = []
-        console.log(seriesList.length)
-        // 비동기 처리 하기
-        function getSeriesKeywordIterCallback(sid, index) {
-          keyword.getSeriesKeyword(seriesList[index]["id"], (keywords) => {
-            results.push({
-              title: seriesList[index]["title"],
-              keywords: keywords,
-              recent_update: seriesList[index]["title"],
-              hits: seriesList[index]["hits"],
-              zzimkkong: seriesList[index]["zzimkkong"],
-              episode_num: seriesList[index]["episode_num"]
-            })
-            if (index < seriesList.length - 1) {
-              index += 1
-              console.log(index)
-            }
-            else res.json({ series_list: results })
-          }) 
+        var index = 0
+
+        function getSeriesKeywordIterCallback(keywords) {
+          results.push({
+            title: seriesList[index]["title"],
+            keywords: keywords,
+            recent_update: seriesList[index]["title"],
+            hits: seriesList[index]["hits"],
+            zzimkkong: seriesList[index]["zzimkkong"],
+            episode_num: seriesList[index]["episode_num"]
+          })
+          if (index < seriesList.length - 1) {
+            index++;
+            series.getSeriesKeyword(seriesList[index]["id"], getSeriesKeywordIterCallback)
+          }
+          else res.json({ series_list: results }) 
         }
-        getSeriesKeywordIterCallback(seriesList[0]["sid"], 0)
+        series.getSeriesKeyword(seriesList[0]["id"], getSeriesKeywordIterCallback)
       }
     })
   })
