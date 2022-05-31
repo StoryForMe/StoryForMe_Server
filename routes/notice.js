@@ -59,13 +59,11 @@ router.post('/', (req,res) => {
 					conn.release();
 					if (err) console.log(err);
 					else {
-						comment.getName(notices[0]["uid"], (name) => {
-							res.json({
-								title: notices[0]["title"],
-								content: notices[0]["content"],
-								hits: notices[0]["hits"],
-								date: notices[0]["date"]
-							})
+						res.json({
+							title: notices[0]["title"],
+							content: notices[0]["content"],
+							hits: notices[0]["hits"],
+							date: notices[0]["date"]
 						})
 					}
 				})
