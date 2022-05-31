@@ -72,7 +72,6 @@ router.post('/', (req,res) => {
 			image: req.body.image,
 			state: req.body.state,
 			chapter: req.body.chapter,
-			hits: 0,
 			date: new Date()
 		}
 		conn.query(sql, values, function(err, results) {
