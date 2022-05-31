@@ -12,14 +12,24 @@ exports.getCharacter = (sid, callback) => {
 	})
 }
 
-// sid에 해당하는 시리즈에 속한 에피소드 개수
-exports.getEpisodeNum = (sid, callback) => {
+exports.updateHits = (sid, callback) => {
 	app.getConnectionPool((conn) => {
-		var sql = "select count(*) from EPISODE where sid=" + sid;
+		var sql = "update SERIES set hits=hits+1, hits_month=hits_month+1, hits_week=hits_week+1 where id=" + sid;
 		conn.query(sql, function(err, results) {
 			conn.release();
-			if(err) console.log(err);
-			else callback(results[0]["count(*)"]); 
+			if (err) console.log(err);
+			else callback(1);
+		})
+	})
+}
+
+exports.updateEpisodeNum = (sid, num, callback) => {
+	app.getConnectionPool((conn) => {
+		var sql = "update SERIES set episode_num=episode_num + (" + num + ") where id=" + sid;
+		conn.query(sql, function(err, results) {
+			conn.release();
+			if (err) console.log(err);
+			else callback(1);
 		})
 	})
 }
