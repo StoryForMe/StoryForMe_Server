@@ -36,7 +36,7 @@ router.get('/:id/login', (req, res) => {
         res.json(result);
       } else {
         var result = {
-          id: user["id"]
+          id: user[0]["id"]
         }
         res.json(result);
       }
