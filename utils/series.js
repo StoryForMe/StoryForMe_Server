@@ -34,6 +34,17 @@ exports.updateEpisodeNum = (sid, num, callback) => {
 	})
 }
 
+exports.updateZzimkkongNum = (sid, callback) => {
+  app.getConnectionPool((conn) => {
+    var sql = "update SERIES SET zzimkkong=zzimkkong+1, zzimkkong_month=zzimkkong_month+1, zzimkkong_week=zzimkkong_week+1 where id=" + sid;
+    conn.query(sql, function(err, results) {
+      conn.release();
+      if (err) console.log(err);
+      else callback(1)
+    })
+  })
+}
+
 // 옵션에 따라 정렬기준을 다르게 함.
 exports.get_series_list_sql = [
 	"select * from SERIES order by recent_update",
