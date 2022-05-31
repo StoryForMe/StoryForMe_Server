@@ -3,7 +3,7 @@ const app = require('../app');
 // 에피소드 목록을 받아, 각각의 에피소드의 comment 개수를 가져옴.
 exports.getEpisodeCommentNum = (episodes, index, callback) => {
 	app.getConnectionPool((conn) => {
-		console.log(index);
+		console.log("index: " + index);
 		console.log(episodes[index]);
 		var sql = "select * from COMMENT where eid=" + episodes[index]["id"];
 		conn.query(sql, function(err, comments) {

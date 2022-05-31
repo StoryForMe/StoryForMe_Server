@@ -23,8 +23,8 @@ exports.getEpisodeList = (sid, callback) => {
 						hits: episode["hits"]
 					}
 					result.push(tmp);
-					console.log(next_index);
-					console.log(episodes.length)
+					console.log("next_index: " + next_index);
+					console.log("episode_len: " + episodes.length)
 					// 마지막 episode면 callback함수 호출
 					if (next_index == episodes.length) callback(result);
 					// 마지막 episode가 아니면 다음 에피소드의 comment 개수를 가져옴.
