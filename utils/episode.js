@@ -21,7 +21,8 @@ exports.getEpisodeList = (sid, callback) => {
 						comment_num: comment_num,
 						date: episodes[index]["date"],
 						image: episodes[index]["image"],
-						hits: episodes[index]["hits"]
+						hits: episodes[index]["hits"],
+						chapter: episodes[index]["chapter"]
 					}
 					result.push(tmp);
 					// 마지막 episode면 callback함수 호출
