@@ -23,6 +23,27 @@ router.get('/:id/character', (req, res) => {
   })
 })
 
+router.get('/:id/login', (req, res) => {
+  app.getConnectionPool((conn) => {
+    var sql = "select * from USER where kakaoid='" + req.params.id;
+    conn.query(sql, function(err, [user]) {
+      conn.release();
+      if(err) console.log("[USER] login " + err);
+      else if(!user) {
+        var result = {
+          id: -1
+        }
+        res.json(result);
+      } else {
+        var result = {
+          id: user["id"]
+        }
+        res.json(result);
+      }
+    })
+  })
+})
+
 router.get('/:id/zzimkkong/writer', (req, res) => {
   app.getConnectionPool((conn) => {
     var sql = "select nickname, profile_image from USER as u join ZZIMKKONG_WRITER as z on u.id=z.wid where uid=" + req.params.id;
@@ -101,27 +122,6 @@ router.get('/:id/series', (req, res) => {
           else res.json({ series_list: results }) 
         }
         keyword.getSeriesKeyword(seriesList[0]["id"], getSeriesKeywordIterCallback)
-      }
-    })
-  })
-})
-
-router.get('/:login/:email', (req, res) => {
-  app.getConnectionPool((conn) => {
-    var sql = "select * from USER where login_method=" + req.params.login + " and email='" + req.params.email +"'";
-    conn.query(sql, function(err, [user]) {
-      conn.release();
-      if(err) console.log("[USER] login " + err);
-      else if(!user) {
-        var result = {
-          id: -1
-        }
-        res.json(result);
-      } else {
-        var result = {
-          id: user["id"]
-        }
-        res.json(result);
       }
     })
   })
