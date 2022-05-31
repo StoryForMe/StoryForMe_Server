@@ -51,4 +51,20 @@ router.delete('/writer/:uid/:wid', (req, res) => {
   })
 })
 
+router.delete('/series/:uid/:sid', (req, res) => {
+  app.getConnectionPool((conn) => {
+    var sql = "delete from ZZIMKKONG_SERIES where uid=" + req.params.uid + ' and sid=' + req.params.sid;
+    conn.query(sql, function(err, results) {
+      conn.release();
+      if(err) console.log(err);
+      else if(results.affectedRows == 0) res.json({ result: 0 });
+      else {
+        series.deleteZzimkkongNum(req.params.sid, (result) => {
+          res.json({ result: result })
+        })
+      }
+    })
+  })
+})
+
 module.exports = router;
