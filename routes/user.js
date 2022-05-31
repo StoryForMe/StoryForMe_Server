@@ -56,14 +56,15 @@ router.get('/:id/zzimkkong/series', (req, res) => {
         console.log(sids)
 
         function getSeriesKeyWordCallback(keywords) {
-          series.getSeries(sids[index]["sid"], (series) => {
+          series.getSeries(sids[index]["sid"], (series_info) => {
+            console.log(series_info)
             results.push({
-              title: series["title"],
+              title: series_info["title"],
               keywords: keywords,
-              recent_update: series["recent_update"],
-              hits: series["hits"],
-              zzimkkong: series["zzimkkong"],
-              episode_num: series["episode_num"]
+              recent_update: series_info["recent_update"],
+              hits: series_info["hits"],
+              zzimkkong: series_info["zzimkkong"],
+              episode_num: series_info["episode_num"]
             })
             if (index < sids.length - 1) {
               index++;
