@@ -172,13 +172,13 @@ router.post('/', (req, res) => {
         function getKeywordIdCallback(kid, next_index) {
           kid_list.push(kid)
           if (next_index == req.body.keywords.length)
-            keyword.postSeriesKeyword(results.insertId, kid_list, 0, postSeriesKeywordCallback);
+            keyword.postUserKeyword(results.insertId, kid_list, 0, postUserKeywordCallback);
           else
             keyword.getKeywordId(req.body.keywords, next_index, getKeywordIdCallback);
         }
-        function postSeriesKeywordCallback(next_index) {
+        function postUserKeywordCallback(next_index) {
           if (next_index == kid_list.length) res.json({ id: results.insertId })
-          else keyword.getSeriesKeyword(results.insertId, kid_list, next_index, postSeriesKeywordCallback);
+          else keyword.getUserKeyword(results.insertId, kid_list, next_index, postUserKeywordCallback);
         }
         keyword.getKeywordId(req.body.keywords, 0, getKeywordIdCallback);
       }
