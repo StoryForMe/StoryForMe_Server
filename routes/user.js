@@ -50,8 +50,6 @@ router.get('/:id/zzimkkong/series', (req, res) => {
       else if(!series) {
         console.log("no exist zzimkkong series.")
       } else {
-        console.log(series_list)
-
         var results = []
         var index = 0
 
@@ -69,8 +67,8 @@ router.get('/:id/zzimkkong/series', (req, res) => {
             keyword.getSeriesKeyword(series_list[index]["id"], getSeriesKeyWordCallback)
           }
           else res.json({ series_list: results })
-          keyword.getSeriesKeyword(series_list[0]["id"], getSeriesKeyWordCallback)
         }
+        keyword.getSeriesKeyword(series_list[0]["id"], getSeriesKeyWordCallback)
       }
     })
   })
