@@ -64,6 +64,7 @@ router.get('/:id/zzimkkong/series', (req, res) => {
               episode_num: series["episode_num"]
             })
             if (index < sids.length - 1) {
+              console.log(index)
               index++;
               keyword.getSeriesKeyword(sids[index], getSeriesKeyWordCallback)
             }
