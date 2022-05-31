@@ -5,7 +5,7 @@ const User = require('./user');
 const Series = require('./series');
 const Episode = require('./episode');
 const Comment = require('./comment');
-const Zzimkkong = require('./comment');
+const Zzimkkong = require('./zzimkkong');
 
 router.use('/user', User);
 router.use('/series', Series);
