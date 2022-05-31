@@ -22,9 +22,9 @@ exports.getSeriesKeyword = (sid, callback) => {
 	})
 }
 // sid에 해당하는 시리즈에 kid_list에 있는 kid에 해당하는 키워드를 추가.
-function postSeriesKeyword (sid, kid_list, index, callback) {
+function postSeriesKeyword (sid, kid, callback) {
 	app.getConnectionPool((conn) => {
-		var sql = "insert into REPRESENT values (" + sid + ", " + kid_list[index] + ")";
+		var sql = "insert into REPRESENT values (" + sid + ", " + kid + ")";
 		conn.query(sql, function(err, results) {
 			conn.release();
 			if(err) console.log(err);
