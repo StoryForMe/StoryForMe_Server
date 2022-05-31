@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 const app = require('../app');
 const keyword = require('../utils/keyword');
+const series = require('../utils/series');
 
 router.get('/:id/character', (req, res) => {
   app.getConnectionPool((conn) => {
@@ -35,6 +36,37 @@ router.get('/:id/zzimkkong/writer', (req, res) => {
           writers: writers
         }
         res.json(result);
+      }
+    })
+  })
+})
+
+router.get('/:id/series', (req, res) => {
+  app.getConnectionPool((conn) => {
+    var sql = "select * from SERIES where uid=" + req.params.id;
+    conn.query(sql, function(err, seriesList) {
+      conn.release();
+      if(err) console.log(err);
+      else {
+        var results = []
+        var index = 0
+
+        function getSeriesKeywordIterCallback(keywords) {
+          results.push({
+            title: seriesList[index]["title"],
+            keywords: keywords,
+            recent_update: seriesList[index]["title"],
+            hits: seriesList[index]["hits"],
+            zzimkkong: seriesList[index]["zzimkkong"],
+            episode_num: seriesList[index]["episode_num"]
+          })
+          if (index < seriesList.length - 1) {
+            index++;
+            keyword.getSeriesKeyword(seriesList[index]["id"], getSeriesKeywordIterCallback)
+          }
+          else res.json({ series_list: results }) 
+        }
+        keyword.getSeriesKeyword(seriesList[0]["id"], getSeriesKeywordIterCallback)
       }
     })
   })
