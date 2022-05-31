@@ -78,7 +78,7 @@ router.post('/', (req,res) => {
 			conn.release();
 			if(err) console.log(err); 
 			else {
-				series.updateEpisodeNum(req.params.sid, 1, (result) => {
+				series.updateEpisodeNum(req.body.sid, 1, (result) => {
 					res.json({ result: result }); 
 				})
 			}
@@ -122,9 +122,9 @@ router.put('/state', (req,res) => {
 	})
 })
 
-router.delete('/:id', (req, res) => {
+router.delete('/:eid/:sid', (req, res) => {
 	app.getConnectionPool((conn) => {
-		var sql = "delete from EPISODE where id=" + req.params.id;
+		var sql = "delete from EPISODE where id=" + req.params.eid;
 		conn.query(sql, function(err, results) {
 			conn.release();
 			if(err) console.log(err);
