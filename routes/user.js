@@ -69,7 +69,7 @@ router.get('/:id/zzimkkong/series', (req, res) => {
             keyword.getSeriesKeyword(series_list[index]["id"], getSeriesKeyWordCallback)
           }
           else res.json({ series_list: results })
-          keyword.getSeriesKeyword(sids[0]["id"], getSeriesKeyWordCallback)
+          keyword.getSeriesKeyword(series_list[0]["id"], getSeriesKeyWordCallback)
         }
       }
     })
