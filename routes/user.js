@@ -136,6 +136,7 @@ router.get('/:id', (req, res) => {
       if(err) console.log(err);
       else if(!user) {
         console.log("no exist user");
+        res.json({ id: -1 })
       } else {
         keyword.getUserKeyword(req.params.id, (keywords) => {
           var result = {
@@ -174,7 +175,13 @@ router.post('/', (req, res) => {
           })
         }
       }
-      else if (req.body.keywords.length == 0) res.json({ id: results.insertId })
+      else if (req.body.keywords.length == 0) {
+        keyword.updateUserKeyword(req.body.id, null, () => { 
+          user.getPostedUser(results.insertId, (user) => {
+            res.json(user);
+          })
+        });
+      }
       else {
         var kid_list = []
         function getKeywordIdCallback(kid, next_index) {
@@ -185,7 +192,11 @@ router.post('/', (req, res) => {
             keyword.getKeywordId(req.body.keywords, next_index, getKeywordIdCallback);
         }
         function postUserKeywordCallback(next_index) {
-          if (next_index == kid_list.length) res.json({ id: results.insertId })
+          if (next_index == kid_list.length){
+            user.getPostedUser(results.insertId, (user) => {
+              res.json(user);
+            })
+          }
           else keyword.postUserKeyword(results.insertId, kid_list, next_index, postUserKeywordCallback);
         }
         keyword.getKeywordId(req.body.keywords, 0, getKeywordIdCallback);
@@ -209,8 +220,13 @@ router.patch('/', (req, res) => {
       conn.release();
       if(err) console.log(err);
       else if (results.affectedRows == 0) res.json({ result: 0 });
-      else if (req.body.keywords.length == 0)
-        keyword.updateUserKeyword(req.body.id, null, () => { res.json({ result: 1 }) });
+      else if (req.body.keywords.length == 0) {
+        keyword.updateUserKeyword(req.body.id, null, () => { 
+          user.getPatchedUser(req.body.id, (user) => {
+            res.json(user);
+          })
+        });
+      }
       else {
         var kid_list = []
         function getKeywordIdCallback(kid, next_index) {
@@ -222,7 +238,7 @@ router.patch('/', (req, res) => {
         }
         function postUserKeywordCallback(next_index) {
           if (next_index == kid_list.length) {
-            user.getUser(req.body.id, (user) => {
+            user.getPatchedUser(req.body.id, (user) => {
               res.json(user);
             })
           }
