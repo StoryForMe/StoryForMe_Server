@@ -109,6 +109,7 @@ router.get('/:id/series', (req, res) => {
 
         function getSeriesKeywordIterCallback(keywords) {
           results.push({
+            sid: seriesList[index]["id"],
             title: seriesList[index]["title"],
             keywords: keywords,
             recent_update: seriesList[index]["recent_update"],
