@@ -3,6 +3,7 @@ var router = express.Router();
 const app = require('../app');
 const keyword = require('../utils/keyword');
 const series = require('../utils/series');
+const user = require('../utils/user');
 
 router.get('/:id/character', (req, res) => {
   app.getConnectionPool((conn) => {
@@ -220,7 +221,11 @@ router.patch('/', (req, res) => {
             keyword.getKeywordId(req.body.keywords, next_index, getKeywordIdCallback);
         }
         function postUserKeywordCallback(next_index) {
-          if (next_index == kid_list.length) res.json({ result: 1 })
+          if (next_index == kid_list.length) {
+            user.getUser(req.params.id, (user) => {
+              res.json(user);
+            })
+          }
           else keyword.postUserKeyword(req.body.id, kid_list, next_index, postUserKeywordCallback);
         }
         keyword.getKeywordId(req.body.keywords, 0, getKeywordIdCallback);
