@@ -136,6 +136,7 @@ router.get('/:id', (req, res) => {
       if(err) console.log(err);
       else if(!user) {
         console.log("no exist user");
+        res.json({ id: -1 })
       } else {
         keyword.getUserKeyword(req.params.id, (keywords) => {
           var result = {
