@@ -222,7 +222,7 @@ router.patch('/', (req, res) => {
         }
         function postUserKeywordCallback(next_index) {
           if (next_index == kid_list.length) {
-            user.getUser(req.params.id, (user) => {
+            user.getUser(req.body.id, (user) => {
               res.json(user);
             })
           }
