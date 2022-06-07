@@ -81,7 +81,7 @@ router.post('/', (req, res) => {
 			conn.release();
 			if(err) console.log(err);
 			else if (req.body.keywords.length == 0) 
-				series.getSeriesData(req.body.id, (series_data) => res.json(results.insertId));
+				series.getSeriesData(results.insertId, (series_data) => res.json(series_data));
 			else {
 				var kid_list = []
 				function getKeywordIdCallback(kid, next_index) {
@@ -93,7 +93,7 @@ router.post('/', (req, res) => {
 				}
 				function postSeriesKeywordCallback(next_index) {
 					if (next_index == kid_list.length) 
-						series.getSeriesData(req.body.id, (series_data) => res.json(results.insertId)); 
+						series.getSeriesData(results.insertId, (series_data) => res.json(series_data)); 
 					else keyword.postSeriesKeyword(results.insertId, kid_list, next_index, postSeriesKeywordCallback);
 				}
 				keyword.getKeywordId(req.body.keywords, 0, getKeywordIdCallback);
