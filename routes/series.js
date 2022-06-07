@@ -104,19 +104,15 @@ router.patch('/', (req, res) => {
 	app.getConnectionPool((conn) => {
 		var sql = "update SERIES SET ? where id=" + req.body.id;
 		var values = {};
-		console.log(req.body);
-		for(var key in req.body) {
-			if (key != "id" && key != "keywords") {
-				values[key] = req.body[key]
-			}
+		if (req.body.id == undefined) {
+			res.json({ 
+				error: "E005",
+				error_message: "수정할 시리즈의 id 정보가 누락됨."
+			})
 		}
-		// var values = {
-		// 	title: req.body.title,
-		// 	introduction: req.body.introduction,
-		// 	image: req.body.image,
-		// 	fname: req.body.fname,
-		// 	lname: req.body.lname
-		// }
+		for(var key in req.body) {
+			if (key != "id" && key != "keywords") values[key] = req.body[key]
+		}
 		conn.query(sql, values, function(err, results) {
 			conn.release();
 			if(err) console.log(err);
