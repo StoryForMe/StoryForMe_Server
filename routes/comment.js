@@ -42,7 +42,7 @@ router.patch('/', (req, res) => {
 					error_message: "해당 댓글이 존재하지 않음."
 				})
 			}
-			else comment.getCommentData(results.insertId, (comment_data) => res.json(comment_data));
+			else comment.getCommentData(req.body.id, (comment_data) => res.json(comment_data));
 		})
 	})
 })
