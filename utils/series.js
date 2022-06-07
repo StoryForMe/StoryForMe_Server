@@ -1,4 +1,7 @@
 const app = require('../app');
+const user = require('../utils/user');
+const keyword = require('../utils/keyword');
+const episode = require('../utils/episode');
 
 // sid에 해당하는 시리즈의 주인공이름
 exports.getCharacter = (sid, callback) => {
@@ -63,3 +66,43 @@ exports.get_series_list_sql = [
 	"select *, zzimkkong_month + hits_month as month from SERIES order by month desc",
 	"select *, zzimkkong + hits as total from SERIES order by total desc"
 ]
+
+exports.getSeriesData = (sid, callback) => {
+	app.getConnectionPool((conn) => {
+		var sql = "select * from SERIES where id=" + sid;
+		conn.query(sql, function(err, series_list) {
+			conn.release();
+			if(err) console.log(err);
+			else if(series_list.length == 0) {
+				console.log("no exist series"); 
+				return({ 
+					error: "E001",
+					error_message: "존재하지 않는 시리즈입니다."
+				})
+			}
+			else {
+				user.getNickname(series_list[0]["uid"], (nickname) => {
+					keyword.getSeriesKeyword(sid, (keywords) => {
+						episode.getEpisodeList(sid, (episodes) => {
+							var result = {
+								title: series_list[0]["title"],
+								image: series_list[0]["image"],
+								introduction: series_list[0]["introduction"],
+								writer: nickname,
+								uid: series_list[0]["uid"],
+								zzimkkong: series_list[0]["zzimkkong"],
+								coin_num: series_list[0]["coin_num"],
+								coin_full_num: series_list[0]["coin_full_num"],
+								ad_days: series_list[0]["ad_days"],
+								keywords: keywords,
+								is_end: series_list[0]["is_end"],
+								episodes: episodes
+							}
+							callback(result);
+						});
+					});
+				});
+			}
+	   })
+	})
+}
