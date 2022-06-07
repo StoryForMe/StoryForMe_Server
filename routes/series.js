@@ -106,7 +106,7 @@ router.patch('/', (req, res) => {
 		var values = {};
 		console.log(req.body);
 		for(var key in req.body) {
-			if (key != "id") {
+			if (key != "id" && key != "keywords") {
 				values[key] = req.body[key]
 			}
 		}
