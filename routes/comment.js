@@ -35,7 +35,12 @@ router.patch('/', (req, res) => {
 		conn.query(sql, values, function(err, results) {
 			conn.release();
 			if (err) console.log(err);
-			else if (results.affectedRows == 0) res.json({ result: 0 }); 
+			else if (results.affectedRows == 0) {
+				res.json({ 
+					error: "E001",
+					error_message: "해당 댓글이 존재하지 않음."
+				})
+			}
 			else comment.getCommentData(results.insertId, (comment_data) => res.json(comment_data));
 		})
 	})
