@@ -82,3 +82,14 @@ exports.getIs_zzimkkong = (uid, sid, callback) => {
 		})
 	})
 }
+
+exports.getUserData = (uid, callback) => {
+	app.getConnectionPool((conn) => {
+		var sql = "select * from USER where id=" + uid;
+		conn.query(sql, function(err, users) {
+			conn.release();
+			if (err) console.log(err);
+			else callback(users[0]);
+		})
+	})
+}

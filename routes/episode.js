@@ -3,40 +3,15 @@ var router = express.Router();
 const app = require('../app');
 const series = require('../utils/series');
 const comment = require('../utils/comment');
+const episode = require('../utils/episode');
 
-router.get('/:id', (req, res) => {
-	app.getConnectionPool((conn) => {
-		var sql = "select * from EPISODE where id=" + req.params.id;
-		conn.query(sql, function(err, episode) {
-			conn.release();
-			if(err) console.log(err);
-			else if(episode.length == 0) {console.log("no exist episode"); res.json({validation: 0});}
-			else {	
-				series.updateHits(episode[0]["sid"], (result) => {
-					if (result == 1) {
-						series.getCharacter(episode[0]["sid"], (fname, lname) => {
-							res.json({
-								uid: episode[0]["uid"],
-								title: episode[0]["title"],
-								music: episode[0]["music"],
-								image: episode[0]["image"],
-								content: episode[0]["content"],
-								chapter: episode[0]["chapter"],
-								state: episode[0]["state"],
-								fname: fname,
-								lname: lname
-							});
-						})
-					}
-				})
-			}
-	   })
-	})
+router.get('/:eid/:uid', (req, res) => {
+	episode.getEpisodeData(req.params.eid, req.params.uid, (episode_data) => res.json(episode_data));
 })
 
-router.get('/:id/comment', (req, res) => {
+router.get('/:eid/comment', (req, res) => {
 	app.getConnectionPool((conn) => {
-		var sql = "select * from COMMENT where eid=" + req.params.id;
+		var sql = "select * from COMMENT where eid=" + req.params.eid;
 		conn.query(sql, function(err, comments) {
 			conn.release();
 			if(err) console.log(err);
@@ -86,61 +61,60 @@ router.post('/', (req,res) => {
 			  }
 			else {
 				series.updateEpisodeNum(req.body.sid, 1, (result) => {
-					if (result == 1) {
-						res.json({ eid: results.insertId }); 
-					}
+					if (result == 1) 
+						episode.getEpisodeData(results.insertId, -1, (episode_data) => res.json(episode_data)); 
 				})
 			}
 		})	
 	})
 })
 
-router.put('/', (req,res) => {
+router.patch('/', (req,res) => {
+	if (req.body.id == undefined) {
+		res.json({ 
+			error: "E005",
+			error_message: "수정할 에피소드의 id 정보가 누락됨."
+		})
+	}
 	app.getConnectionPool((conn) => {
 		var sql = "update EPISODE SET ? where id=" + req.body.id;
-		var values = {
-			title: req.body.title,
-			music: req.body.music,
-			content: req.body.content,
-			image: req.body.image,
-			state: req.body.state,
-			date: new Date()
+		var values = {};
+		for(var key in req.body) {
+			if (key != "id") values[key] = req.body[key]
 		}
 		conn.query(sql, values, function(err, results) {
 			conn.release();
 			if(err) console.log(err);
 			else { 
-				if (results.affectedRows == 0) res.json({ result: 0 }); 
-				else res.json({ result: 1 }); 
+				if (results.affectedRows == 0) {
+					res.json({ 
+						error: "E001",
+						error_message: "해당 에피소드가 존재하지 않음."
+					})
+				} 
+				else episode.getEpisodeData(req.body.id, -1, (episode_data) => res.json(episode_data)); 
 			}
 		})	
 		
 	})
 })
 
-router.put('/state', (req,res) => {
+router.delete('/:eid', (req, res) => {
 	app.getConnectionPool((conn) => {
-		var sql = "update EPISODE SET state=" + req.body.state + " where id=" + req.body.id;
-		conn.query(sql, function(err, results) {
-			conn.release();
+		var sql = "select * from EPISODE where id =" + req.params.eid;
+		conn.query(sql, function(err, episode) {
 			if(err) console.log(err);
-			else if (results.affectedRows == 0) res.json({ result: 0 }); 
-			else res.json({ result: 1 }); 
-		})	
-		
-	})
-})
-
-router.delete('/:eid/:sid', (req, res) => {
-	app.getConnectionPool((conn) => {
-		var sql = "delete from EPISODE where id=" + req.params.eid;
-		conn.query(sql, function(err, results) {
-			conn.release();
-			if(err) console.log(err);
-			else if (results.affectedRows == 0) res.json({ result: 0 }); 
 			else {
-				series.updateEpisodeNum(req.params.sid, -1, (result) => {
-					res.json({ result: result }); 
+				sql = "delete from EPISODE where id=" + req.params.eid;
+				conn.query(sql, function(err, results) {
+					conn.release();
+					if(err) console.log(err);
+					else if (results.affectedRows == 0) res.json({ result: 0 }); 
+					else {
+						series.updateEpisodeNum(episode[0]["sid"], -1, (result) => {
+							res.json({ result: result }); 
+						})
+					}
 				})
 			}
 		})

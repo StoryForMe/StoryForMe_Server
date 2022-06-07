@@ -1,7 +1,7 @@
 const app = require('../app');
-const user = require('../utils/user');
-const keyword = require('../utils/keyword');
-const episode = require('../utils/episode');
+const user = require('./user');
+const keyword = require('./keyword');
+const episode = require('./episode');
 
 // sid에 해당하는 시리즈의 주인공이름
 exports.getCharacter = (sid, callback) => {
@@ -90,7 +90,7 @@ exports.getSeriesData = (sid, callback) => {
 								image: series_list[0]["image"],
 								introduction: series_list[0]["introduction"],
 								writer: nickname,
-								uid: series_list[0]["uid"],
+								wid: series_list[0]["uid"],
 								zzimkkong: series_list[0]["zzimkkong"],
 								coin_num: series_list[0]["coin_num"],
 								coin_full_num: series_list[0]["coin_full_num"],

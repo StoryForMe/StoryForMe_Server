@@ -50,8 +50,8 @@ router.get('/list/:option/:uid', (req, res) => {
 	})
 })
 
-router.get('/:id', (req, res) => {
-	series.getSeriesData(req.params.id, (series_data) => res.json(series_data));
+router.get('/:sid', (req, res) => {
+	series.getSeriesData(req.params.sid, (series_data) => res.json(series_data));
 })
 
 router.post('/', (req, res) => {
@@ -103,22 +103,27 @@ router.post('/', (req, res) => {
 })
 
 router.patch('/', (req, res) => {
+	if (req.body.id == undefined) {
+		res.json({ 
+			error: "E005",
+			error_message: "수정할 시리즈의 id 정보가 누락됨."
+		})
+	}
 	app.getConnectionPool((conn) => {
 		var sql = "update SERIES SET ? where id=" + req.body.id;
 		var values = {};
-		if (req.body.id == undefined) {
-			res.json({ 
-				error: "E005",
-				error_message: "수정할 시리즈의 id 정보가 누락됨."
-			})
-		}
 		for(var key in req.body) {
 			if (key != "id" && key != "keywords") values[key] = req.body[key]
 		}
 		conn.query(sql, values, function(err, results) {
 			conn.release();
 			if(err) console.log(err);
-			else if (results.affectedRows == 0) res.json({ result: 0 }); 
+			else if (results.affectedRows == 0) {
+				res.json({ 
+					error: "E001",
+					error_message: "해당 시리즈가 존재하지 않음."
+				})
+			}
 			else if (req.body.keywords == null || req.body.keywords.length == 0)
 				keyword.updateSeriesKeyword(req.body.id, null, () => { 
 					series.getSeriesData(req.body.id, (series_data) => res.json(series_data)); 
@@ -134,8 +139,8 @@ router.patch('/', (req, res) => {
 				}
 				function postSeriesKeywordCallback(next_index) {
 					if (next_index == kid_list.length) 
-						series.getSeriesData(req.body.id, (series_data) => res.json(series_data));
-					else keyword.postSeriesKeyword(req.body.id, kid_list, next_index, postSeriesKeywordCallback);
+						series.getSeriesData(req.body.sid, (series_data) => res.json(series_data));
+					else keyword.postSeriesKeyword(req.body.sid, kid_list, next_index, postSeriesKeywordCallback);
 				}
 				keyword.getKeywordId(req.body.keywords, 0, getKeywordIdCallback);
 			}
@@ -143,9 +148,9 @@ router.patch('/', (req, res) => {
 	})
 })
 
-router.delete('/:id', (req, res) => {
+router.delete('/:sid', (req, res) => {
 	app.getConnectionPool((conn) => {
-		var sql = "delete from SERIES where id=" + req.params.id;
+		var sql = "delete from SERIES where id=" + req.params.sid;
 		conn.query(sql, function(err, results) {
 			conn.release();
 			if(err) console.log(err);
