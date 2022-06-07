@@ -1,4 +1,7 @@
 const app = require('../app');
+const user = require('../utils/user');
+const keyword = require('../utils/keyword');
+const episode = require('../utils/episode');
 
 // sid에 해당하는 시리즈의 주인공이름
 exports.getCharacter = (sid, callback) => {
