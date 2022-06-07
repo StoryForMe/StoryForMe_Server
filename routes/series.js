@@ -104,6 +104,7 @@ router.patch('/', (req, res) => {
 	app.getConnectionPool((conn) => {
 		var sql = "update SERIES SET ? where id=" + req.body.id;
 		var values = {};
+		console.log(req.body);
 		req.body.forEach(element => {
 			if (element.key != id)
 				values[element.key] = element.value;
@@ -119,7 +120,7 @@ router.patch('/', (req, res) => {
 			conn.release();
 			if(err) console.log(err);
 			else if (results.affectedRows == 0) res.json({ result: 0 }); 
-			else if (req.body.keywords.length == 0)
+			else if (req.body.keywords == null || req.body.keywords.length == 0)
 				keyword.updateSeriesKeyword(req.body.id, null, () => { res.json(series.getSeriesData(results.insertId)); })
 			else {
 				var kid_list = []
