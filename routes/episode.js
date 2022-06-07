@@ -103,7 +103,6 @@ router.delete('/:eid', (req, res) => {
 	app.getConnectionPool((conn) => {
 		var sql = "select * from EPISODE where id =" + req.params.eid;
 		conn.query(sql, function(err, episode) {
-			conn.release();
 			if(err) console.log(err);
 			else {
 				sql = "delete from EPISODE where id=" + req.params.eid;
