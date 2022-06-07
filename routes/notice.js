@@ -44,7 +44,15 @@ router.get('/', (req, res) => {
 })
 
 router.get('/:nid', (req,res) => {
-	getNoticeData(req.params.nid, (notice) => res.json(notice));
+	app.getConnectionPool((conn) => {
+		var sql = "update NOTICE SET hits = hits + 1 where id=" + req.params.nid;
+		conn.query(sql, function(err, notices) {
+			conn.release();
+			if(err) console.log(err);
+			else{
+				getNoticeData(req.params.nid, (notice) => res.json(notice));
+			}
+	})
 })
 
 router.post('/', (req,res) => {
