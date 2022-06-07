@@ -107,7 +107,6 @@ router.delete('/:eid', (req, res) => {
 			else {
 				sql = "delete from EPISODE where id=" + req.params.eid;
 				conn.query(sql, function(err, results) {
-					console.log(results)
 					conn.release();
 					if(err) console.log(err);
 					else if (results.affectedRows == 0) res.json({ result: 0 }); 
