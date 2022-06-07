@@ -11,7 +11,13 @@ router.get('/list/:option/:uid', (req, res) => {
 		conn.query(series.get_series_list_sql[req.params.option], function(err, series_list) {
 			conn.release();
 			if(err) console.log("err");
-			else if(!series_list) {console.log("no exist series"); res.json({validation: 0});}
+			else if(!series_list) {
+				console.log("no exist series"); 
+				res.json({ 
+					error: "E001",
+					error_message: "시리즈가 존재하지 않습니다."
+				})
+			}
 			else {
 				results = [];
 				// 각각의 시리즈에 대해 필요한 정보들을 가져와서 results에 추가해줌.
@@ -45,37 +51,7 @@ router.get('/list/:option/:uid', (req, res) => {
 })
 
 router.get('/:id', (req, res) => {
-	app.getConnectionPool((conn) => {
-		var sql = "select * from SERIES where id=" + req.params.id;
-		conn.query(sql, function(err, [series]) {
-			conn.release();
-			if(err) console.log("err");
-			else if(!series) {console.log("no exist series"); res.json({validation: 0});}
-			else {
-				user.getNickname(series["uid"], (nickname) => {
-					keyword.getSeriesKeyword(req.params.id, (keywords) => {
-						episode.getEpisodeList(req.params.id, (episodes) => {
-							var result = {
-								title: series["title"],
-								image: series["image"],
-								introduction: series["introduction"],
-								writer: nickname,
-								uid: series["uid"],
-								zzimkkong: series["zzimkkong"],
-								coin_num: series["coin_num"],
-								coin_full_num: series["coin_full_num"],
-								ad_days: series["ad_days"],
-								keywords: keywords,
-								is_end: series["is_end"],
-								episodes: episodes
-							}
-							res.json(result);
-						});
-					});
-				});
-			}
-	   })
-	})
+	series.getSeriesData(req.params.id);
 })
 
 router.post('/', (req, res) => {
@@ -124,22 +100,27 @@ router.post('/', (req, res) => {
 	})
 })
 
-router.put('/', (req, res) => {
+router.patch('/', (req, res) => {
 	app.getConnectionPool((conn) => {
 		var sql = "update SERIES SET ? where id=" + req.body.id;
-		var values = {
-			title: req.body.title,
-			introduction: req.body.introduction,
-			image: req.body.image,
-			fname: req.body.fname,
-			lname: req.body.lname
-		}
+		var values = {};
+		req.body.forEach(element => {
+			if (element.key != id)
+				values[element.key] = element.value;
+		});
+		// var values = {
+		// 	title: req.body.title,
+		// 	introduction: req.body.introduction,
+		// 	image: req.body.image,
+		// 	fname: req.body.fname,
+		// 	lname: req.body.lname
+		// }
 		conn.query(sql, values, function(err, results) {
 			conn.release();
 			if(err) console.log(err);
 			else if (results.affectedRows == 0) res.json({ result: 0 }); 
 			else if (req.body.keywords.length == 0)
-				keyword.updateSeriesKeyword(req.body.id, null, () => { res.json({ result: 1 }) })
+				keyword.updateSeriesKeyword(req.body.id, null, () => { res.json(series.getSeriesData(results.insertId)); })
 			else {
 				var kid_list = []
 				function getKeywordIdCallback(kid, next_index) {
@@ -150,7 +131,7 @@ router.put('/', (req, res) => {
 						keyword.getKeywordId(req.body.keywords, next_index, getKeywordIdCallback);
 				}
 				function postSeriesKeywordCallback(next_index) {
-					if (next_index == kid_list.length) res.json({ result: 1 })
+					if (next_index == kid_list.length) res.json(series.getSeriesData(results.insertId));
 					else keyword.postSeriesKeyword(req.body.id, kid_list, next_index, postSeriesKeywordCallback);
 				}
 				keyword.getKeywordId(req.body.keywords, 0, getKeywordIdCallback);

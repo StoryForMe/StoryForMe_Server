@@ -63,3 +63,43 @@ exports.get_series_list_sql = [
 	"select *, zzimkkong_month + hits_month as month from SERIES order by month desc",
 	"select *, zzimkkong + hits as total from SERIES order by total desc"
 ]
+
+exports.getSeriesData = (sid) => {
+	app.getConnectionPool((conn) => {
+		var sql = "select * from SERIES where id=" + sid;
+		conn.query(sql, function(err, series_list) {
+			conn.release();
+			if(err) console.log(err);
+			else if(series_list.length == 0) {
+				console.log("no exist series"); 
+				res.json({ 
+					error: "E001",
+					error_message: "존재하지 않는 시리즈입니다."
+				})
+			}
+			else {
+				user.getNickname(series_list["uid"], (nickname) => {
+					keyword.getSeriesKeyword(req.params.id, (keywords) => {
+						episode.getEpisodeList(req.params.id, (episodes) => {
+							var result = {
+								title: series_list["title"],
+								image: series_list["image"],
+								introduction: series_list["introduction"],
+								writer: nickname,
+								uid: series_list["uid"],
+								zzimkkong: series_list["zzimkkong"],
+								coin_num: series_list["coin_num"],
+								coin_full_num: series_list["coin_full_num"],
+								ad_days: series_list["ad_days"],
+								keywords: keywords,
+								is_end: series_list["is_end"],
+								episodes: episodes
+							}
+							return (result);
+						});
+					});
+				});
+			}
+	   })
+	})
+}
