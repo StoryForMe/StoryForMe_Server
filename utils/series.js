@@ -72,7 +72,7 @@ exports.getSeriesData = (sid) => {
 			if(err) console.log(err);
 			else if(series_list.length == 0) {
 				console.log("no exist series"); 
-				res.json({ 
+				return({ 
 					error: "E001",
 					error_message: "존재하지 않는 시리즈입니다."
 				})
