@@ -3,6 +3,7 @@ const app = require('../app');
 const comment = require('./comment');
 const { updateSeriesKeyword } = require('./keyword');
 const user = require('./user')
+const series = require('./series');
 
 // sid에 해당하는 시리즈의 에피소드 정보 목록을 가져옴.
 exports.getEpisodeList = (sid, callback) => {
