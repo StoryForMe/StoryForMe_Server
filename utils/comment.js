@@ -24,13 +24,36 @@ exports.getNameIter = (comments, index, callback) => {
 	})
 }
 
-exports.getName = (uid, callback) => {
+function getName(uid, callback) {
 	app.getConnectionPool((conn) => {
 		var sql = "select * from USER where id=" + uid;
 		conn.query(sql, function(err, users) {
 			conn.release();
 			if (err) console.log(err);
 			else callback(users[0]["nickname"]);
+		})
+	})
+}
+exports.getName = getName;
+
+exports.getCommentData = (cid, callback) => {
+	app.getConnectionPool((conn) => {
+		var sql = "select * from COMMENT where id=" + cid;
+		conn.query(sql, function(err, comments) {
+			conn.release();
+			if (err) console.log(err);
+			else {
+				getName(comments[0]["uid"], (name) => {
+					callback({
+						cid: comments[0]["id"],
+						uid: comments[0]["uid"],
+						cid: comments[0]["id"],
+						name: name,
+						content: comments[0]["content"],
+						date: comments[0]["date"]
+					})
+				})
+			}
 		})
 	})
 }
