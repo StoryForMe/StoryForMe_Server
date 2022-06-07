@@ -34,3 +34,23 @@ exports.getName = (uid, callback) => {
 		})
 	})
 }
+
+exports.getCommentData = (cid, callback) => {
+	var sql = "select * from COMMENT where id=" + cid;
+	conn.query(sql, function(err, comments) {
+		conn.release();
+		if (err) console.log(err);
+		else {
+			comment.getName(comments[0]["uid"], (name) => {
+				callback({
+					cid: comments[0]["id"],
+					uid: comments[0]["uid"],
+					cid: comments[0]["id"],
+					name: name,
+					content: comments[0]["content"],
+					date: comments[0]["date"]
+				})
+			})
+		}
+	})
+}
