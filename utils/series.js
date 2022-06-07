@@ -81,21 +81,21 @@ exports.getSeriesData = (sid) => {
 				})
 			}
 			else {
-				user.getNickname(series_list["uid"], (nickname) => {
-					keyword.getSeriesKeyword(req.params.id, (keywords) => {
-						episode.getEpisodeList(req.params.id, (episodes) => {
+				user.getNickname(series_list[0]["uid"], (nickname) => {
+					keyword.getSeriesKeyword(sid, (keywords) => {
+						episode.getEpisodeList(sid, (episodes) => {
 							var result = {
-								title: series_list["title"],
-								image: series_list["image"],
-								introduction: series_list["introduction"],
+								title: series_list[0]["title"],
+								image: series_list[0]["image"],
+								introduction: series_list[0]["introduction"],
 								writer: nickname,
-								uid: series_list["uid"],
-								zzimkkong: series_list["zzimkkong"],
-								coin_num: series_list["coin_num"],
-								coin_full_num: series_list["coin_full_num"],
-								ad_days: series_list["ad_days"],
+								uid: series_list[0]["uid"],
+								zzimkkong: series_list[0]["zzimkkong"],
+								coin_num: series_list[0]["coin_num"],
+								coin_full_num: series_list[0]["coin_full_num"],
+								ad_days: series_list[0]["ad_days"],
 								keywords: keywords,
-								is_end: series_list["is_end"],
+								is_end: series_list[0]["is_end"],
 								episodes: episodes
 							}
 							return (result);
