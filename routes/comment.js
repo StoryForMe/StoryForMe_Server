@@ -13,6 +13,7 @@ router.post('/', (req,res) => {
 			date: new Date()
 		}
 		conn.query(sql, values, function(err, results) {
+			conn.release();
 			if(err) console.log(err); 
 			else comment.getCommentData(results.insertId, (comment_data) => res.json(comment_data));
 		})	
