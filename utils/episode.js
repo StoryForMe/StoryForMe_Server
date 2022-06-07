@@ -54,7 +54,7 @@ exports.getEpisodeData = (eid, uid, callback) => {
 				})
 			}
 			else {	
-				series.updateHits(episode[0]["sid"], (result) => {
+				series.updateHits(episode_list[0]["sid"], (result) => {
 					if (result == 1) {
 						var episode = {
 							eid: episode_list[0]["id"],
