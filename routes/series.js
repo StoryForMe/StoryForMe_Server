@@ -123,7 +123,7 @@ router.patch('/', (req, res) => {
 			else if (results.affectedRows == 0) res.json({ result: 0 }); 
 			else if (req.body.keywords == null || req.body.keywords.length == 0)
 				keyword.updateSeriesKeyword(req.body.id, null, () => { 
-					series.getSeriesData(req.params.id, (series_data) => res.json(series_data)); 
+					series.getSeriesData(req.body.id, (series_data) => res.json(series_data)); 
 				})
 			else {
 				var kid_list = []
@@ -136,7 +136,7 @@ router.patch('/', (req, res) => {
 				}
 				function postSeriesKeywordCallback(next_index) {
 					if (next_index == kid_list.length) 
-						series.getSeriesData(req.params.id, (series_data) => res.json(series_data));
+						series.getSeriesData(req.body.id, (series_data) => res.json(series_data));
 					else keyword.postSeriesKeyword(req.body.id, kid_list, next_index, postSeriesKeywordCallback);
 				}
 				keyword.getKeywordId(req.body.keywords, 0, getKeywordIdCallback);
