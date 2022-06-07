@@ -141,18 +141,6 @@ router.patch('/', (req, res) => {
 	})
 })
 
-router.put('/end', (req,res) => {
-	app.getConnectionPool((conn) => {
-		var sql = "update SERIES SET is_end=" + req.body.is_end + " where id=" + req.body.id;
-		conn.query(sql, function(err, results) {
-			conn.release();
-			if(err) console.log(err);
-			else if (results.affectedRows == 0) res.json({ result: 0 }); 
-			else res.json({ result: 1 }); 
-		})
-	})
-})
-
 router.delete('/:id', (req, res) => {
 	app.getConnectionPool((conn) => {
 		var sql = "delete from SERIES where id=" + req.params.id;
