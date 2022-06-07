@@ -105,10 +105,11 @@ router.patch('/', (req, res) => {
 		var sql = "update SERIES SET ? where id=" + req.body.id;
 		var values = {};
 		console.log(req.body);
-		req.body.forEach(element => {
-			if (element.key != id)
-				values[element.key] = element.value;
-		});
+		for(var key in req.body) {
+			if (key != "id") {
+				values[key] = req.body[key]
+			}
+		}
 		// var values = {
 		// 	title: req.body.title,
 		// 	introduction: req.body.introduction,
