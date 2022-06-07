@@ -67,7 +67,7 @@ exports.get_series_list_sql = [
 	"select *, zzimkkong + hits as total from SERIES order by total desc"
 ]
 
-exports.getSeriesData = (sid) => {
+exports.getSeriesData = (sid, callback) => {
 	app.getConnectionPool((conn) => {
 		var sql = "select * from SERIES where id=" + sid;
 		conn.query(sql, function(err, series_list) {
@@ -98,7 +98,7 @@ exports.getSeriesData = (sid) => {
 								is_end: series_list[0]["is_end"],
 								episodes: episodes
 							}
-							return (result);
+							callback(result);
 						});
 					});
 				});

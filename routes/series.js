@@ -51,7 +51,7 @@ router.get('/list/:option/:uid', (req, res) => {
 })
 
 router.get('/:id', (req, res) => {
-	series.getSeriesData(req.params.id);
+	series.getSeriesData(req.params.id, (series_data) => res.json(series_data));
 })
 
 router.post('/', (req, res) => {
@@ -122,7 +122,9 @@ router.patch('/', (req, res) => {
 			if(err) console.log(err);
 			else if (results.affectedRows == 0) res.json({ result: 0 }); 
 			else if (req.body.keywords == null || req.body.keywords.length == 0)
-				keyword.updateSeriesKeyword(req.body.id, null, () => { res.json(series.getSeriesData(req.body.id)); })
+				keyword.updateSeriesKeyword(req.body.id, null, () => { 
+					series.getSeriesData(req.params.id, (series_data) => res.json(series_data)); 
+				})
 			else {
 				var kid_list = []
 				function getKeywordIdCallback(kid, next_index) {
@@ -133,7 +135,8 @@ router.patch('/', (req, res) => {
 						keyword.getKeywordId(req.body.keywords, next_index, getKeywordIdCallback);
 				}
 				function postSeriesKeywordCallback(next_index) {
-					if (next_index == kid_list.length) res.json(series.getSeriesData(req.body.id));
+					if (next_index == kid_list.length) 
+						series.getSeriesData(req.params.id, (series_data) => res.json(series_data));
 					else keyword.postSeriesKeyword(req.body.id, kid_list, next_index, postSeriesKeywordCallback);
 				}
 				keyword.getKeywordId(req.body.keywords, 0, getKeywordIdCallback);
