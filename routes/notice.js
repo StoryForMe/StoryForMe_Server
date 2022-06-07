@@ -52,6 +52,7 @@ router.get('/:nid', (req,res) => {
 			else{
 				getNoticeData(req.params.nid, (notice) => res.json(notice));
 			}
+		})
 	})
 })
 
@@ -112,6 +113,5 @@ router.delete('/:id', (req, res) => {
 		})
 	})
 })
-
 
 module.exports = router;
