@@ -24,7 +24,7 @@ exports.getNameIter = (comments, index, callback) => {
 	})
 }
 
-exports.getName = (uid, callback) => {
+function getName(uid, callback) {
 	app.getConnectionPool((conn) => {
 		var sql = "select * from USER where id=" + uid;
 		conn.query(sql, function(err, users) {
@@ -34,6 +34,7 @@ exports.getName = (uid, callback) => {
 		})
 	})
 }
+exports.getName = getName;
 
 exports.getCommentData = (cid, callback) => {
 	app.getConnectionPool((conn) => {
@@ -42,7 +43,7 @@ exports.getCommentData = (cid, callback) => {
 			conn.release();
 			if (err) console.log(err);
 			else {
-				comment.getName(comments[0]["uid"], (name) => {
+				getName(comments[0]["uid"], (name) => {
 					callback({
 						cid: comments[0]["id"],
 						uid: comments[0]["uid"],
