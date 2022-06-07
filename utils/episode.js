@@ -54,7 +54,7 @@ exports.getEpisodeData = (eid, uid, callback) => {
 				})
 			}
 			else {	
-				series.updateHits(episode_list[0]["sid"], (result) => {
+				series.updateHits(episode[0]["sid"], (result) => {
 					if (result == 1) {
 						var episode = {
 							eid: episode_list[0]["id"],
@@ -74,12 +74,12 @@ exports.getEpisodeData = (eid, uid, callback) => {
 									if (user_data["is_default_name"] == 0) {
 										episode["fname"] = user_data["fname"];
 										episode["lname"] = user_data["lname"];
-										res.json(episode);
+										callback(episode);
 									}
-									else res.json(episode);
+									else callback(episode);
 								})
 							}
-							else res.json(episode);
+							else callback(episode);
 						})
 					}
 				})
