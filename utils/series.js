@@ -85,6 +85,7 @@ exports.getSeriesData = (sid, callback) => {
 					keyword.getSeriesKeyword(sid, (keywords) => {
 						episode.getEpisodeList(sid, (episodes) => {
 							var result = {
+								sid: series_list[0]["id"],
 								title: series_list[0]["title"],
 								image: series_list[0]["image"],
 								introduction: series_list[0]["introduction"],

@@ -25,7 +25,7 @@ router.get('/list/:option/:uid', (req, res) => {
 					user.getIs_zzimkkong(req.params.uid, series_list[index]["id"], (is_zzimkkong) => {
 						keyword.getSeriesKeyword(series_list[index]["id"], (keywords) => {
 							results.push({
-								id: series_list[index]["id"],
+								sid: series_list[index]["id"],
 								title: series_list[index]["title"],
 								writer: nickname,
 								uid: series_list[index]["uid"],
@@ -80,7 +80,8 @@ router.post('/', (req, res) => {
 		conn.query(sql, values, function(err, results) {
 			conn.release();
 			if(err) console.log(err);
-			else if (req.body.keywords.length == 0) res.json({ sid: results.insertId })
+			else if (req.body.keywords.length == 0) 
+				series.getSeriesData(results.insertId, (series_data) => res.json(series_data));
 			else {
 				var kid_list = []
 				function getKeywordIdCallback(kid, next_index) {
@@ -91,7 +92,8 @@ router.post('/', (req, res) => {
 						keyword.getKeywordId(req.body.keywords, next_index, getKeywordIdCallback);
 				}
 				function postSeriesKeywordCallback(next_index) {
-					if (next_index == kid_list.length) res.json({ sid: results.insertId })
+					if (next_index == kid_list.length) 
+						series.getSeriesData(results.insertId, (series_data) => res.json(series_data)); 
 					else keyword.postSeriesKeyword(results.insertId, kid_list, next_index, postSeriesKeywordCallback);
 				}
 				keyword.getKeywordId(req.body.keywords, 0, getKeywordIdCallback);
