@@ -23,8 +23,8 @@ router.get('/login', (req, res) => {
         })
       }
       else {
-        JSON.parse(body);
-        console.log(body.id);
+        console.log(JSON.parse(body));
+        console.log(JSON.parse(body).id);
         var sql = "select * from USER where kakao_id=" + body["id"];
         console.log(sql);
         conn.query(sql, function(err, user) {
