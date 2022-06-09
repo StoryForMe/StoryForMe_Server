@@ -98,7 +98,7 @@ exports.getIs_zzimkkong = (uid, sid, callback) => {
 // }
 const getUserInfo = async (url, access_token) => {
   try {
-      return await fetch(optinos.url, {
+      return await axios({
           method: 'GET',
           url: url,
           headers: {
