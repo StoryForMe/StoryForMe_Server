@@ -32,16 +32,16 @@ router.get('/:id/login', (req, res) => {
       if(err) console.log("[USER] login " + err);
       else if(!user) {
         console.log(req.header)
-        var result = {
-          id: -1
-        }
-        res.json(result);
+        // var result = {
+        //   id: -1
+        // }
+        // res.json(result);
       } else {
         console.log(req.header);
-        var result = {
-          id: user[0]["id"]
-        }
-        res.json(result);
+        // var result = {
+        //   id: user[0]["id"]
+        // }
+        // res.json(result);
       }
     })
   })
