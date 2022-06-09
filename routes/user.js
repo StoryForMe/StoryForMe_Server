@@ -194,6 +194,7 @@ router.post('/', (req, res) => {
         error_message: "kakao access token 정보 조회 중 문제 발생"
       })
     } else {
+      console.log(JSON.parse(body).id)
       app.getConnectionPool((conn) => {
         var sql = "insert into USER SET ?";
         var values = {
