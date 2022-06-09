@@ -1,4 +1,3 @@
-var router = express.Router();
 const app = require('../app');
 const keyword = require('./keyword');
 
@@ -84,19 +83,19 @@ exports.getIs_zzimkkong = (uid, sid, callback) => {
 	})
 }
 
-exports.getUserInfo = async(url, access_token, callback) => {
-  try {
-    return await fetch(options.url, {
-      method: 'GET',
-      url: url,
-      headers: {
-        Authorization: `Bearer ${access_token}`
-      }
-    });
-  } catch(e) {
-    console.log(e);
-  }
-}
+// exports.getUserInfo = async(url, access_token, callback) => {
+//   try {
+//     return await fetch(options.url, {
+//       method: 'GET',
+//       url: url,
+//       headers: {
+//         Authorization: `Bearer ${access_token}`
+//       }
+//     });
+//   } catch(e) {
+//     console.log(e);
+//   }
+// }
 
 // const getUserInfo = async (url, access_token) => {
 //   try {
