@@ -23,27 +23,30 @@ router.get('/login', (req, res) => {
           error_message: "kakao access token 정보 조회 중 문제 발생"
         })
       }
-      // console.log(error);
-      // console.log(response);
-      console.log(body);
-      var sql = "select * from USER where id=" + body.id;
-      conn.query(sql, function(err, user) {
-        conn.release();
-        if(err) console.log("[USER] login " + err);
-        else if(!user) {
-          // console.log(req.headers.access_token);
-          var result = {
-            id: -1
+      else {
+        // console.log(error);
+        // console.log(response);
+        console.log(body);
+        var sql = "select * from USER where kakao_id=" + body.id;
+        console.log(sql);
+        conn.query(sql, function(err, user) {
+          conn.release();
+          if(err) console.log("[USER] login " + err);
+          else if(!user) {
+            // console.log(req.headers.access_token);
+            var result = {
+              id: -1
+            }
+            res.json(result);
+          } else {
+            // console.log(req.headers.access_token);
+            var result = {
+              id: user[0]["id"]
+            }
+            res.json(result);
           }
-          res.json(result);
-        } else {
-          // console.log(req.headers.access_token);
-          var result = {
-            id: user[0]["id"]
-          }
-          res.json(result);
-        }
-      })
+        })
+      }
     })
   })
 })
