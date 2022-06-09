@@ -36,6 +36,7 @@ router.get('/:id/login', (req, res) => {
         }
         res.json(result);
       } else {
+        console.log(req.header);
         var result = {
           id: user[0]["id"]
         }
