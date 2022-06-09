@@ -26,11 +26,12 @@ router.get('/:id/character', (req, res) => {
 
 router.get('/:id/login', (req, res) => {
   app.getConnectionPool((conn) => {
-    var sql = "select * from USER where kakao_id=" + req.params.id;
+    var sql = "select * from USER where access_token=" + req.params.id;
     conn.query(sql, function(err, user) {
       conn.release();
       if(err) console.log("[USER] login " + err);
       else if(!user) {
+        console.log(req.header)
         var result = {
           id: -1
         }
