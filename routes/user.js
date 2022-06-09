@@ -26,22 +26,23 @@ router.get('/:id/character', (req, res) => {
 
 router.get('/:id/login', (req, res) => {
   app.getConnectionPool((conn) => {
+    // const userInfo = await getUserInfo('kapi.kakao.com', req.headers.access_token);
     var sql = "select * from USER where access_token=" + req.params.id;
     conn.query(sql, function(err, user) {
       conn.release();
       if(err) console.log("[USER] login " + err);
       else if(!user) {
-        console.log(req.headers)
-        // var result = {
-        //   id: -1
-        // }
-        // res.json(result);
+        console.log(req.headers.access_token);
+        var result = {
+          id: -1
+        }
+        res.json(result);
       } else {
-        console.log(req.headers);
-        // var result = {
-        //   id: user[0]["id"]
-        // }
-        // res.json(result);
+        console.log(req.headers.access_token);
+        var result = {
+          id: user[0]["id"]
+        }
+        res.json(result);
       }
     })
   })
