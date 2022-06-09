@@ -24,9 +24,9 @@ router.get('/:id/character', (req, res) => {
   })
 })
 
-router.get('/:id/login', async (req, res) => {
+router.get('/:id/login', (req, res) => {
   app.getConnectionPool((conn) => {
-    const userInfo = await user.getUserInfo('kapi.kakao.com', req.headers.access_token);
+    const userInfo = user.getUserInfo('kapi.kakao.com', req.headers.access_token);
     var sql = "select * from USER where access_token=" + userInfo.id;
     conn.query(sql, function(err, user) {
       conn.release();
