@@ -207,21 +207,28 @@ router.post('/', (req, res) => {
 })
 
 router.patch('/', (req, res) => {
+  if (req.body.id == undefined) {
+		res.json({ 
+			error: "E005",
+			error_message: "수정할 유저의 id 정보가 누락됨."
+		})
+	}
   app.getConnectionPool((conn) => {
     var sql = "update USER SET ? where id=" + req.body.id;
-    var values = {
-      nickname: req.body.nickname,
-      profile_image: req.body.profile_image,
-      fname: req.body.fname,
-      lname: req.body.lname,
-      introduction: req.body.introduction,
-      is_default_name: req.body.is_default_name
-    }
+    var values = {};
+		for(var key in req.body) {
+			if (key != "id" && key != "keywords") values[key] = req.body[key]
+		}
     conn.query(sql, values, function(err, results) {
       conn.release();
       if(err) console.log(err);
-      else if (results.affectedRows == 0) res.json({ result: 0 });
-      else if (req.body.keywords.length == 0) {
+      else if (results.affectedRows == 0) {
+        res.json({ 
+          error: "E001",
+					error_message: "해당 유저가 존재하지 않음."
+        });
+      }
+      else if (req.body.keywords == null || req.body.keywords.length == 0) {
         keyword.updateUserKeyword(req.body.id, null, () => { 
           user.getPatchedUser(req.body.id, (user) => {
             res.json(user);
