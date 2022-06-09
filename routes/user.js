@@ -16,6 +16,7 @@ router.get('/login', (req, res) => {
   }
   request(options, function(error, response, body) {
     app.getConnectionPool((conn) => {
+      console.log(error);
       console.log(response);
       console.log(body);
       var sql = "select * from USER where id=" + response.id;
