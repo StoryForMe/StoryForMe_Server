@@ -15,38 +15,37 @@ router.get('/login', (req, res) => {
     }
   }
   request(options, function(error, response, body) {
-    app.getConnectionPool((conn) => {
-      if(error) {
-        res.json({
-          error: "E006",
-          error_message: "kakao access token 정보 조회 중 문제 발생"
-        })
-      }
-      else {
-        var sql = "select * from USER where kakao_id=" + JSON.parse(body).id;
-        conn.query(sql, function(err, [user]) {
-          conn.release();
-          if(err) {
-            res.json({
-              error: "E002",
-              error_message: "query 문법 오류"
-            })
+    if(error) {
+      res.json({
+        error: "E006",
+        error_message: "kakao access token 정보 조회 중 문제 발생"
+      })
+    } else {
+      app.getConnectionPool((conn) => {
+      var sql = "select * from USER where kakao_id=" + JSON.parse(body).id;
+      conn.query(sql, function(err, [user]) {
+        conn.release();
+        if(err) {
+          res.json({
+            error: "E002",
+            error_message: "query 문법 오류"
+          })
+        }
+        else if(!user) {
+          var result = {
+            id: -1
           }
-          else if(!user) {
-            var result = {
-              id: -1
-            }
-            res.json(result);
-          } else {
-            console.log(user);
-            var result = {
-              id: user["id"]
-            }
-            res.json(result);
+          res.json(result);
+        } else {
+          console.log(user);
+          var result = {
+            id: user["id"]
           }
-        })
-      }
+          res.json(result);
+        }
+      })
     })
+  }
   })
 })
 
@@ -181,52 +180,68 @@ router.get('/:id', (req, res) => {
 })
 
 router.post('/', (req, res) => {
-  app.getConnectionPool((conn) => {
-    var sql = "insert into USER SET ?";
-    var values = {
-      kakao_id: req.body.kakao_id,
-      nickname: req.body.nickname,
-      fname: req.body.fname,
-      lname: req.body.lname,
-      profile_image: req.body.profile_image
+  const options = {
+    uri: 'https://kapi.kakao.com/v2/user/me',
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${req.headers.access_token}`
     }
-    conn.query(sql, values, function(err, results) {
-      conn.release();
-      if(err) {
-        if (err.code == 'ER_DUP_ENTRY') {
-          res.json({ 
-            error: "E003",
-            error_message: "kakao id 중복"
-          })
+  }
+  request(options, function(error, response, body) {
+    if(error) {
+      res.json({
+        error: "E006",
+        error_message: "kakao access token 정보 조회 중 문제 발생"
+      })
+    } else {
+      app.getConnectionPool((conn) => {
+        var sql = "insert into USER SET ?";
+        var values = {
+          kakao_id: JSON.parse(body).id,
+          nickname: req.body.nickname,
+          fname: req.body.fname,
+          lname: req.body.lname,
+          profile_image: req.body.profile_image
         }
-      }
-      else if (req.body.keywords.length == 0) {
-        keyword.updateUserKeyword(req.body.id, null, () => { 
-          user.getPostedUser(results.insertId, (user) => {
-            res.json(user);
-          })
-        });
-      }
-      else {
-        var kid_list = []
-        function getKeywordIdCallback(kid, next_index) {
-          kid_list.push(kid)
-          if (next_index == req.body.keywords.length)
-            keyword.postUserKeyword(results.insertId, kid_list, 0, postUserKeywordCallback);
-          else
-            keyword.getKeywordId(req.body.keywords, next_index, getKeywordIdCallback);
-        }
-        function postUserKeywordCallback(next_index) {
-          if (next_index == kid_list.length){
-            user.getPostedUser(results.insertId, (user) => {
-              res.json(user);
-            })
+        conn.query(sql, values, function(err, results) {
+          conn.release();
+          if(err) {
+            if (err.code == 'ER_DUP_ENTRY') {
+              res.json({ 
+                error: "E003",
+                error_message: "kakao id 중복"
+              })
+            }
           }
-          else keyword.postUserKeyword(results.insertId, kid_list, next_index, postUserKeywordCallback);
-        }
-        keyword.getKeywordId(req.body.keywords, 0, getKeywordIdCallback);
-      }
-    })
+          else if (req.body.keywords.length == 0) {
+            keyword.updateUserKeyword(JSON.parse(body).id, null, () => { 
+              user.getPostedUser(results.insertId, (user) => {
+                res.json(user);
+              })
+            });
+          }
+          else {
+            var kid_list = []
+            function getKeywordIdCallback(kid, next_index) {
+              kid_list.push(kid)
+              if (next_index == req.body.keywords.length)
+                keyword.postUserKeyword(results.insertId, kid_list, 0, postUserKeywordCallback);
+              else
+                keyword.getKeywordId(req.body.keywords, next_index, getKeywordIdCallback);
+            }
+            function postUserKeywordCallback(next_index) {
+              if (next_index == kid_list.length){
+                user.getPostedUser(results.insertId, (user) => {
+                  res.json(user);
+                })
+              }
+              else keyword.postUserKeyword(results.insertId, kid_list, next_index, postUserKeywordCallback);
+            }
+            keyword.getKeywordId(req.body.keywords, 0, getKeywordIdCallback);
+          }
+        })
+      })
+    }
   })
 })
 
