@@ -8,7 +8,7 @@ const user = require('../utils/user');
 
 router.get('/login', (req, res) => {
   const options = {
-    uri: 'kapi.kakao.com',
+    uri: 'https://kapi.kakao.com',
     method: 'GET',
     headers: {
       Authorization: `Bearer ${req.headers.access_token}`
