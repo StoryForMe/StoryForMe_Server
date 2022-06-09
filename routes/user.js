@@ -1,9 +1,53 @@
+var request = require('request');
 var express = require('express');
 var router = express.Router();
 const app = require('../app');
 const keyword = require('../utils/keyword');
 const series = require('../utils/series');
 const user = require('../utils/user');
+
+router.get('/login', (req, res) => {
+  const options = {
+    uri: 'https://kapi.kakao.com/v2/user/me',
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${req.headers.access_token}`
+    }
+  }
+  request(options, function(error, response, body) {
+    if(error) {
+      res.json({
+        error: "E006",
+        error_message: "kakao access token 정보 조회 중 문제 발생"
+      })
+    } else {
+      app.getConnectionPool((conn) => {
+      var sql = "select * from USER where kakao_id=" + JSON.parse(body).id;
+      conn.query(sql, function(err, [user]) {
+        conn.release();
+        if(err) {
+          res.json({
+            error: "E002",
+            error_message: "query 문법 오류"
+          })
+        }
+        else if(!user) {
+          var result = {
+            id: -1
+          }
+          res.json(result);
+        } else {
+          console.log(user);
+          var result = {
+            id: user["id"]
+          }
+          res.json(result);
+        }
+      })
+    })
+  }
+  })
+})
 
 router.get('/:id/character', (req, res) => {
   app.getConnectionPool((conn) => {
@@ -17,27 +61,6 @@ router.get('/:id/character', (req, res) => {
         var result = {
           fname: user["fname"],
           lname: user["lname"]
-        }
-        res.json(result);
-      }
-    })
-  })
-})
-
-router.get('/:id/login', (req, res) => {
-  app.getConnectionPool((conn) => {
-    var sql = "select * from USER where kakao_id=" + req.params.id;
-    conn.query(sql, function(err, user) {
-      conn.release();
-      if(err) console.log("[USER] login " + err);
-      else if(!user) {
-        var result = {
-          id: -1
-        }
-        res.json(result);
-      } else {
-        var result = {
-          id: user[0]["id"]
         }
         res.json(result);
       }
@@ -109,6 +132,7 @@ router.get('/:id/series', (req, res) => {
 
         function getSeriesKeywordIterCallback(keywords) {
           results.push({
+            sid: seriesList[index]["id"],
             title: seriesList[index]["title"],
             keywords: keywords,
             recent_update: seriesList[index]["recent_update"],
@@ -156,71 +180,95 @@ router.get('/:id', (req, res) => {
 })
 
 router.post('/', (req, res) => {
-  app.getConnectionPool((conn) => {
-    var sql = "insert into USER SET ?";
-    var values = {
-      kakao_id: req.body.kakao_id,
-      nickname: req.body.nickname,
-      fname: req.body.fname,
-      lname: req.body.lname,
-      profile_image: req.body.profile_image
+  const options = {
+    uri: 'https://kapi.kakao.com/v2/user/me',
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${req.headers.access_token}`
     }
-    conn.query(sql, values, function(err, results) {
-      conn.release();
-      if(err) {
-        if (err.code == 'ER_DUP_ENTRY') {
-          res.json({ 
-            error: "E003",
-            error_message: "kakao id 중복"
-          })
+  }
+  request(options, function(error, response, body) {
+    if(error) {
+      res.json({
+        error: "E006",
+        error_message: "kakao access token 정보 조회 중 문제 발생"
+      })
+    } else {
+      console.log(JSON.parse(body).id)
+      app.getConnectionPool((conn) => {
+        var sql = "insert into USER SET ?";
+        var values = {
+          kakao_id: JSON.parse(body).id,
+          nickname: req.body.nickname,
+          fname: req.body.fname,
+          lname: req.body.lname,
+          profile_image: req.body.profile_image
         }
-      }
-      else if (req.body.keywords.length == 0) {
-        keyword.updateUserKeyword(req.body.id, null, () => { 
-          user.getPostedUser(results.insertId, (user) => {
-            res.json(user);
-          })
-        });
-      }
-      else {
-        var kid_list = []
-        function getKeywordIdCallback(kid, next_index) {
-          kid_list.push(kid)
-          if (next_index == req.body.keywords.length)
-            keyword.postUserKeyword(results.insertId, kid_list, 0, postUserKeywordCallback);
-          else
-            keyword.getKeywordId(req.body.keywords, next_index, getKeywordIdCallback);
-        }
-        function postUserKeywordCallback(next_index) {
-          if (next_index == kid_list.length){
-            user.getPostedUser(results.insertId, (user) => {
-              res.json(user);
-            })
+        conn.query(sql, values, function(err, results) {
+          conn.release();
+          if(err) {
+            if (err.code == 'ER_DUP_ENTRY') {
+              res.json({ 
+                error: "E003",
+                error_message: "kakao id 중복"
+              })
+            }
           }
-          else keyword.postUserKeyword(results.insertId, kid_list, next_index, postUserKeywordCallback);
-        }
-        keyword.getKeywordId(req.body.keywords, 0, getKeywordIdCallback);
-      }
-    })
+          else if (req.body.keywords.length == 0) {
+            keyword.updateUserKeyword(JSON.parse(body).id, null, () => { 
+              user.getPostedUser(results.insertId, (user) => {
+                res.json(user);
+              })
+            });
+          }
+          else {
+            var kid_list = []
+            function getKeywordIdCallback(kid, next_index) {
+              kid_list.push(kid)
+              if (next_index == req.body.keywords.length)
+                keyword.postUserKeyword(results.insertId, kid_list, 0, postUserKeywordCallback);
+              else
+                keyword.getKeywordId(req.body.keywords, next_index, getKeywordIdCallback);
+            }
+            function postUserKeywordCallback(next_index) {
+              if (next_index == kid_list.length){
+                user.getPostedUser(results.insertId, (user) => {
+                  res.json(user);
+                })
+              }
+              else keyword.postUserKeyword(results.insertId, kid_list, next_index, postUserKeywordCallback);
+            }
+            keyword.getKeywordId(req.body.keywords, 0, getKeywordIdCallback);
+          }
+        })
+      })
+    }
   })
 })
 
 router.patch('/', (req, res) => {
+  if (req.body.id == undefined) {
+		res.json({ 
+			error: "E005",
+			error_message: "수정할 유저의 id 정보가 누락됨."
+		})
+	}
   app.getConnectionPool((conn) => {
     var sql = "update USER SET ? where id=" + req.body.id;
-    var values = {
-      nickname: req.body.nickname,
-      profile_image: req.body.profile_image,
-      fname: req.body.fname,
-      lname: req.body.lname,
-      introduction: req.body.introduction,
-      is_default_name: req.body.is_default_name
-    }
+    var values = {};
+		for(var key in req.body) {
+			if (key != "id" && key != "keywords") values[key] = req.body[key]
+		}
     conn.query(sql, values, function(err, results) {
       conn.release();
       if(err) console.log(err);
-      else if (results.affectedRows == 0) res.json({ result: 0 });
-      else if (req.body.keywords.length == 0) {
+      else if (results.affectedRows == 0) {
+        res.json({ 
+          error: "E001",
+					error_message: "해당 유저가 존재하지 않음."
+        });
+      }
+      else if (req.body.keywords == null || req.body.keywords.length == 0) {
         keyword.updateUserKeyword(req.body.id, null, () => { 
           user.getPatchedUser(req.body.id, (user) => {
             res.json(user);
