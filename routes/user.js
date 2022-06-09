@@ -17,31 +17,32 @@ router.get('/login', (req, res) => {
   request(options, function(error, response, body) {
     app.getConnectionPool((conn) => {
       if(error) {
-        console.log(error)
         res.json({
           error: "E006",
           error_message: "kakao access token 정보 조회 중 문제 발생"
         })
       }
       else {
-        // console.log(body);
         if(body) {
           console.log(body);
-          console.log(body["id"]);
+          console.log(body.id);
         }
         var sql = "select * from USER where kakao_id=" + body["id"];
         console.log(sql);
         conn.query(sql, function(err, user) {
           conn.release();
-          if(err) console.log("[USER] login " + err);
+          if(err) {
+            res.json({
+              error: "E002",
+              error_message: "query 문법 오류"
+            })
+          }
           else if(!user) {
-            // console.log(req.headers.access_token);
             var result = {
               id: -1
             }
             res.json(result);
           } else {
-            // console.log(req.headers.access_token);
             var result = {
               id: user[0]["id"]
             }
