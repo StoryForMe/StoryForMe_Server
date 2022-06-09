@@ -11,7 +11,7 @@ router.get('/login', (req, res) => {
     uri: 'kapi.kakao.com',
     method: 'GET',
     headers: {
-      Authorization: `Bearer ${rea.headers.access_token}`
+      Authorization: `Bearer ${req.headers.access_token}`
     }
   }
   request(options, function(error, response, body) {
