@@ -82,32 +82,3 @@ exports.getIs_zzimkkong = (uid, sid, callback) => {
 		})
 	})
 }
-
-// exports.getUserInfo = async(url, access_token, callback) => {
-//   try {
-//     return await fetch(options.url, {
-//       method: 'GET',
-//       url: url,
-//       headers: {
-//         Authorization: `Bearer ${access_token}`
-//       }
-//     });
-//   } catch(e) {
-//     console.log(e);
-//   }
-// }
-
-// const getUserInfo = async (url, access_token) => {
-//   try {
-//       return await fetch(optinos.url, {
-//           method: 'GET',
-//           url: url,
-//           headers: {
-//               Authorization: `Bearer ${access_token}`
-//           }
-//       });
-//   }catch(e) {
-//       console.log("[KAKAO ERROR] "+ e)
-//   }
-// };
-// exports.getUserInfo = getUserInfo;

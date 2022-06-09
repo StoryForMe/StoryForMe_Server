@@ -16,10 +16,17 @@ router.get('/login', (req, res) => {
   }
   request(options, function(error, response, body) {
     app.getConnectionPool((conn) => {
+      if(error) {
+        console.log(error)
+        res.json({
+          error: "E006",
+          error_message: "kakao access token 정보 조회 중 문제 발생"
+        })
+      }
       // console.log(error);
       // console.log(response);
       console.log(body);
-      var sql = "select * from USER where id=" + response.id;
+      var sql = "select * from USER where id=" + body.id;
       conn.query(sql, function(err, user) {
         conn.release();
         if(err) console.log("[USER] login " + err);
