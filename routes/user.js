@@ -1,3 +1,4 @@
+const { request } = require('express');
 var express = require('express');
 var router = express.Router();
 const app = require('../app');
@@ -6,25 +7,34 @@ const series = require('../utils/series');
 const user = require('../utils/user');
 
 router.get('/login', (req, res) => {
-  app.getConnectionPool((conn) => {
-    const userInfo = user.getUserInfo('kapi.kakao.com', req.headers.access_token);
-    var sql = "select * from USER where access_token=" + userInfo.id;
-    conn.query(sql, function(err, user) {
-      conn.release();
-      if(err) console.log("[USER] login " + err);
-      else if(!user) {
-        // console.log(req.headers.access_token);
-        var result = {
-          id: -1
+  const options = {
+    uri: 'kapi.kakao.com',
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${rea.headers.access_token}`
+    }
+  }
+  request(options, function(error, response, body) {
+    app.getConnectionPool((conn) => {
+      // const userInfo = user.getUserInfo('kapi.kakao.com', req.headers.access_token);
+      var sql = "select * from USER where id=" + response.id;
+      conn.query(sql, function(err, user) {
+        conn.release();
+        if(err) console.log("[USER] login " + err);
+        else if(!user) {
+          // console.log(req.headers.access_token);
+          var result = {
+            id: -1
+          }
+          res.json(result);
+        } else {
+          // console.log(req.headers.access_token);
+          var result = {
+            id: user[0]["id"]
+          }
+          res.json(result);
         }
-        res.json(result);
-      } else {
-        // console.log(req.headers.access_token);
-        var result = {
-          id: user[0]["id"]
-        }
-        res.json(result);
-      }
+      })
     })
   })
 })

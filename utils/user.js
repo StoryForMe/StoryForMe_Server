@@ -1,5 +1,4 @@
-const fetch = require('node-fetch');
-
+var router = express.Router();
 const app = require('../app');
 const keyword = require('./keyword');
 
@@ -85,30 +84,31 @@ exports.getIs_zzimkkong = (uid, sid, callback) => {
 	})
 }
 
-// exports.getUserInfo = async(url, access_token, callback) => {
-//   try {
-//     return await fetch(options.url, {
-//       method: 'GET',
-//       url: url,
-//       headers: {
-//         Authorization: `Bearer ${access_token}`
-//       }
-//     });
-//   } catch(e) {
-//     console.log(e);
-//   }
-// }
-const getUserInfo = async (url, access_token) => {
+exports.getUserInfo = async(url, access_token, callback) => {
   try {
-      return await fetch(optinos.url, {
-          method: 'GET',
-          url: url,
-          headers: {
-              Authorization: `Bearer ${access_token}`
-          }
-      });
-  }catch(e) {
-      console.log("[KAKAO ERROR] "+ e)
+    return await fetch(options.url, {
+      method: 'GET',
+      url: url,
+      headers: {
+        Authorization: `Bearer ${access_token}`
+      }
+    });
+  } catch(e) {
+    console.log(e);
   }
-};
-exports.getUserInfo = getUserInfo;
+}
+
+// const getUserInfo = async (url, access_token) => {
+//   try {
+//       return await fetch(optinos.url, {
+//           method: 'GET',
+//           url: url,
+//           headers: {
+//               Authorization: `Bearer ${access_token}`
+//           }
+//       });
+//   }catch(e) {
+//       console.log("[KAKAO ERROR] "+ e)
+//   }
+// };
+// exports.getUserInfo = getUserInfo;
