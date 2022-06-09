@@ -5,26 +5,7 @@ const keyword = require('../utils/keyword');
 const series = require('../utils/series');
 const user = require('../utils/user');
 
-router.get('/:id/character', (req, res) => {
-  app.getConnectionPool((conn) => {
-    var sql = "select * from USER where id=" + req.params.id;
-    conn.query(sql, function(err, [user]) {
-      conn.release();
-      if(err) console.log("[USER] get character " + err);
-      else if(!user) {
-        console.log("no exist user.")
-      } else {
-        var result = {
-          fname: user["fname"],
-          lname: user["lname"]
-        }
-        res.json(result);
-      }
-    })
-  })
-})
-
-router.get('/:id/login', (req, res) => {
+router.get('/login', (req, res) => {
   app.getConnectionPool((conn) => {
     const userInfo = user.getUserInfo('kapi.kakao.com', req.headers.access_token);
     var sql = "select * from USER where access_token=" + userInfo.id;
@@ -41,6 +22,25 @@ router.get('/:id/login', (req, res) => {
         // console.log(req.headers.access_token);
         var result = {
           id: user[0]["id"]
+        }
+        res.json(result);
+      }
+    })
+  })
+})
+
+router.get('/:id/character', (req, res) => {
+  app.getConnectionPool((conn) => {
+    var sql = "select * from USER where id=" + req.params.id;
+    conn.query(sql, function(err, [user]) {
+      conn.release();
+      if(err) console.log("[USER] get character " + err);
+      else if(!user) {
+        console.log("no exist user.")
+      } else {
+        var result = {
+          fname: user["fname"],
+          lname: user["lname"]
         }
         res.json(result);
       }
