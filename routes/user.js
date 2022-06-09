@@ -31,13 +31,13 @@ router.get('/:id/login', (req, res) => {
       conn.release();
       if(err) console.log("[USER] login " + err);
       else if(!user) {
-        console.log(req.header)
+        console.log(req.headers)
         // var result = {
         //   id: -1
         // }
         // res.json(result);
       } else {
-        console.log(req.header);
+        console.log(req.headers);
         // var result = {
         //   id: user[0]["id"]
         // }
