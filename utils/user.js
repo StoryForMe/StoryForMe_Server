@@ -1,3 +1,5 @@
+import fetch from "node-fetch";
+
 const app = require('../app');
 const keyword = require('./keyword');
 
@@ -98,7 +100,7 @@ exports.getIs_zzimkkong = (uid, sid, callback) => {
 // }
 const getUserInfo = async (url, access_token) => {
   try {
-      return await axios({
+      return await fetch(optinos.url, {
           method: 'GET',
           url: url,
           headers: {
