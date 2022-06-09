@@ -106,7 +106,7 @@ const getUserInfo = async (url, access_token) => {
           }
       });
   }catch(e) {
-      logger.info("error", e);
+      console.log("[KAKAO ERROR] "+ e)
   }
 };
 exports.getUserInfo = getUserInfo;
