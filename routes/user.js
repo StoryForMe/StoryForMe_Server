@@ -14,7 +14,7 @@ router.get('/login', (req, res) => {
       Authorization: `Bearer ${req.headers.access_token}`
     }
   }
-  request(options, function(error, response, rbody) {
+  request(options, function(error, response, body) {
     app.getConnectionPool((conn) => {
       if(error) {
         res.json({
@@ -23,11 +23,11 @@ router.get('/login', (req, res) => {
         })
       }
       else {
-        if(rbody) {
-          console.log(rbody);
-          console.log(rbody.id);
+        if(body) {
+          JSON.parse(body);
+          console.log(body.id);
         }
-        var sql = "select * from USER where kakao_id=" + rbody["id"];
+        var sql = "select * from USER where kakao_id=" + body["id"];
         console.log(sql);
         conn.query(sql, function(err, user) {
           conn.release();
