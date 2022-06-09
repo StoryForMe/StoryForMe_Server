@@ -24,7 +24,7 @@ router.get('/login', (req, res) => {
       }
       else {
         var sql = "select * from USER where kakao_id=" + JSON.parse(body).id;
-        conn.query(sql, function(err, user) {
+        conn.query(sql, function(err, [user]) {
           conn.release();
           if(err) {
             res.json({
