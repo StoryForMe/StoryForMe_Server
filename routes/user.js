@@ -165,7 +165,7 @@ router.get('/:id', (req, res) => {
         keyword.getUserKeyword(req.params.id, (keywords) => {
           var result = {
             nickname: user["nickname"],
-            introduce: user["introduce"],
+            introduction: user["introduction"],
             profile_image: user["profile_image"],
             fname: user["fname"],
             lname: user["lname"],
