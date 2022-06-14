@@ -125,12 +125,12 @@ router.patch('/', (req, res) => {
 					for (var k in req.body.keywords) {
 						var index = keyword_list.indexOf(k);
 						if (index == -1) 
-							keyword.addKeywordToSeries(req.body.id, k);
+							keyword.addKeywordToSeries(req.body.id, k, () => {});
 					}
 					for (var k in keyword_list) {
 						var index = req.body.keywords.indexOf(k);
 						if (index == -1)
-							keyword.deleteKeywordFromSeries(req.body.id, k);
+							keyword.deleteKeywordFromSeries(req.body.id, k, () => {});
 					}
 				})
 			}
