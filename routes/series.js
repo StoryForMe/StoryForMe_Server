@@ -122,16 +122,25 @@ router.patch('/', (req, res) => {
 				series.getSeriesData(req.body.id, (series_data) => res.json(series_data));
 			else {
 				keyword.getSeriesKeyword(req.body.id, (keyword_list) => {
-					for (var k in req.body.keywords) {
-						var index = keyword_list.indexOf(k);
-						if (index == -1) 
-							keyword.addKeywordToSeries(req.body.id, k, () => {});
+					var index = 0;
+					function addKeywordToSeriesCallback() {
+						index++;
+						if (index == req.body.keywords.length) {
+							index = 0;
+							keyword.deleteKeywordFromSeries(req.body.id, keyword_list[index], deleteKeywordFromSeriesCallback);
+						}
+						else if (keyword_list.indexOf(req.body.keywords[index]) != -1) addKeywordToSeriesCallback()
+						else keyword.addKeywordToSeries(req.body.id, req.body.keywords[index], addKeywordToSeriesCallback);
 					}
-					for (var k in keyword_list) {
-						var index = req.body.keywords.indexOf(k);
-						if (index == -1)
-							keyword.deleteKeywordFromSeries(req.body.id, k, () => {});
+					function deleteKeywordFromSeriesCallback() {
+						index++;
+						if (index == keyword_list.length) {
+							series.getSeriesData(req.body.id, (series_data) => res.json(series_data));
+						}
+						else if (req.body.keywords.indexOf(keyword_list[index]) != -1) deleteKeywordFromSeriesCallback()
+						else keyword.deleteKeywordFromSeries(req.body.id, keyword_list[index], deleteKeywordFromSeriesCallback);
 					}
+					keyword.addKeywordToSeries(req.body.id, req.body.keywords[index], addKeywordToSeriesCallback);
 				})
 			}
 		})
