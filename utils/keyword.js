@@ -7,8 +7,8 @@ const app = require('../app');
 // sid에 해당하는 시리즈의 키워드 목록을 가져옴.
 exports.getSeriesKeyword = (res, sid, callback) => {
 	app.getConnectionPool((conn) => {
-		var sql = "select content from KEYWORD as k join REPRESENT as r on k.id=r.kid where sid=" + sid;
-		conn.query(sql, function(err, rows) {
+		var sql = "select * from KEYWORD as k join REPRESENT as r on k.id=r.kid where sid=" + sid;
+		conn.query(sql, function(err, keyword_list) {
 			conn.release();
 			if(err) {
         res.status(400).json({
@@ -18,8 +18,8 @@ exports.getSeriesKeyword = (res, sid, callback) => {
       }
 			else{
 				var keywords = [];
-				for (var row of rows) {
-					keywords.push(row["content"]);
+				for (var keyword of keyword_list) {
+					keywords.push(keyword["id"]);
 				}
 				callback(keywords);
 			}
@@ -27,47 +27,31 @@ exports.getSeriesKeyword = (res, sid, callback) => {
 	})
 }
 // sid에 해당하는 시리즈에 kid_list에 있는 kid에 해당하는 키워드를 추가.
-function postSeriesKeyword (res, sid, kid_list, index, callback) {
+function createNewRepresent (sid, kid, callback) {
 	app.getConnectionPool((conn) => {
-		var sql = "insert into REPRESENT values (" + sid + ", " + kid_list[index] + ")";
+		var sql = "insert into REPRESENT values (" + sid + ", '" + kid + "')";
 		conn.query(sql, function(err, results) {
 			conn.release();
-			if(err) {
-        res.status(400).json({
-          error: "E002",
-          error_message: "query 문법 오류"
-        })
-      }
-			else callback(index + 1);
+			if(err) console.log(err);
+			else callback();
 		})
 	})
 }
-exports.postSeriesKeyword = postSeriesKeyword;
 
-// sid에 해당하는 시리즈의 기존 키워드를 삭제한 뒤 새로운 키워드 목록 추가.
-exports.updateSeriesKeyword = (res, sid, kid_list, callback) => {
+exports.deleteKeywordFromSeries = (sid, kid, callback) => {
 	app.getConnectionPool((conn) => {
-		var sql = "delete from REPRESENT where sid=" + sid;
+		var sql = "delete from REPRESENT where sid=" + sid + " and kid ='" + kid + "'";
 		conn.query(sql, function(err, results) {
 			conn.release();
-			if (err) {
-        res.status(400).json({
-          error: "E002",
-          error_message: "query 문법 오류"
-        })
-      }
-			else if (kid_list == null) {
-				callback();
-			}
-			else postSeriesKeyword(sid, kid_list, 0, callback);
+			if (err) console.log(err);
+			callback();
 		})
 	})
 }
-// keyword 목록을 받아 각각의 키워드에 해당하는 kid를 가져옴. 
-// 해당 키워드가 존재하지 않는다면 postKeyword를 호출해 해당 키워드를 추가한 뒤 그 키워드의 kid를 가져옴.
-exports.getKeywordId = (res, keywords, index, callback) => {
+
+exports.addKeywordToSeries = (sid, kid, callback) => {
 	app.getConnectionPool((conn) => {
-		var sql = "select * from KEYWORD where content='" + keywords[index] + "'";
+		var sql = "select * from KEYWORD where id='" + kid + "'";
 		conn.query(sql, function(err, keyword_list) {
 			conn.release();
 			if (err) {
@@ -78,9 +62,9 @@ exports.getKeywordId = (res, keywords, index, callback) => {
       }
 			else{
 				if(keyword_list.length == 0)
-					postKeyword(keywords[index], (kid) => { callback(kid, index + 1); });
+					postKeyword(kid, () => { createNewRepresent(sid, kid, callback) });
 				else
-					callback(keyword_list[0]["id"], index + 1);
+					createNewRepresent(sid, kid, callback);
 			}
 		})
 	})
@@ -115,7 +99,7 @@ exports.getUserKeyword = (res, uid, callback) => {
 }
 
 // uid에 해당하는 시리즈에 kid_list에 있는 kid에 해당하는 키워드를 추가.
-function postUserKeyword (res, uid, kid_list, index, callback) {
+exports.postUserKeyword = (uid, kid_list, index, callback) => {
 	app.getConnectionPool((conn) => {
 		var sql = "insert into `LIKE` values (" + uid + ", " + kid_list[index] + ")";
 		conn.query(sql, function(err, results) {
@@ -130,7 +114,6 @@ function postUserKeyword (res, uid, kid_list, index, callback) {
 		})
 	})
 }
-exports.postUserKeyword = postUserKeyword;
 
 // uid에 해당하는 시리즈의 기존 키워드를 삭제한 뒤 새로운 키워드 목록 추가.
 exports.updateUserKeyword = (res, uid, kid_list, callback) => {
@@ -159,7 +142,7 @@ exports.updateUserKeyword = (res, uid, kid_list, callback) => {
 // 받은 keyword를 content로 하는 KEYWORD를 새로 추가한 뒤 추가된 키워드의 id를 가져옴.
 postKeyword = (res, keyword, callback) => {
 	app.getConnectionPool((conn) => {
-		var sql = "insert into KEYWORD (search, content, hits) values (0, '" + keyword + "', 0)";
+		var sql = "insert into KEYWORD (id, search, hits) values ('" + keyword + "', 0, 0)";
 		conn.query(sql, function(err, results) {
 			conn.release();
 			if (err) {
