@@ -80,6 +80,47 @@ exports.get_series_list_sql = (option, kid) => {
 	return (sql);
 }
 
+exports.makeResForSeriesList = (series_list, res) => {
+	if(!series_list) {
+		console.log("no exist series"); 
+		res.json({ 
+			error: "E001",
+			error_message: "시리즈가 존재하지 않습니다."
+		})
+	}
+	else if (series_list.length == 0) {
+		res.json({series_list: []});
+	}
+	else {
+		results = [];
+		// 각각의 시리즈에 대해 필요한 정보들을 가져와서 results에 추가해줌.
+		function getNicknameIterCallback(nickname, index) {
+			user.getIs_zzimkkong(req.params.uid, series_list[index]["id"], (is_zzimkkong) => {
+				keyword.getSeriesKeyword(series_list[index]["id"], (keywords) => {
+					results.push({
+						sid: series_list[index]["id"],
+						title: series_list[index]["title"],
+						writer: nickname,
+						uid: series_list[index]["uid"],
+						image: series_list["image"],
+						keywords: keywords,
+						hits: series_list[index]["hits"],
+						zzimkkong: series_list[index]["zzimkkong"],
+						episode_num: series_list[index]["episode_num"],
+						is_zzimkkong: is_zzimkkong,
+						is_end: series_list[index]["is_end"],
+						recent_update: series_list[index]["recent_update"]
+					});
+					if (index < series_list.length - 1)
+						user.getNicknameIter(series_list[index + 1]["uid"], index + 1, getNicknameIterCallback)
+					else res.json( {series_list: results });
+				});
+			});
+		}
+		user.getNicknameIter(series_list[0]["uid"], 0, getNicknameIterCallback)
+	}
+}
+
 
 exports.getSeriesData = (sid, callback) => {
 	app.getConnectionPool((conn) => {
