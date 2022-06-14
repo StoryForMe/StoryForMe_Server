@@ -11,7 +11,7 @@ router.get('/list/:option/:uid', (req, res) => {
 		conn.query(series.get_series_list_sql(req.params.option, null), function(err, series_list) {
 			conn.release();
 			if(err) console.log(err);
-			series.makeResForSeriesList(series_list, res);
+			series.makeResForSeriesList(series_list, req, res);
 	   })
 	})
 })
@@ -21,7 +21,7 @@ router.get('/list/:option/:uid/:kid', (req, res) => {
 		conn.query(series.get_series_list_sql(req.params.option, req.params.kid), function(err, series_list) {
 			conn.release();
 			if(err) console.log(err);
-			series.makeResForSeriesList(series_list, res);
+			series.makeResForSeriesList(series_list, req, res);
 	   })
 	})
 })

@@ -80,7 +80,7 @@ exports.get_series_list_sql = (option, kid) => {
 	return (sql);
 }
 
-exports.makeResForSeriesList = (series_list, res) => {
+exports.makeResForSeriesList = (series_list, req, res) => {
 	if(!series_list) {
 		console.log("no exist series"); 
 		res.json({ 
