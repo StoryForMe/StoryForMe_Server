@@ -80,7 +80,7 @@ exports.getUserKeyword = (uid, callback) => {
 			else {
 				var keywords = [];
 				for (var row of rows) {
-					keywords.push(row["id"]);
+					keywords.push({content: row["id"]});
 				}
 				callback(keywords);
 			}
