@@ -71,12 +71,17 @@ exports.getKeywordId = (keywords, index, callback) => {
 /*************************************************************/
 
 // uid애 해당하는 user가 like로 등록한 keyword들을 가져옴
-exports.getUserKeyword = (uid, callback) => {
+exports.getUserKeyword = (res, uid, callback) => {
 	app.getConnectionPool((conn) => {
 		var sql = "select id from KEYWORD as k join `LIKE` as l on k.id=l.kid where uid=" + uid;
 		conn.query(sql, function(err, rows) {
 			conn.release();
-			if(err) console.log("getUserKeyword " + err);
+			if(err) {
+        res.json({
+          error: "E002",
+          error_message: "query 문법 오류"
+        })
+      }
 			else {
 				var keywords = [];
 				for (var row of rows) {
