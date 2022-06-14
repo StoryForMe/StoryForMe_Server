@@ -31,7 +31,7 @@ router.post('/series', (req, res) => {
       conn.release();
       if(err) res.status(400).json({ result: 0})
       else {
-        series.updateZzimkkongNum(req.body.sid, (result) => {
+        series.updateZzimkkongNum(res, req.body.sid, (result) => {
           res.json({ result: result })
         })
       }
@@ -69,7 +69,7 @@ router.delete('/series/:uid/:sid', (req, res) => {
       }
       else if(results.affectedRows == 0) res.json({ result: 0 });
       else {
-        series.deleteZzimkkongNum(req.params.sid, (result) => {
+        series.deleteZzimkkongNum(res, req.params.sid, (result) => {
           res.json({ result: result })
         })
       }

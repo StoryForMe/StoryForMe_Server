@@ -22,8 +22,8 @@ router.get('/list/:option/:uid/:kid', (req, res) => {
 				results = [];
 				// 각각의 시리즈에 대해 필요한 정보들을 가져와서 results에 추가해줌.
 				function getNicknameIterCallback(nickname, index) {
-					user.getIs_zzimkkong(req.params.uid, series_list[index]["id"], (is_zzimkkong) => {
-						keyword.getSeriesKeyword(series_list[index]["id"], (keywords) => {
+					user.getIs_zzimkkong(res, req.params.uid, series_list[index]["id"], (is_zzimkkong) => {
+						keyword.getSeriesKeyword(res, series_list[index]["id"], (keywords) => {
 							results.push({
 								sid: series_list[index]["id"],
 								title: series_list[index]["title"],
@@ -39,19 +39,19 @@ router.get('/list/:option/:uid/:kid', (req, res) => {
 								recent_update: series_list[index]["recent_update"]
 							});
 							if (index < series_list.length - 1)
-								user.getNicknameIter(series_list[index + 1]["uid"], index + 1, getNicknameIterCallback)
+								user.getNicknameIter(res, series_list[index + 1]["uid"], index + 1, getNicknameIterCallback)
 							else res.json( {series_list: results });
 						});
 					});
 				}
-				user.getNicknameIter(series_list[0]["uid"], 0, getNicknameIterCallback)
+				user.getNicknameIter(res, series_list[0]["uid"], 0, getNicknameIterCallback)
 			}
 	   })
 	})
 })
 
 router.get('/:sid', (req, res) => {
-	series.getSeriesData(req.params.sid, (series_data) => res.json(series_data));
+	series.getSeriesData(res, req.params.sid, (series_data) => res.json(series_data));
 })
 
 router.post('/', (req, res) => {
@@ -81,22 +81,22 @@ router.post('/', (req, res) => {
 			conn.release();
 			if(err) console.log(err);
 			else if (req.body.keywords.length == 0) 
-				series.getSeriesData(results.insertId, (series_data) => res.json(series_data));
+				series.getSeriesData(res, results.insertId, (series_data) => res.json(series_data));
 			else {
 				var kid_list = []
 				function getKeywordIdCallback(kid, next_index) {
 					kid_list.push(kid)
 					if (next_index == req.body.keywords.length) 
-						keyword.postSeriesKeyword(results.insertId, kid_list, 0, postSeriesKeywordCallback);
+						keyword.postSeriesKeyword(res, results.insertId, kid_list, 0, postSeriesKeywordCallback);
 					else 
-						keyword.getKeywordId(req.body.keywords, next_index, getKeywordIdCallback);
+						keyword.getKeywordId(res, req.body.keywords, next_index, getKeywordIdCallback);
 				}
 				function postSeriesKeywordCallback(next_index) {
 					if (next_index == kid_list.length) 
-						series.getSeriesData(results.insertId, (series_data) => res.json(series_data)); 
-					else keyword.postSeriesKeyword(results.insertId, kid_list, next_index, postSeriesKeywordCallback);
+						series.getSeriesData(res, results.insertId, (series_data) => res.json(series_data)); 
+					else keyword.postSeriesKeyword(res, results.insertId, kid_list, next_index, postSeriesKeywordCallback);
 				}
-				keyword.getKeywordId(req.body.keywords, 0, getKeywordIdCallback);
+				keyword.getKeywordId(res, req.body.keywords, 0, getKeywordIdCallback);
 			}
 		})
 	})
@@ -125,24 +125,24 @@ router.patch('/', (req, res) => {
 				})
 			}
 			else if (req.body.keywords == null || req.body.keywords.length == 0)
-				keyword.updateSeriesKeyword(req.body.id, null, () => { 
-					series.getSeriesData(req.body.id, (series_data) => res.json(series_data)); 
+				keyword.updateSeriesKeyword(res, req.body.id, null, () => { 
+					series.getSeriesData(res, req.body.id, (series_data) => res.json(series_data)); 
 				})
 			else {
 				var kid_list = []
 				function getKeywordIdCallback(kid, next_index) {
 					kid_list.push(kid)
 					if (next_index == req.body.keywords.length) 
-						keyword.updateSeriesKeyword(req.body.id, kid_list, postSeriesKeywordCallback);
+						keyword.updateSeriesKeyword(res, req.body.id, kid_list, postSeriesKeywordCallback);
 					else 
-						keyword.getKeywordId(req.body.keywords, next_index, getKeywordIdCallback);
+						keyword.getKeywordId(res, req.body.keywords, next_index, getKeywordIdCallback);
 				}
 				function postSeriesKeywordCallback(next_index) {
 					if (next_index == kid_list.length) 
-						series.getSeriesData(req.body.sid, (series_data) => res.json(series_data));
-					else keyword.postSeriesKeyword(req.body.sid, kid_list, next_index, postSeriesKeywordCallback);
+						series.getSeriesData(res, req.body.sid, (series_data) => res.json(series_data));
+					else keyword.postSeriesKeyword(res, req.body.sid, kid_list, next_index, postSeriesKeywordCallback);
 				}
-				keyword.getKeywordId(req.body.keywords, 0, getKeywordIdCallback);
+				keyword.getKeywordId(res, req.body.keywords, 0, getKeywordIdCallback);
 			}
 		})
 	})

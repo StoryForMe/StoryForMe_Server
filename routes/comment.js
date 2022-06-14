@@ -15,7 +15,7 @@ router.post('/', (req,res) => {
 		conn.query(sql, values, function(err, results) {
 			conn.release();
 			if(err) console.log(err); 
-			else comment.getCommentData(results.insertId, (comment_data) => res.json(comment_data));
+			else comment.getCommentData(res, results.insertId, (comment_data) => res.json(comment_data));
 		})	
 	})
 })
@@ -42,7 +42,7 @@ router.patch('/', (req, res) => {
 					error_message: "해당 댓글이 존재하지 않음."
 				})
 			}
-			else comment.getCommentData(req.body.id, (comment_data) => res.json(comment_data));
+			else comment.getCommentData(res, req.body.id, (comment_data) => res.json(comment_data));
 		})
 	})
 })

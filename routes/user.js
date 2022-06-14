@@ -3,7 +3,6 @@ var express = require('express');
 var router = express.Router();
 const app = require('../app');
 const keyword = require('../utils/keyword');
-const series = require('../utils/series');
 const user = require('../utils/user');
 
 router.get('/login', (req, res) => {
@@ -133,11 +132,11 @@ router.get('/:id/zzimkkong/series', (req, res) => {
           })
           if (index < series_list.length - 1) {
             index++;
-            keyword.getSeriesKeyword(series_list[index]["id"], getSeriesKeyWordCallback)
+            keyword.getSeriesKeyword(res, series_list[index]["id"], getSeriesKeyWordCallback)
           }
           else res.json({ series_list: results })
         }
-        keyword.getSeriesKeyword(series_list[0]["id"], getSeriesKeyWordCallback)
+        keyword.getSeriesKeyword(res, series_list[0]["id"], getSeriesKeyWordCallback)
       }
     })
   })
@@ -171,7 +170,7 @@ router.get('/:id/series', (req, res) => {
           })
           if (index < seriesList.length - 1) {
             index++;
-            keyword.getSeriesKeyword(seriesList[index]["id"], getSeriesKeywordIterCallback)
+            keyword.getSeriesKeyword(res, seriesList[index]["id"], getSeriesKeywordIterCallback)
           }
           else res.json({ series_list: results }) 
         }
@@ -204,7 +203,7 @@ router.get('/:id', (req, res) => {
       else if(!user) {
         res.json({ id: -1 })
       } else {
-        keyword.getUserKeyword(req.params.id, (keywords) => {
+        keyword.getUserKeyword(res, req.params.id, (keywords) => {
           var result = {
             nickname: user["nickname"],
             introduction: user["introduction"],
@@ -257,8 +256,8 @@ router.post('/', (req, res) => {
             }
           }
           else if (req.body.keywords.length == 0) {
-            keyword.updateUserKeyword(JSON.parse(body).id, null, () => { 
-              user.getPostedUser(results.insertId, (user) => {
+            keyword.updateUserKeyword(res, JSON.parse(body).id, null, () => { 
+              user.getPostedUser(res, results.insertId, (user) => {
                 res.json(user);
               })
             });
@@ -268,19 +267,19 @@ router.post('/', (req, res) => {
             function getKeywordIdCallback(kid, next_index) {
               kid_list.push(kid)
               if (next_index == req.body.keywords.length)
-                keyword.postUserKeyword(results.insertId, kid_list, 0, postUserKeywordCallback);
+                keyword.postUserKeyword(res, results.insertId, kid_list, 0, postUserKeywordCallback);
               else
-                keyword.getKeywordId(req.body.keywords, next_index, getKeywordIdCallback);
+                keyword.getKeywordId(res, req.body.keywords, next_index, getKeywordIdCallback);
             }
             function postUserKeywordCallback(next_index) {
               if (next_index == kid_list.length){
-                user.getPostedUser(results.insertId, (user) => {
+                user.getPostedUser(res, results.insertId, (user) => {
                   res.json(user);
                 })
               }
-              else keyword.postUserKeyword(results.insertId, kid_list, next_index, postUserKeywordCallback);
+              else keyword.postUserKeyword(res, results.insertId, kid_list, next_index, postUserKeywordCallback);
             }
-            keyword.getKeywordId(req.body.keywords, 0, getKeywordIdCallback);
+            keyword.getKeywordId(res, req.body.keywords, 0, getKeywordIdCallback);
           }
         })
       })
@@ -316,8 +315,8 @@ router.patch('/', (req, res) => {
         });
       }
       else if (req.body.keywords == null || req.body.keywords.length == 0) {
-        keyword.updateUserKeyword(req.body.id, null, () => { 
-          user.getPatchedUser(req.body.id, (user) => {
+        keyword.updateUserKeyword(res, req.body.id, null, () => { 
+          user.getPatchedUser(res, req.body.id, (user) => {
             res.json(user);
           })
         });
@@ -327,19 +326,19 @@ router.patch('/', (req, res) => {
         function getKeywordIdCallback(kid, next_index) {
           kid_list.push(kid)
           if (next_index == req.body.keywords.length) 
-            keyword.updateUserKeyword(req.body.id, kid_list, postUserKeywordCallback);
+            keyword.updateUserKeyword(res, req.body.id, kid_list, postUserKeywordCallback);
           else
-            keyword.getKeywordId(req.body.keywords, next_index, getKeywordIdCallback);
+            keyword.getKeywordId(res, req.body.keywords, next_index, getKeywordIdCallback);
         }
         function postUserKeywordCallback(next_index) {
           if (next_index == kid_list.length) {
-            user.getPatchedUser(req.body.id, (user) => {
+            user.getPatchedUser(res, req.body.id, (user) => {
               res.json(user);
             })
           }
-          else keyword.postUserKeyword(req.body.id, kid_list, next_index, postUserKeywordCallback);
+          else keyword.postUserKeyword(res, req.body.id, kid_list, next_index, postUserKeywordCallback);
         }
-        keyword.getKeywordId(req.body.keywords, 0, getKeywordIdCallback);
+        keyword.getKeywordId(res, req.body.keywords, 0, getKeywordIdCallback);
       }
     })
   })

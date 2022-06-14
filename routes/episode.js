@@ -6,7 +6,7 @@ const comment = require('../utils/comment');
 const episode = require('../utils/episode');
 
 router.get('/:eid/:uid', (req, res) => {
-	episode.getEpisodeData(req.params.eid, req.params.uid, (episode_data) => res.json(episode_data));
+	episode.getEpisodeData(res, req.params.eid, req.params.uid, (episode_data) => res.json(episode_data));
 })
 
 router.get('/:eid/comment', (req, res) => {
@@ -27,9 +27,9 @@ router.get('/:eid/comment', (req, res) => {
 						date: _comment["date"]
 					});
 					if (next_index == comments.length) res.json(_comments);
-					else comment.getNameIter(comments, next_index, getNameCallback);
+					else comment.getNameIter(res, comments, next_index, getNameCallback);
 				}
-				comment.getNameIter(comments, 0, getNameCallback);
+				comment.getNameIter(res, comments, 0, getNameCallback);
 			}
 	   })
 	})
@@ -60,9 +60,9 @@ router.post('/', (req,res) => {
 				}
 			  }
 			else {
-				series.updateEpisodeNum(req.body.sid, 1, (result) => {
+				series.updateEpisodeNum(res, req.body.sid, 1, (result) => {
 					if (result == 1) 
-						episode.getEpisodeData(results.insertId, -1, (episode_data) => res.json(episode_data)); 
+						episode.getEpisodeData(res, results.insertId, -1, (episode_data) => res.json(episode_data)); 
 				})
 			}
 		})	
@@ -92,7 +92,7 @@ router.patch('/', (req,res) => {
 						error_message: "해당 에피소드가 존재하지 않음."
 					})
 				} 
-				else episode.getEpisodeData(req.body.id, -1, (episode_data) => res.json(episode_data)); 
+				else episode.getEpisodeData(res, req.body.id, -1, (episode_data) => res.json(episode_data)); 
 			}
 		})	
 		
@@ -111,7 +111,7 @@ router.delete('/:eid', (req, res) => {
 					if(err) console.log(err);
 					else if (results.affectedRows == 0) res.json({ result: 0 }); 
 					else {
-						series.updateEpisodeNum(episode[0]["sid"], -1, (result) => {
+						series.updateEpisodeNum(res, episode[0]["sid"], -1, (result) => {
 							res.json({ result: result }); 
 						})
 					}
