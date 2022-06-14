@@ -121,7 +121,7 @@ router.patch('/', (req, res) => {
 			else if (req.body.keywords == null)
 				series.getSeriesData(req.body.id, (series_data) => res.json(series_data));
 			else {
-				keyword.getSeriesKeyword(req.body.id), (keyword_list) => {
+				keyword.getSeriesKeyword(req.body.id, (keyword_list) => {
 					for (var k in req.body.keywords) {
 						var index = keyword_list.indexOf(k);
 						if (index == -1) 
@@ -132,7 +132,7 @@ router.patch('/', (req, res) => {
 						if (index == -1)
 							keyword.deleteKeywordFromSeries(req.body.id, k);
 					}
-				}
+				})
 			}
 		})
 	})
