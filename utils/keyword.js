@@ -117,7 +117,7 @@ exports.updateUserKeyword = (uid, kid_list, callback) => {
 // 받은 keyword를 content로 하는 KEYWORD를 새로 추가한 뒤 추가된 키워드의 id를 가져옴.
 postKeyword = (keyword, callback) => {
 	app.getConnectionPool((conn) => {
-		var sql = "insert into KEYWORD (search, content, hits) values (0, '" + keyword + "', 0)";
+		var sql = "insert into KEYWORD (id, search, hits) values ('" + keyword + "', 0, 0)";
 		conn.query(sql, function(err, results) {
 			conn.release();
 			if (err) console.log(err);
