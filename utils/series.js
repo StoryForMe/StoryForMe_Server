@@ -5,8 +5,9 @@ const episode = require('./episode');
 const schedule = require('node-schedule');
 
 // 정기적으로 조회 수 초기화 하는 코드
-// const rule = new schedule.RecurrenceRule();
-const job = schedule.scheduleJob('1 * * * *', function(){
+const rule = new schedule.RecurrenceRule();
+rule.minute = 53;
+const job = schedule.scheduleJob(rule, function(){
   console.log("scheduling")
   app.getConnectionPool((conn) => {
     var sql = "update SERIES set hits_week=0, hits_month=0";
