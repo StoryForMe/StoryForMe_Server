@@ -81,7 +81,6 @@ exports.get_series_list_sql = (option, kid) => {
 }
 
 
-
 exports.getSeriesData = (sid, callback) => {
 	app.getConnectionPool((conn) => {
 		var sql = "select * from SERIES where id=" + sid;
