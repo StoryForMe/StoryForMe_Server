@@ -182,7 +182,7 @@ router.get('/:id/series', (req, res) => {
 })
 
 router.get('/:id/keywords', (req, res) => {
-  keyword.getUserKeyword(req.params.id, (keywords) => {
+  keyword.getUserKeyword(res, req.params.id, (keywords) => {
     var result = {
       keywords: keywords
     }
