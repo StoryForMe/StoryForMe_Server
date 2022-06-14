@@ -5,12 +5,17 @@ const app = require('../app');
 /************************************************************/
 
 // sid에 해당하는 시리즈의 키워드 목록을 가져옴.
-exports.getSeriesKeyword = (sid, callback) => {
+exports.getSeriesKeyword = (res, sid, callback) => {
 	app.getConnectionPool((conn) => {
 		var sql = "select * from KEYWORD as k join REPRESENT as r on k.id=r.kid where sid=" + sid;
 		conn.query(sql, function(err, keyword_list) {
 			conn.release();
-			if(err) console.log(err);
+			if(err) {
+        res.status(400).json({
+          error: "E002",
+          error_message: "query 문법 오류"
+        })
+      }
 			else{
 				var keywords = [];
 				for (var keyword of keyword_list) {
@@ -49,7 +54,12 @@ exports.addKeywordToSeries = (sid, kid, callback) => {
 		var sql = "select * from KEYWORD where id='" + kid + "'";
 		conn.query(sql, function(err, keyword_list) {
 			conn.release();
-			if (err) console.log(err);
+			if (err) {
+        res.status(400).json({
+          error: "E002",
+          error_message: "query 문법 오류"
+        })
+      }
 			else{
 				if(keyword_list.length == 0)
 					postKeyword(kid, () => { createNewRepresent(sid, kid, callback) });
@@ -66,12 +76,17 @@ exports.addKeywordToSeries = (sid, kid, callback) => {
 /*************************************************************/
 
 // uid애 해당하는 user가 like로 등록한 keyword들을 가져옴
-exports.getUserKeyword = (uid, callback) => {
+exports.getUserKeyword = (res, uid, callback) => {
 	app.getConnectionPool((conn) => {
-		var sql = "select id from KEYWORD as k join `LIKE` as l on k.id=l.kid where uid=" + uid;
+		var sql = "select id from KEYWORD as k join LIKE as l on k.id=l.kid where uid=" + uid;
 		conn.query(sql, function(err, rows) {
 			conn.release();
-			if(err) console.log("getUserKeyword " + err);
+			if(err) {
+        res.status(400).json({
+          error: "E002",
+          error_message: "query 문법 오류"
+        })
+      }
 			else {
 				var keywords = [];
 				for (var row of rows) {
@@ -89,19 +104,29 @@ exports.postUserKeyword = (uid, kid_list, index, callback) => {
 		var sql = "insert into `LIKE` values (" + uid + ", " + kid_list[index] + ")";
 		conn.query(sql, function(err, results) {
 			conn.release();
-			if(err) console.log(err);
+			if(err) {
+        res.status(400).json({
+          error: "E002",
+          error_message: "query 문법 오류"
+        })
+      }
 			else callback(index + 1);
 		})
 	})
 }
 
 // uid에 해당하는 시리즈의 기존 키워드를 삭제한 뒤 새로운 키워드 목록 추가.
-exports.updateUserKeyword = (uid, kid_list, callback) => {
+exports.updateUserKeyword = (res, uid, kid_list, callback) => {
 	app.getConnectionPool((conn) => {
 		var sql = "delete from `LIKE` where uid=" + uid;
 		conn.query(sql, function(err, results) {
 			conn.release();
-			if (err) console.log(err);
+			if (err) {
+        res.status(400).json({
+          error: "E002",
+          error_message: "query 문법 오류"
+        })
+      }
 			else if (kid_list == null) {
 				callback();
 			}
@@ -115,12 +140,17 @@ exports.updateUserKeyword = (uid, kid_list, callback) => {
 /*************************************************************/
 
 // 받은 keyword를 content로 하는 KEYWORD를 새로 추가한 뒤 추가된 키워드의 id를 가져옴.
-postKeyword = (keyword, callback) => {
+postKeyword = (res, keyword, callback) => {
 	app.getConnectionPool((conn) => {
 		var sql = "insert into KEYWORD (id, search, hits) values ('" + keyword + "', 0, 0)";
 		conn.query(sql, function(err, results) {
 			conn.release();
-			if (err) console.log(err);
+			if (err) {
+        res.status(400).json({
+          error: "E002",
+          error_message: "query 문법 오류"
+        })
+      }
 			else callback(results.insertId);
 		})
 	})

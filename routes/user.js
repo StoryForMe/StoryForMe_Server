@@ -3,7 +3,6 @@ var express = require('express');
 var router = express.Router();
 const app = require('../app');
 const keyword = require('../utils/keyword');
-const series = require('../utils/series');
 const user = require('../utils/user');
 
 router.get('/login', (req, res) => {
@@ -16,7 +15,7 @@ router.get('/login', (req, res) => {
   }
   request(options, function(error, response, body) {
     if(error) {
-      res.json({
+      res.status(400).json({
         error: "E006",
         error_message: "kakao access token 정보 조회 중 문제 발생"
       })
@@ -26,7 +25,7 @@ router.get('/login', (req, res) => {
       conn.query(sql, function(err, [user]) {
         conn.release();
         if(err) {
-          res.json({
+          res.status(400).json({
             error: "E002",
             error_message: "query 문법 오류"
           })
@@ -55,13 +54,13 @@ router.get('/:id/character', (req, res) => {
     conn.query(sql, function(err, [user]) {
       conn.release();
       if(err) {
-        res.json({
+        res.status(400).json({
           error: "E002",
           error_message: "query 문법 오류"
         })
       }
       else if(!user) {
-        res.json({
+        res.status(400).json({
           error: "E001",
           error_message: "존재하지 않는 user"
         })
@@ -82,13 +81,13 @@ router.get('/:id/zzimkkong/writer', (req, res) => {
     conn.query(sql, function(err, writers) {
       conn.release();
       if(err) {
-        res.json({
+        res.status(400).json({
           error: "E002",
           error_message: "query 문법 오류"
         })
       }
       else if(!writers) {
-        res.json({
+        res.status(400).json({
           error: "E001",
           error_message: "존재하지 않는 writer"
         })
@@ -108,13 +107,13 @@ router.get('/:id/zzimkkong/series', (req, res) => {
     conn.query(sql, function(err, series_list) {
       conn.release();
       if(err) {
-        res.json({
+        res.status(400).json({
           error: "E002",
           error_message: "query 문법 오류"
         })
       }
       else if(!series) {
-        res.json({
+        res.status(400).json({
           error: "E001",
           error_message: "존재하지 않는 series"
         })
@@ -133,11 +132,11 @@ router.get('/:id/zzimkkong/series', (req, res) => {
           })
           if (index < series_list.length - 1) {
             index++;
-            keyword.getSeriesKeyword(series_list[index]["id"], getSeriesKeyWordCallback)
+            keyword.getSeriesKeyword(res, series_list[index]["id"], getSeriesKeyWordCallback)
           }
           else res.json({ series_list: results })
         }
-        keyword.getSeriesKeyword(series_list[0]["id"], getSeriesKeyWordCallback)
+        keyword.getSeriesKeyword(res, series_list[0]["id"], getSeriesKeyWordCallback)
       }
     })
   })
@@ -150,7 +149,7 @@ router.get('/:id/series', (req, res) => {
     conn.query(sql, function(err, seriesList) {
       conn.release();
       if(err) {
-        res.json({
+        res.status(400).json({
           error: "E002",
           error_message: "query 문법 오류"
         })
@@ -171,7 +170,7 @@ router.get('/:id/series', (req, res) => {
           })
           if (index < seriesList.length - 1) {
             index++;
-            keyword.getSeriesKeyword(seriesList[index]["id"], getSeriesKeywordIterCallback)
+            keyword.getSeriesKeyword(res, seriesList[index]["id"], getSeriesKeywordIterCallback)
           }
           else res.json({ series_list: results }) 
         }
@@ -182,7 +181,7 @@ router.get('/:id/series', (req, res) => {
 })
 
 router.get('/:id/keywords', (req, res) => {
-  keyword.getUserKeyword(req.params.id, (keywords) => {
+  keyword.getUserKeyword(res, req.params.id, (keywords) => {
     var result = {
       keywords: keywords
     }
@@ -196,7 +195,7 @@ router.get('/:id', (req, res) => {
     conn.query(sql, function(err, [user]) {
       conn.release();
       if(err) {
-        res.json({
+        res.status(400).json({
           error: "E002",
           error_message: "query 문법 오류"
         })
@@ -204,7 +203,7 @@ router.get('/:id', (req, res) => {
       else if(!user) {
         res.json({ id: -1 })
       } else {
-        keyword.getUserKeyword(req.params.id, (keywords) => {
+        keyword.getUserKeyword(res, req.params.id, (keywords) => {
           var result = {
             nickname: user["nickname"],
             introduction: user["introduction"],
@@ -231,7 +230,7 @@ router.post('/', (req, res) => {
   }
   request(options, function(error, response, body) {
     if(error) {
-      res.json({
+      res.status(400).json({
         error: "E006",
         error_message: "kakao access token 정보 조회 중 문제 발생"
       })
@@ -257,8 +256,8 @@ router.post('/', (req, res) => {
             }
           }
           else if (req.body.keywords.length == 0) {
-            keyword.updateUserKeyword(JSON.parse(body).id, null, () => { 
-              user.getPostedUser(results.insertId, (user) => {
+            keyword.updateUserKeyword(res, JSON.parse(body).id, null, () => { 
+              user.getPostedUser(res, results.insertId, (user) => {
                 res.json(user);
               })
             });
@@ -268,19 +267,19 @@ router.post('/', (req, res) => {
             function getKeywordIdCallback(kid, next_index) {
               kid_list.push(kid)
               if (next_index == req.body.keywords.length)
-                keyword.postUserKeyword(results.insertId, kid_list, 0, postUserKeywordCallback);
+                keyword.postUserKeyword(res, results.insertId, kid_list, 0, postUserKeywordCallback);
               else
-                keyword.getKeywordId(req.body.keywords, next_index, getKeywordIdCallback);
+                keyword.getKeywordId(res, req.body.keywords, next_index, getKeywordIdCallback);
             }
             function postUserKeywordCallback(next_index) {
               if (next_index == kid_list.length){
-                user.getPostedUser(results.insertId, (user) => {
+                user.getPostedUser(res, results.insertId, (user) => {
                   res.json(user);
                 })
               }
-              else keyword.postUserKeyword(results.insertId, kid_list, next_index, postUserKeywordCallback);
+              else keyword.postUserKeyword(res, results.insertId, kid_list, next_index, postUserKeywordCallback);
             }
-            keyword.getKeywordId(req.body.keywords, 0, getKeywordIdCallback);
+            keyword.getKeywordId(res, req.body.keywords, 0, getKeywordIdCallback);
           }
         })
       })
@@ -290,7 +289,7 @@ router.post('/', (req, res) => {
 
 router.patch('/', (req, res) => {
   if (req.body.id == undefined) {
-		res.json({ 
+		res.status(400).json({ 
 			error: "E005",
 			error_message: "수정할 유저의 id 정보가 누락됨."
 		})
@@ -303,16 +302,21 @@ router.patch('/', (req, res) => {
 		}
     conn.query(sql, values, function(err, results) {
       conn.release();
-      if(err) console.log(err);
+      if(err) {
+        res.status(400).json({ 
+          error: "E002",
+					error_message: "query 문법 오류"
+        });
+      }
       else if (results.affectedRows == 0) {
-        res.json({ 
+        res.status(400).json({ 
           error: "E001",
 					error_message: "해당 유저가 존재하지 않음."
         });
       }
       else if (req.body.keywords == null || req.body.keywords.length == 0) {
-        keyword.updateUserKeyword(req.body.id, null, () => { 
-          user.getPatchedUser(req.body.id, (user) => {
+        keyword.updateUserKeyword(res, req.body.id, null, () => { 
+          user.getPatchedUser(res, req.body.id, (user) => {
             res.json(user);
           })
         });
@@ -322,19 +326,19 @@ router.patch('/', (req, res) => {
         function getKeywordIdCallback(kid, next_index) {
           kid_list.push(kid)
           if (next_index == req.body.keywords.length) 
-            keyword.updateUserKeyword(req.body.id, kid_list, postUserKeywordCallback);
+            keyword.updateUserKeyword(res, req.body.id, kid_list, postUserKeywordCallback);
           else
-            keyword.getKeywordId(req.body.keywords, next_index, getKeywordIdCallback);
+            keyword.getKeywordId(res, req.body.keywords, next_index, getKeywordIdCallback);
         }
         function postUserKeywordCallback(next_index) {
           if (next_index == kid_list.length) {
-            user.getPatchedUser(req.body.id, (user) => {
+            user.getPatchedUser(res, req.body.id, (user) => {
               res.json(user);
             })
           }
-          else keyword.postUserKeyword(req.body.id, kid_list, next_index, postUserKeywordCallback);
+          else keyword.postUserKeyword(res, req.body.id, kid_list, next_index, postUserKeywordCallback);
         }
-        keyword.getKeywordId(req.body.keywords, 0, getKeywordIdCallback);
+        keyword.getKeywordId(res, req.body.keywords, 0, getKeywordIdCallback);
       }
     })
   })
@@ -346,7 +350,7 @@ router.delete('/:id', (req, res) => {
     conn.query(sql, function(err, results) {
       conn.release();
       if(err) {
-        res.json({
+        res.status(400).json({
           error: "E002",
           error_message: "query 문법 오류"
         })

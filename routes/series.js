@@ -27,7 +27,7 @@ router.get('/list/:option/:uid/:kid', (req, res) => {
 })
 
 router.get('/:sid', (req, res) => {
-	series.getSeriesData(req.params.sid, (series_data) => res.json(series_data));
+	series.getSeriesData(res, req.params.sid, (series_data) => res.json(series_data));
 })
 
 router.post('/', (req, res) => {
@@ -57,7 +57,7 @@ router.post('/', (req, res) => {
 			conn.release();
 			if(err) console.log(err);
 			else if (req.body.keywords.length == 0) 
-				series.getSeriesData(results.insertId, (series_data) => res.json(series_data));
+				series.getSeriesData(res, results.insertId, (series_data) => res.json(series_data));
 			else {
 				var index = 0;
 				function addKeywordToSeriesCallback() {

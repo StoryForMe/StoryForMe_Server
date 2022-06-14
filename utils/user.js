@@ -2,23 +2,33 @@ const app = require('../app');
 const keyword = require('./keyword');
 
 // uid에 해당하는 유저의 닉네임을 가져옴.
-exports.getNickname = (uid, callback) => {
+exports.getNickname = (res, uid, callback) => {
 	app.getConnectionPool((conn) => {
 		var sql = "select nickname from USER where id=" + uid;
 		conn.query(sql, function(err, users) {
 			conn.release();
-			if(err) console.log(err);
+			if(err) {
+        res.status(400).json({
+          error: "E002",
+          error_message: "query 문법 오류"
+        })
+      }
 			else callback(users[0]["nickname"]);
 		})
 	})
 }
 
-exports.getPostedUser = (uid, callback)=> {
+exports.getPostedUser = (res, uid, callback)=> {
   app.getConnectionPool((conn) => {
     var sql = "select * from USER where id=" + uid;
     conn.query(sql, function(err, user) {
       conn.release();
-      if(err) console.log(err);
+      if(err) {
+        res.status(400).json({
+          error: "E002",
+          error_message: "query 문법 오류"
+        })
+      }
       else {
         keyword.getUserKeyword(uid, (keywords) => {
           var result = {
@@ -36,12 +46,17 @@ exports.getPostedUser = (uid, callback)=> {
   })
 }
 
-exports.getPatchedUser = (uid, callback)=> {
+exports.getPatchedUser = (res, uid, callback)=> {
   app.getConnectionPool((conn) => {
     var sql = "select * from USER where id=" + uid;
     conn.query(sql, function(err, user) {
       conn.release();
-      if(err) console.log(err);
+      if(err) {
+        res.status(400).json({
+          error: "E002",
+          error_message: "query 문법 오류"
+        })
+      }
       else {
         keyword.getUserKeyword(uid, (keywords) => {
           var result = {
@@ -61,34 +76,49 @@ exports.getPatchedUser = (uid, callback)=> {
   })
 }
 
-exports.getNicknameIter = (uid, index, callback) => {
+exports.getNicknameIter = (res, uid, index, callback) => {
 	app.getConnectionPool((conn) => {
 		var sql = "select nickname from USER where id=" + uid;
 		conn.query(sql, function(err, users) {
 			conn.release();
-			if(err) console.log(err);
+			if(err) {
+        res.status(400).json({
+          error: "E002",
+          error_message: "query 문법 오류"
+        })
+      }
 			else callback(users[0]["nickname"], index);
 		})
 	})
 }
 
-exports.getIs_zzimkkong = (uid, sid, callback) => {
+exports.getIs_zzimkkong = (res, uid, sid, callback) => {
 	app.getConnectionPool((conn) => {
 		var sql = "select * from ZZIMKKONG_SERIES where uid=" + uid + " and sid=" + sid;
 		conn.query(sql, function(err, zzimkkongs) {
 			conn.release();
-			if (err) console.log(err);
+			if (err) {
+        res.status(400).json({
+          error: "E002",
+          error_message: "query 문법 오류"
+        })
+      }
 			else if(zzimkkongs) callback(zzimkkongs.length);
 		})
 	})
 }
 
-exports.getUserData = (uid, callback) => {
+exports.getUserData = (res, uid, callback) => {
 	app.getConnectionPool((conn) => {
 		var sql = "select * from USER where id=" + uid;
 		conn.query(sql, function(err, users) {
 			conn.release();
-			if (err) console.log(err);
+			if (err) {
+        res.status(400).json({
+          error: "E002",
+          error_message: "query 문법 오류"
+        })
+      }
 			else callback(users[0]);
 		})
 	})

@@ -15,7 +15,7 @@ const jobWeekHit = schedule.scheduleJob(ruleWeek, function(){
     conn.query(sql, function(err, results) {
       conn.release();
       if (err) {
-        callback({
+        console.log({
           error: "E007",
           error_message: "월요일 hits_week 초기화 과정에서 error 발생"
         })
@@ -30,7 +30,7 @@ const jobWeekZK = schedule.scheduleJob(ruleWeek, function(){
     conn.query(sql, function(err, results) {
       conn.release();
       if (err) {
-        callback({
+        console.log({
           error: "E007",
           error_message: "월요일 zzimkkong_week 초기화 과정에서 error 발생"
         })
@@ -50,7 +50,7 @@ const jobMonthHit = schedule.scheduleJob(ruleMonth, function(){
     conn.query(sql, function(err, results) {
       conn.release();
       if (err) {
-        callback({
+        console.log({
           error: "E007",
           error_message: "1일 hits_month 초기화 과정에서 error 발생"
         })
@@ -65,7 +65,7 @@ const jobMonthZK = schedule.scheduleJob(ruleMonth, function(){
     conn.query(sql, function(err, results) {
       conn.release();
       if (err) {
-        callback({
+        console.log({
           error: "E007",
           error_message: "1이 zzimkkong_month 초기화 과정에서 error 발생"
         })
@@ -86,45 +86,65 @@ exports.getCharacter = (sid, callback) => {
 	})
 }
 
-exports.updateHits = (sid, callback) => {
+exports.updateHits = (res, sid, callback) => {
 	app.getConnectionPool((conn) => {
 		var sql = "update SERIES set hits=hits+1, hits_month=hits_month+1, hits_week=hits_week+1 where id=" + sid;
 		conn.query(sql, function(err, results) {
 			conn.release();
-			if (err) console.log(err);
+			if (err) {
+        res.status(400).json({
+          error: "E002",
+          error_message: "query 문법 오류"
+        })
+      }
 			else callback(1);
 		})
 	})
 }
 
-exports.updateEpisodeNum = (sid, num, callback) => {
+exports.updateEpisodeNum = (res, sid, num, callback) => {
 	app.getConnectionPool((conn) => {
 		var sql = "update SERIES set episode_num=episode_num + (" + num + ") where id=" + sid;
 		conn.query(sql, function(err, results) {
 			conn.release();
-			if (err) console.log(err);
+			if (err) {
+        res.status(400).json({
+          error: "E002",
+          error_message: "query 문법 오류"
+        })
+      }
 			else callback(1);
 		})
 	})
 }
 
-exports.updateZzimkkongNum = (sid, callback) => {
+exports.updateZzimkkongNum = (res, sid, callback) => {
   app.getConnectionPool((conn) => {
     var sql = "update SERIES SET zzimkkong=zzimkkong+1, zzimkkong_month=zzimkkong_month+1, zzimkkong_week=zzimkkong_week+1 where id=" + sid;
     conn.query(sql, function(err, results) {
       conn.release();
-      if (err) console.log(err);
+      if (err) {
+        res.status(400).json({
+          error: "E002",
+          error_message: "query 문법 오류"
+        })
+      }
       else callback(1)
     })
   })
 }
 
-exports.deleteZzimkkongNum = (sid, callback) => {
+exports.deleteZzimkkongNum = (res, sid, callback) => {
   app.getConnectionPool((conn) => {
     var sql = "update SERIES SET zzimkkong=zzimkkong-1, zzimkkong_month=zzimkkong_month-1, zzimkkong_week=zzimkkong_week-1 where id=" + sid;
     conn.query(sql, function(err, results) {
       conn.release();
-      if (err) console.log(err);
+      if (err) {
+        res.status(400).json({
+          error: "E002",
+          error_message: "query 문법 오류"
+        })
+      }
       else callback(1)
     })
   })
@@ -193,15 +213,19 @@ exports.makeResForSeriesList = (series_list, req, res) => {
 }
 
 
-exports.getSeriesData = (sid, callback) => {
+exports.getSeriesData = (res, sid, callback) => {
 	app.getConnectionPool((conn) => {
 		var sql = "select * from SERIES where id=" + sid;
 		conn.query(sql, function(err, series_list) {
 			conn.release();
-			if(err) console.log(err);
+			if(err) {
+        res.status(400).json({
+          error: "E002",
+          error_message: "query 문법 오류"
+        })
+      }
 			else if(series_list.length == 0) {
-				console.log("no exist series"); 
-				return({ 
+				res.status(400).json({ 
 					error: "E001",
 					error_message: "존재하지 않는 시리즈입니다."
 				})

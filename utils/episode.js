@@ -6,12 +6,17 @@ const user = require('./user')
 const series = require('./series');
 
 // sid에 해당하는 시리즈의 에피소드 정보 목록을 가져옴.
-exports.getEpisodeList = (sid, callback) => {
+exports.getEpisodeList = (res, sid, callback) => {
 	app.getConnectionPool((conn) => {
 		var sql = "select * from EPISODE where sid=" + sid + " order by chapter";
 		conn.query(sql, function(err, episodes) {
 			conn.release();
-			if(err) console.log(err);
+			if(err) {
+        res.status(400).json({
+          error: "E002",
+          error_message: "query 문법 오류"
+        })
+      }
 			else if (episodes.length == 0) callback([]);
 			else {
 				var result = [];
@@ -40,15 +45,19 @@ exports.getEpisodeList = (sid, callback) => {
 	})
 }
 
-exports.getEpisodeData = (eid, uid, callback) => {
+exports.getEpisodeData = (res, eid, uid, callback) => {
 	app.getConnectionPool((conn) => {
 		var sql = "select * from EPISODE where id=" + eid;
 		conn.query(sql, function(err, episode_list) {
 			conn.release();
-			if(err) console.log(err);
+			if(err) {
+        res.status(400).json({
+          error: "E002",
+          error_message: "query 문법 오류"
+        })
+      }
 			else if(episode_list.length == 0) {
-				console.log("no exist episode");
-				return({ 
+				res.status(400).json({ 
 					error: "E001",
 					error_message: "존재하지 않는 에피소드입니다."
 				})

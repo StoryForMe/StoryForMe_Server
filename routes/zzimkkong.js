@@ -12,7 +12,7 @@ router.post('/writer', (req, res) => {
     }
     conn.query(sql, values, function(err, results) {
       conn.release();
-      if(err) res.json({ result: 0})
+      if(err) res.status(400).json({ result: 0})
       else {
         res.json({ result: 1 })
       }
@@ -29,9 +29,9 @@ router.post('/series', (req, res) => {
     }
     conn.query(sql, values, function(err, results) {
       conn.release();
-      if(err) res.json({ result: 0})
+      if(err) res.status(400).json({ result: 0})
       else {
-        series.updateZzimkkongNum(req.body.sid, (result) => {
+        series.updateZzimkkongNum(res, req.body.sid, (result) => {
           res.json({ result: result })
         })
       }
@@ -45,7 +45,7 @@ router.delete('/writer/:uid/:wid', (req, res) => {
     conn.query(sql, function(err, results) {
       conn.release();
       if(err) {
-        res.json({
+        res.status(400).json({
           error: "E002",
           error_message: "query 문법 오류"
         })
@@ -62,14 +62,14 @@ router.delete('/series/:uid/:sid', (req, res) => {
     conn.query(sql, function(err, results) {
       conn.release();
       if(err) {
-        res.json({
+        res.status(400).json({
           error: "E002",
           error_message: "query 문법 오류"
         })
       }
       else if(results.affectedRows == 0) res.json({ result: 0 });
       else {
-        series.deleteZzimkkongNum(req.params.sid, (result) => {
+        series.deleteZzimkkongNum(res, req.params.sid, (result) => {
           res.json({ result: result })
         })
       }
