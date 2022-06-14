@@ -76,7 +76,7 @@ sql_post = [
 exports.get_series_list_sql = (option, kid) => {
 	var sql; 
 	if (kid == null) sql = sql_pre[option] + "from SERIES" + sql_post[option];
-	else sql = sql_pre[option] + "from SERIES as s join REPRESENT as r on s.id=r.sid where kid=" + kid + sql_post[option];
+	else sql = sql_pre[option] + "from SERIES as s join REPRESENT as r on s.id=r.sid where kid='" + kid + "'" + sql_post[option];
 	return (sql);
 }
 
