@@ -16,7 +16,7 @@ router.get('/login', (req, res) => {
   }
   request(options, function(error, response, body) {
     if(error) {
-      res.json({
+      res.status(400).json({
         error: "E006",
         error_message: "kakao access token 정보 조회 중 문제 발생"
       })
@@ -26,7 +26,7 @@ router.get('/login', (req, res) => {
       conn.query(sql, function(err, [user]) {
         conn.release();
         if(err) {
-          res.json({
+          res.status(400).json({
             error: "E002",
             error_message: "query 문법 오류"
           })
@@ -55,13 +55,13 @@ router.get('/:id/character', (req, res) => {
     conn.query(sql, function(err, [user]) {
       conn.release();
       if(err) {
-        res.json({
+        res.status(400).json({
           error: "E002",
           error_message: "query 문법 오류"
         })
       }
       else if(!user) {
-        res.json({
+        res.status(400).json({
           error: "E001",
           error_message: "존재하지 않는 user"
         })
@@ -82,13 +82,13 @@ router.get('/:id/zzimkkong/writer', (req, res) => {
     conn.query(sql, function(err, writers) {
       conn.release();
       if(err) {
-        res.json({
+        res.status(400).json({
           error: "E002",
           error_message: "query 문법 오류"
         })
       }
       else if(!writers) {
-        res.json({
+        res.status(400).json({
           error: "E001",
           error_message: "존재하지 않는 writer"
         })
@@ -108,13 +108,13 @@ router.get('/:id/zzimkkong/series', (req, res) => {
     conn.query(sql, function(err, series_list) {
       conn.release();
       if(err) {
-        res.json({
+        res.status(400).json({
           error: "E002",
           error_message: "query 문법 오류"
         })
       }
       else if(!series) {
-        res.json({
+        res.status(400).json({
           error: "E001",
           error_message: "존재하지 않는 series"
         })
@@ -150,7 +150,7 @@ router.get('/:id/series', (req, res) => {
     conn.query(sql, function(err, seriesList) {
       conn.release();
       if(err) {
-        res.json({
+        res.status(400).json({
           error: "E002",
           error_message: "query 문법 오류"
         })
@@ -196,7 +196,7 @@ router.get('/:id', (req, res) => {
     conn.query(sql, function(err, [user]) {
       conn.release();
       if(err) {
-        res.json({
+        res.status(400).json({
           error: "E002",
           error_message: "query 문법 오류"
         })
@@ -231,7 +231,7 @@ router.post('/', (req, res) => {
   }
   request(options, function(error, response, body) {
     if(error) {
-      res.json({
+      res.status(400).json({
         error: "E006",
         error_message: "kakao access token 정보 조회 중 문제 발생"
       })
@@ -290,7 +290,7 @@ router.post('/', (req, res) => {
 
 router.patch('/', (req, res) => {
   if (req.body.id == undefined) {
-		res.json({ 
+		res.status(400).json({ 
 			error: "E005",
 			error_message: "수정할 유저의 id 정보가 누락됨."
 		})
@@ -303,9 +303,14 @@ router.patch('/', (req, res) => {
 		}
     conn.query(sql, values, function(err, results) {
       conn.release();
-      if(err) console.log(err);
+      if(err) {
+        res.status(400).json({ 
+          error: "E002",
+					error_message: "query 문법 오류"
+        });
+      }
       else if (results.affectedRows == 0) {
-        res.json({ 
+        res.status(400).json({ 
           error: "E001",
 					error_message: "해당 유저가 존재하지 않음."
         });
@@ -346,7 +351,7 @@ router.delete('/:id', (req, res) => {
     conn.query(sql, function(err, results) {
       conn.release();
       if(err) {
-        res.json({
+        res.status(400).json({
           error: "E002",
           error_message: "query 문법 오류"
         })
