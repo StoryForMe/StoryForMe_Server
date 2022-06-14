@@ -2,6 +2,77 @@ const app = require('../app');
 const user = require('./user');
 const keyword = require('./keyword');
 const episode = require('./episode');
+const schedule = require('node-schedule');
+
+// 매주 조회 수와 찜꽁 수 초기화 하는 코드
+const ruleWeek = new schedule.RecurrenceRule();
+ruleWeek.minute = 0;
+ruleWeek.hour = 0;
+ruleWeek.dayOfWeek = 0;
+const jobWeekHit = schedule.scheduleJob(ruleWeek, function(){
+  app.getConnectionPool((conn) => {
+    var sql = "update SERIES set hits_week=0 where hits_week>0";
+    conn.query(sql, function(err, results) {
+      conn.release();
+      if (err) {
+        callback({
+          error: "E007",
+          error_message: "월요일 hits_week 초기화 과정에서 error 발생"
+        })
+      };
+    })
+  })
+});
+
+const jobWeekZK = schedule.scheduleJob(ruleWeek, function(){
+  app.getConnectionPool((conn) => {
+    var sql = "update SERIES set zzimkkong_week=0 where zzimkkong_week>0";
+    conn.query(sql, function(err, results) {
+      conn.release();
+      if (err) {
+        callback({
+          error: "E007",
+          error_message: "월요일 zzimkkong_week 초기화 과정에서 error 발생"
+        })
+      };
+    })
+  })
+});
+
+// 매달 조회 수와 찜꽁 수 초기화 하는 코드
+const ruleMonth = new schedule.RecurrenceRule();
+ruleMonth.minute = 0;
+ruleMonth.hour = 0;
+ruleMonth.date = 1;
+const jobMonthHit = schedule.scheduleJob(ruleMonth, function(){
+  app.getConnectionPool((conn) => {
+    var sql = "update SERIES set hits_month=0 where hits_month>0";
+    conn.query(sql, function(err, results) {
+      conn.release();
+      if (err) {
+        callback({
+          error: "E007",
+          error_message: "1일 hits_month 초기화 과정에서 error 발생"
+        })
+      };
+    })
+  })
+});
+
+const jobMonthZK = schedule.scheduleJob(ruleMonth, function(){
+  app.getConnectionPool((conn) => {
+    var sql = "update SERIES set zzimkkong_month=0 where zzimkkong_month>0";
+    conn.query(sql, function(err, results) {
+      conn.release();
+      if (err) {
+        callback({
+          error: "E007",
+          error_message: "1이 zzimkkong_month 초기화 과정에서 error 발생"
+        })
+      };
+    })
+  })
+});
 
 // sid에 해당하는 시리즈의 주인공이름
 exports.getCharacter = (sid, callback) => {
