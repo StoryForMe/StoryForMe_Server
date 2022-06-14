@@ -18,6 +18,9 @@ router.get('/list/:option/:uid/:kid', (req, res) => {
 					error_message: "시리즈가 존재하지 않습니다."
 				})
 			}
+			else if (series_list.length == 0) {
+				res.json({series_list: []});
+			}
 			else {
 				console.log(series_list);
 				results = [];
