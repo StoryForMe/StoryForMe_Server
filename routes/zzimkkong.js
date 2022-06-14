@@ -44,7 +44,12 @@ router.delete('/writer/:uid/:wid', (req, res) => {
     var sql = "delete from ZZIMKKONG_WRITER where uid=" + req.params.uid + ' and wid=' + req.params.wid;
     conn.query(sql, function(err, results) {
       conn.release();
-      if(err) console.log(err);
+      if(err) {
+        res.json({
+          error: "E002",
+          error_message: "query 문법 오류"
+        })
+      }
       else if(results.affectedRows == 0) res.json({ result: 0 });
       else res.json({ result: 1 })
     })
@@ -56,7 +61,12 @@ router.delete('/series/:uid/:sid', (req, res) => {
     var sql = "delete from ZZIMKKONG_SERIES where uid=" + req.params.uid + ' and sid=' + req.params.sid;
     conn.query(sql, function(err, results) {
       conn.release();
-      if(err) console.log(err);
+      if(err) {
+        res.json({
+          error: "E002",
+          error_message: "query 문법 오류"
+        })
+      }
       else if(results.affectedRows == 0) res.json({ result: 0 });
       else {
         series.deleteZzimkkongNum(req.params.sid, (result) => {

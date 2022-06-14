@@ -54,9 +54,17 @@ router.get('/:id/character', (req, res) => {
     var sql = "select * from USER where id=" + req.params.id;
     conn.query(sql, function(err, [user]) {
       conn.release();
-      if(err) console.log("[USER] get character " + err);
+      if(err) {
+        res.json({
+          error: "E002",
+          error_message: "query 문법 오류"
+        })
+      }
       else if(!user) {
-        console.log("no exist user.")
+        res.json({
+          error: "E001",
+          error_message: "존재하지 않는 user"
+        })
       } else {
         var result = {
           fname: user["fname"],
@@ -73,9 +81,17 @@ router.get('/:id/zzimkkong/writer', (req, res) => {
     var sql = "select nickname, profile_image from USER as u join ZZIMKKONG_WRITER as z on u.id=z.wid where uid=" + req.params.id;
     conn.query(sql, function(err, writers) {
       conn.release();
-      if(err) console.log("[USER] get zzimkkong writer " + err);
+      if(err) {
+        res.json({
+          error: "E002",
+          error_message: "query 문법 오류"
+        })
+      }
       else if(!writers) {
-        console.log("no exist zzimkkong writers.")
+        res.json({
+          error: "E001",
+          error_message: "존재하지 않는 writer"
+        })
       } else {
         result = {
           writers: writers
@@ -91,9 +107,17 @@ router.get('/:id/zzimkkong/series', (req, res) => {
     var sql = "select * from SERIES as s join ZZIMKKONG_SERIES as z on s.id=z.sid where z.uid=" + req.params.id;
     conn.query(sql, function(err, series_list) {
       conn.release();
-      if(err) console.log("[USER] get zzimkkong series " + err);
+      if(err) {
+        res.json({
+          error: "E002",
+          error_message: "query 문법 오류"
+        })
+      }
       else if(!series) {
-        console.log("no exist zzimkkong series.")
+        res.json({
+          error: "E001",
+          error_message: "존재하지 않는 series"
+        })
       } else {
         var results = []
         var index = 0
@@ -125,7 +149,12 @@ router.get('/:id/series', (req, res) => {
     var sql = "select * from SERIES where uid=" + req.params.id;
     conn.query(sql, function(err, seriesList) {
       conn.release();
-      if(err) console.log(err);
+      if(err) {
+        res.json({
+          error: "E002",
+          error_message: "query 문법 오류"
+        })
+      }
       else {
         var results = []
         var index = 0
@@ -166,9 +195,13 @@ router.get('/:id', (req, res) => {
     var sql = "select * from USER where id=" + req.params.id;
     conn.query(sql, function(err, [user]) {
       conn.release();
-      if(err) console.log(err);
+      if(err) {
+        res.json({
+          error: "E002",
+          error_message: "query 문법 오류"
+        })
+      }
       else if(!user) {
-        console.log("no exist user");
         res.json({ id: -1 })
       } else {
         keyword.getUserKeyword(req.params.id, (keywords) => {
@@ -312,7 +345,12 @@ router.delete('/:id', (req, res) => {
     var sql = "delete from SERIES where id=" + req.params.id;
     conn.query(sql, function(err, results) {
       conn.release();
-      if(err) console.log(err);
+      if(err) {
+        res.json({
+          error: "E002",
+          error_message: "query 문법 오류"
+        })
+      }
       else if (results.affectedRows == 0) res.json({ result: 0 });
       else res.json({ result: 1 });
     })
