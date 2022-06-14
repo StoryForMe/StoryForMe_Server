@@ -6,11 +6,11 @@ const schedule = require('node-schedule');
 
 // 정기적으로 조회 수 초기화 하는 코드
 const rule = new schedule.RecurrenceRule();
-rule.minute = 53;
+rule.minute = 4;
 const job = schedule.scheduleJob(rule, function(){
   console.log("scheduling")
   app.getConnectionPool((conn) => {
-    var sql = "update SERIES set hits_week=0, hits_month=0";
+    var sql = "update SERIES set hits_week=0, hits_month=0 where zzimkkong_week>0 or zzimkkong_month>0";
     conn.query(sql, function(err, results) {
       conn.release();
       if (err) {
