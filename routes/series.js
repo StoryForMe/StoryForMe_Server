@@ -6,9 +6,9 @@ const user = require('../utils/user');
 const episode = require('../utils/episode');
 const series = require('../utils/series');
 
-router.get('/list/:option/:uid', (req, res) => {
+router.get('/list/:option/:uid/:kid', (req, res) => {
 	app.getConnectionPool((conn) => {
-		conn.query(series.get_series_list_sql[req.params.option], function(err, series_list) {
+		conn.query(series.get_series_list_sql(req.params.option, req.params.kid), function(err, series_list) {
 			conn.release();
 			if(err) console.log("err");
 			else if(!series_list) {
