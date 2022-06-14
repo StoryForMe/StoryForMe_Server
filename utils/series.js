@@ -59,13 +59,28 @@ exports.deleteZzimkkongNum = (sid, callback) => {
   })
 }
 
-// 옵션에 따라 정렬기준을 다르게 함.
-exports.get_series_list_sql = [
-	"select * from SERIES order by recent_update",
-	"select *, zzimkkong_week + hits_week as week from SERIES order by week desc",
-	"select *, zzimkkong_month + hits_month as month from SERIES order by month desc",
-	"select *, zzimkkong + hits as total from SERIES order by total desc"
+sql_pre = [
+	"select * ",
+	"select *, zzimkkong_week + hits_week as week ",
+	"select *, zzimkkong_month + hits_month as month ",
+	"select *, zzimkkong + hits as total "
 ]
+sql_post = [
+	" order by recent_update",
+	" order by week desc",
+	" order by month desc",
+	" order by total desc"
+]
+
+// 옵션에 따라 정렬기준을 다르게 함.
+exports.get_series_list_sql = (option, kid) => {
+	var sql; 
+	if (kid == -1) sql = sql_pre[option] + "from SERIES" + sql_post[option];
+	else sql = sql_pre[option] + "from SERIES as s join REPRESENT as r on s.id=r.sid where kid=" + kid + sql_post[option];
+	return (sql);
+}
+
+
 
 exports.getSeriesData = (sid, callback) => {
 	app.getConnectionPool((conn) => {
