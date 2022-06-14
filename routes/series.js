@@ -88,9 +88,9 @@ router.post('/', (req, res) => {
 					index++;
 					if (index == req.body.keywords.length) 
 						series.getSeriesData(results.insertId, (series_data) => res.json(series_data));
-					else keyword.addKeywordToSeries(results.insertId, req.body.keywords[index]);
+					else keyword.addKeywordToSeries(results.insertId, req.body.keywords[index], addKeywordToSeriesCallback);
 				}
-				keyword.addKeywordToSeries(results.insertId, req.body.keywords[index]);
+				keyword.addKeywordToSeries(results.insertId, req.body.keywords[index], addKeywordToSeriesCallback);
 			}
 		})
 	})
