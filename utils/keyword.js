@@ -77,7 +77,7 @@ exports.getUserKeyword = (res, uid, callback) => {
 		conn.query(sql, function(err, rows) {
 			conn.release();
 			if(err) {
-        res.json({
+        res.status(400).json({
           error: "E002",
           error_message: "query 문법 오류"
         })
