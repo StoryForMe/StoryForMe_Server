@@ -75,7 +75,7 @@ sql_post = [
 // 옵션에 따라 정렬기준을 다르게 함.
 exports.get_series_list_sql = (option, kid) => {
 	var sql; 
-	if (kid == -1) sql = sql_pre[option] + "from SERIES" + sql_post[option];
+	if (kid == null) sql = sql_pre[option] + "from SERIES" + sql_post[option];
 	else sql = sql_pre[option] + "from SERIES as s join REPRESENT as r on s.id=r.sid where kid=" + kid + sql_post[option];
 	return (sql);
 }
