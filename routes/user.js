@@ -152,6 +152,15 @@ router.get('/:id/series', (req, res) => {
   })
 })
 
+router.get('/:id/keywords', (req, res) => {
+  keyword.getUserKeyword(req.params.id, (keywords) => {
+    var result = {
+      keywords: keywords
+    }
+    res.json(result);
+  })
+})
+
 router.get('/:id', (req, res) => {
   app.getConnectionPool((conn) => {
     var sql = "select * from USER where id=" + req.params.id;
