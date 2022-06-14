@@ -52,7 +52,7 @@ exports.addKeywordToSeries = (sid, kid, callback) => {
 			if (err) console.log(err);
 			else{
 				if(keyword_list.length == 0)
-					postKeyword(kid, () => { callback(); });
+					postKeyword(kid, () => { createNewRepresent(sid, kid, callback) });
 				else
 					createNewRepresent(sid, kid, callback);
 			}
