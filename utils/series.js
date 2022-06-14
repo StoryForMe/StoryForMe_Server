@@ -6,7 +6,7 @@ const schedule = require('node-schedule');
 
 // 정기적으로 조회 수 초기화 하는 코드
 const rule = new schedule.RecurrenceRule();
-rule.minute = 4;
+rule.minute = 13;
 const job = schedule.scheduleJob(rule, function(){
   console.log("scheduling")
   app.getConnectionPool((conn) => {
