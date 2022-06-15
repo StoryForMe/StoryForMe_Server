@@ -63,7 +63,7 @@ exports.getCommentData = (res, cid, callback) => {
 				})
 			}
 			else {
-				getName(comments[0]["uid"], (name) => {
+				getName(res, comments[0]["uid"], (name) => {
 					callback({
 						cid: comments[0]["id"],
 						uid: comments[0]["uid"],
