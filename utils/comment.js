@@ -7,11 +7,11 @@ exports.getEpisodeCommentNum = (res, eid, callback) => {
 		conn.query(sql, function(err, comments) {
 			conn.release();
 			if(err) {
-        res.status(400).json({
-          error: "E002",
-          error_message: "query 문법 오류"
-        })
-      }
+				res.status(400).json({
+					error: "E002",
+					error_message: "query 문법 오류"
+				})
+			}
 			else callback(comments.length);		// 다음 episode의 index를 넘겨줌.
 		})
 	})
@@ -24,11 +24,11 @@ exports.getNameIter = (res, comments, index, callback) => {
 		conn.query(sql, function(err, users) {
 			conn.release();
 			if (err) {
-        res.status(400).json({
-          error: "E002",
-          error_message: "query 문법 오류"
-        })
-      }
+				res.status(400).json({
+					error: "E002",
+					error_message: "query 문법 오류"
+				})
+			}
 			else callback(users[0]["nickname"], comments[index], index + 1);
 		})
 	})
@@ -40,11 +40,11 @@ function getName(res, uid, callback) {
 		conn.query(sql, function(err, users) {
 			conn.release();
 			if (err) {
-        res.status(400).json({
-          error: "E002",
-          error_message: "query 문법 오류"
-        })
-      }
+				res.status(400).json({
+					error: "E002",
+					error_message: "query 문법 오류"
+				})
+			}
 			else callback(users[0]["nickname"]);
 		})
 	})
@@ -57,11 +57,11 @@ exports.getCommentData = (res, cid, callback) => {
 		conn.query(sql, function(err, comments) {
 			conn.release();
 			if (err) {
-        res.status(400).json({
-          error: "E002",
-          error_message: "query 문법 오류"
-        })
-      }
+				res.status(400).json({
+					error: "E002",
+					error_message: "query 문법 오류"
+				})
+			}
 			else {
 				getName(comments[0]["uid"], (name) => {
 					callback({

@@ -2,15 +2,18 @@ var express = require('express');
 var router = express.Router();
 const app = require('../app');
 const keyword = require('../utils/keyword');
-const user = require('../utils/user');
-const episode = require('../utils/episode');
 const series = require('../utils/series');
 
 router.get('/list/:option/:uid', (req, res) => {
 	app.getConnectionPool((conn) => {
 		conn.query(series.get_series_list_sql(req.params.option, null), function(err, series_list) {
 			conn.release();
-			if(err) console.log(err);
+			if(err) {
+				res.status(400).json({
+				  error: "E002",
+				  error_message: "query 문법 오류"
+				})
+			}
 			series.makeResForSeriesList(series_list, req, res);
 	   })
 	})
@@ -20,7 +23,12 @@ router.get('/list/:option/:uid/:kid', (req, res) => {
 	app.getConnectionPool((conn) => {
 		conn.query(series.get_series_list_sql(req.params.option, req.params.kid), function(err, series_list) {
 			conn.release();
-			if(err) console.log(err);
+			if(err) {
+				res.status(400).json({
+				  error: "E002",
+				  error_message: "query 문법 오류"
+				})
+			}
 			series.makeResForSeriesList(series_list, req, res);
 	   })
 	})
@@ -55,7 +63,12 @@ router.post('/', (req, res) => {
 		}
 		conn.query(sql, values, function(err, results) {
 			conn.release();
-			if(err) console.log(err);
+			if(err) {
+				res.status(400).json({
+				  error: "E002",
+				  error_message: "query 문법 오류"
+				})
+			}
 			else if (req.body.keywords.length == 0) 
 				series.getSeriesData(res, results.insertId, (series_data) => res.json(series_data));
 			else {
@@ -63,10 +76,10 @@ router.post('/', (req, res) => {
 				function addKeywordToSeriesCallback() {
 					index++;
 					if (index == req.body.keywords.length) 
-						series.getSeriesData(results.insertId, (series_data) => res.json(series_data));
-					else keyword.addKeywordToSeries(results.insertId, req.body.keywords[index], addKeywordToSeriesCallback);
+						series.getSeriesData(res, results.insertId, (series_data) => res.json(series_data));
+					else keyword.addKeywordToSeries(res, results.insertId, req.body.keywords[index], addKeywordToSeriesCallback);
 				}
-				keyword.addKeywordToSeries(results.insertId, req.body.keywords[index], addKeywordToSeriesCallback);
+				keyword.addKeywordToSeries(res, results.insertId, req.body.keywords[index], addKeywordToSeriesCallback);
 			}
 		})
 	})
@@ -74,7 +87,7 @@ router.post('/', (req, res) => {
 
 router.patch('/', (req, res) => {
 	if (req.body.id == undefined) {
-		res.json({ 
+		res.status(400).json({ 
 			error: "E005",
 			error_message: "수정할 시리즈의 id 정보가 누락됨."
 		})
@@ -87,36 +100,41 @@ router.patch('/', (req, res) => {
 		}
 		conn.query(sql, values, function(err, results) {
 			conn.release();
-			if(err) console.log(err);
+			if(err) {
+				res.status(400).json({
+				  error: "E002",
+				  error_message: "query 문법 오류"
+				})
+			}
 			else if (results.affectedRows == 0) {
-				res.json({ 
+				res.status(400).json({ 
 					error: "E001",
 					error_message: "해당 시리즈가 존재하지 않음."
 				})
 			}
 			else if (req.body.keywords == null)
-				series.getSeriesData(req.body.id, (series_data) => res.json(series_data));
+				series.getSeriesData(res, req.body.id, (series_data) => res.json(series_data));
 			else {
-				keyword.getSeriesKeyword(req.body.id, (keyword_list) => {
+				keyword.getSeriesKeyword(res, req.body.id, (keyword_list) => {
 					var index = 0;
 					function addKeywordToSeriesCallback() {
 						index++;
 						if (index == req.body.keywords.length) {
 							index = 0;
-							keyword.deleteKeywordFromSeries(req.body.id, keyword_list[index], deleteKeywordFromSeriesCallback);
+							keyword.deleteKeywordFromSeries(res, req.body.id, keyword_list[index], deleteKeywordFromSeriesCallback);
 						}
 						else if (keyword_list.indexOf(req.body.keywords[index]) != -1) addKeywordToSeriesCallback()
-						else keyword.addKeywordToSeries(req.body.id, req.body.keywords[index], addKeywordToSeriesCallback);
+						else keyword.addKeywordToSeries(res, req.body.id, req.body.keywords[index], addKeywordToSeriesCallback);
 					}
 					function deleteKeywordFromSeriesCallback() {
 						index++;
 						if (index == keyword_list.length) {
-							series.getSeriesData(req.body.id, (series_data) => res.json(series_data));
+							series.getSeriesData(res, req.body.id, (series_data) => res.json(series_data));
 						}
 						else if (req.body.keywords.indexOf(keyword_list[index]) != -1) deleteKeywordFromSeriesCallback()
-						else keyword.deleteKeywordFromSeries(req.body.id, keyword_list[index], deleteKeywordFromSeriesCallback);
+						else keyword.deleteKeywordFromSeries(res, req.body.id, keyword_list[index], deleteKeywordFromSeriesCallback);
 					}
-					keyword.addKeywordToSeries(req.body.id, req.body.keywords[index], addKeywordToSeriesCallback);
+					keyword.addKeywordToSeries(res, req.body.id, req.body.keywords[index], addKeywordToSeriesCallback);
 				})
 			}
 		})
@@ -128,7 +146,12 @@ router.delete('/:sid', (req, res) => {
 		var sql = "delete from SERIES where id=" + req.params.sid;
 		conn.query(sql, function(err, results) {
 			conn.release();
-			if(err) console.log(err);
+			if(err) {
+				res.status(400).json({
+				  error: "E002",
+				  error_message: "query 문법 오류"
+				})
+			}
 			else if (results.affectedRows == 0) res.json({ result: 0 }); 
 			else res.json({ result: 1 }); 
 		})

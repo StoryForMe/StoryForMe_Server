@@ -8,11 +8,11 @@ exports.getNickname = (res, uid, callback) => {
 		conn.query(sql, function(err, users) {
 			conn.release();
 			if(err) {
-        res.status(400).json({
-          error: "E002",
-          error_message: "query 문법 오류"
-        })
-      }
+				res.status(400).json({
+					error: "E002",
+					error_message: "query 문법 오류"
+				})
+			}
 			else callback(users[0]["nickname"]);
 		})
 	})
@@ -82,11 +82,11 @@ exports.getNicknameIter = (res, uid, index, callback) => {
 		conn.query(sql, function(err, users) {
 			conn.release();
 			if(err) {
-        res.status(400).json({
-          error: "E002",
-          error_message: "query 문법 오류"
-        })
-      }
+				res.status(400).json({
+					error: "E002",
+					error_message: "query 문법 오류"
+				})
+			}
 			else callback(users[0]["nickname"], index);
 		})
 	})
@@ -98,11 +98,11 @@ exports.getIs_zzimkkong = (res, uid, sid, callback) => {
 		conn.query(sql, function(err, zzimkkongs) {
 			conn.release();
 			if (err) {
-        res.status(400).json({
-          error: "E002",
-          error_message: "query 문법 오류"
-        })
-      }
+				res.status(400).json({
+					error: "E002",
+					error_message: "query 문법 오류"
+				})
+			}
 			else if(zzimkkongs) callback(zzimkkongs.length);
 		})
 	})
@@ -114,11 +114,11 @@ exports.getUserData = (res, uid, callback) => {
 		conn.query(sql, function(err, users) {
 			conn.release();
 			if (err) {
-        res.status(400).json({
-          error: "E002",
-          error_message: "query 문법 오류"
-        })
-      }
+				res.status(400).json({
+					error: "E002",
+					error_message: "query 문법 오류"
+				})
+			}
 			else callback(users[0]);
 		})
 	})

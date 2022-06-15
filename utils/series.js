@@ -75,12 +75,17 @@ const jobMonthZK = schedule.scheduleJob(ruleMonth, function(){
 });
 
 // sid에 해당하는 시리즈의 주인공이름
-exports.getCharacter = (sid, callback) => {
+exports.getCharacter = (res, sid, callback) => {
 	app.getConnectionPool((conn) => {
 		var sql = "select fname, lname from SERIES where id=" + sid;
 		conn.query(sql, function(err, results) {
 			conn.release();
-			if (err) console.log(err);
+			if(err) {
+				res.status(400).json({
+				  error: "E002",
+				  error_message: "query 문법 오류"
+				})
+			}
 			else callback(results[0]["fname"], results[0]["lname"]);
 		})
 	})
@@ -92,11 +97,11 @@ exports.updateHits = (res, sid, callback) => {
 		conn.query(sql, function(err, results) {
 			conn.release();
 			if (err) {
-        res.status(400).json({
-          error: "E002",
-          error_message: "query 문법 오류"
-        })
-      }
+				res.status(400).json({
+					error: "E002",
+					error_message: "query 문법 오류"
+				})
+			}
 			else callback(1);
 		})
 	})
@@ -108,11 +113,11 @@ exports.updateEpisodeNum = (res, sid, num, callback) => {
 		conn.query(sql, function(err, results) {
 			conn.release();
 			if (err) {
-        res.status(400).json({
-          error: "E002",
-          error_message: "query 문법 오류"
-        })
-      }
+				res.status(400).json({
+					error: "E002",
+					error_message: "query 문법 오류"
+				})
+			}
 			else callback(1);
 		})
 	})
@@ -174,7 +179,7 @@ exports.get_series_list_sql = (option, kid) => {
 exports.makeResForSeriesList = (series_list, req, res) => {
 	if(!series_list) {
 		console.log("no exist series"); 
-		res.json({ 
+		res.status(400).json({ 
 			error: "E001",
 			error_message: "시리즈가 존재하지 않습니다."
 		})
@@ -219,11 +224,11 @@ exports.getSeriesData = (res, sid, callback) => {
 		conn.query(sql, function(err, series_list) {
 			conn.release();
 			if(err) {
-        res.status(400).json({
-          error: "E002",
-          error_message: "query 문법 오류"
-        })
-      }
+				res.status(400).json({
+					error: "E002",
+					error_message: "query 문법 오류"
+				})
+			}
 			else if(series_list.length == 0) {
 				res.status(400).json({ 
 					error: "E001",

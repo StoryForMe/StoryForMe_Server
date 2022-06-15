@@ -11,11 +11,11 @@ exports.getSeriesKeyword = (res, sid, callback) => {
 		conn.query(sql, function(err, keyword_list) {
 			conn.release();
 			if(err) {
-        res.status(400).json({
-          error: "E002",
-          error_message: "query 문법 오류"
-        })
-      }
+				res.status(400).json({
+					error: "E002",
+					error_message: "query 문법 오류"
+				})
+			}
 			else{
 				var keywords = [];
 				for (var keyword of keyword_list) {
@@ -27,39 +27,49 @@ exports.getSeriesKeyword = (res, sid, callback) => {
 	})
 }
 // sid에 해당하는 시리즈에 kid_list에 있는 kid에 해당하는 키워드를 추가.
-function createNewRepresent (sid, kid, callback) {
+function createNewRepresent (res, sid, kid, callback) {
 	app.getConnectionPool((conn) => {
 		var sql = "insert into REPRESENT values (" + sid + ", '" + kid + "')";
 		conn.query(sql, function(err, results) {
 			conn.release();
-			if(err) console.log(err);
+			if(err) {
+				res.status(400).json({
+					error: "E002",
+					error_message: "query 문법 오류"
+				})
+			}
 			else callback();
 		})
 	})
 }
 
-exports.deleteKeywordFromSeries = (sid, kid, callback) => {
+exports.deleteKeywordFromSeries = (res, sid, kid, callback) => {
 	app.getConnectionPool((conn) => {
 		var sql = "delete from REPRESENT where sid=" + sid + " and kid ='" + kid + "'";
 		conn.query(sql, function(err, results) {
 			conn.release();
-			if (err) console.log(err);
+			if(err) {
+				res.status(400).json({
+				  error: "E002",
+				  error_message: "query 문법 오류"
+				})
+			}
 			callback();
 		})
 	})
 }
 
-exports.addKeywordToSeries = (sid, kid, callback) => {
+exports.addKeywordToSeries = (res, sid, kid, callback) => {
 	app.getConnectionPool((conn) => {
 		var sql = "select * from KEYWORD where id='" + kid + "'";
 		conn.query(sql, function(err, keyword_list) {
 			conn.release();
 			if (err) {
-        res.status(400).json({
-          error: "E002",
-          error_message: "query 문법 오류"
-        })
-      }
+				res.status(400).json({
+					error: "E002",
+					error_message: "query 문법 오류"
+				})
+			}
 			else{
 				if(keyword_list.length == 0)
 					postKeyword(kid, () => { createNewRepresent(sid, kid, callback) });
@@ -82,11 +92,11 @@ exports.getUserKeyword = (res, uid, callback) => {
 		conn.query(sql, function(err, rows) {
 			conn.release();
 			if(err) {
-        res.status(400).json({
-          error: "E002",
-          error_message: "query 문법 오류"
-        })
-      }
+				res.status(400).json({
+					error: "E002",
+					error_message: "query 문법 오류"
+				})
+			}
 			else {
 				var keywords = [];
 				for (var row of rows) {
@@ -105,11 +115,11 @@ exports.postUserKeyword = (uid, kid_list, index, callback) => {
 		conn.query(sql, function(err, results) {
 			conn.release();
 			if(err) {
-        res.status(400).json({
-          error: "E002",
-          error_message: "query 문법 오류"
-        })
-      }
+				res.status(400).json({
+					error: "E002",
+					error_message: "query 문법 오류"
+				})
+			}
 			else callback(index + 1);
 		})
 	})
@@ -122,11 +132,11 @@ exports.updateUserKeyword = (res, uid, kid_list, callback) => {
 		conn.query(sql, function(err, results) {
 			conn.release();
 			if (err) {
-        res.status(400).json({
-          error: "E002",
-          error_message: "query 문법 오류"
-        })
-      }
+				res.status(400).json({
+					error: "E002",
+					error_message: "query 문법 오류"
+				})
+			}
 			else if (kid_list == null) {
 				callback();
 			}
@@ -146,11 +156,11 @@ postKeyword = (res, keyword, callback) => {
 		conn.query(sql, function(err, results) {
 			conn.release();
 			if (err) {
-        res.status(400).json({
-          error: "E002",
-          error_message: "query 문법 오류"
-        })
-      }
+				res.status(400).json({
+					error: "E002",
+					error_message: "query 문법 오류"
+				})
+			}
 			else callback(results.insertId);
 		})
 	})
