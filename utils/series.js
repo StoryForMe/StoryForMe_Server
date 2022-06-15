@@ -191,8 +191,8 @@ exports.makeResForSeriesList = (series_list, req, res) => {
 		results = [];
 		// 각각의 시리즈에 대해 필요한 정보들을 가져와서 results에 추가해줌.
 		function getNicknameIterCallback(nickname, index) {
-			user.getIs_zzimkkong(req.params.uid, series_list[index]["id"], (is_zzimkkong) => {
-				keyword.getSeriesKeyword(series_list[index]["id"], (keywords) => {
+			user.getIs_zzimkkong(res, req.params.uid, series_list[index]["id"], (is_zzimkkong) => {
+				keyword.getSeriesKeyword(sres, eries_list[index]["id"], (keywords) => {
 					results.push({
 						sid: series_list[index]["id"],
 						title: series_list[index]["title"],
@@ -208,12 +208,12 @@ exports.makeResForSeriesList = (series_list, req, res) => {
 						recent_update: series_list[index]["recent_update"]
 					});
 					if (index < series_list.length - 1)
-						user.getNicknameIter(series_list[index + 1]["uid"], index + 1, getNicknameIterCallback)
+						user.getNicknameIter(res, series_list[index + 1]["uid"], index + 1, getNicknameIterCallback)
 					else res.json( {series_list: results });
 				});
 			});
 		}
-		user.getNicknameIter(series_list[0]["uid"], 0, getNicknameIterCallback)
+		user.getNicknameIter(res, series_list[0]["uid"], 0, getNicknameIterCallback)
 	}
 }
 
@@ -237,8 +237,8 @@ exports.getSeriesData = (res, sid, callback) => {
 			}
 			else {
 				user.getNickname(series_list[0]["uid"], (nickname) => {
-					keyword.getSeriesKeyword(sid, (keywords) => {
-						episode.getEpisodeList(sid, (episodes) => {
+					keyword.getSeriesKeyword(res, sid, (keywords) => {
+						episode.getEpisodeList(res, sid, (episodes) => {
 							var result = {
 								sid: series_list[0]["id"],
 								title: series_list[0]["title"],

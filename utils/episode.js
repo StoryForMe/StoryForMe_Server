@@ -1,7 +1,5 @@
-const res = require('express/lib/response');
 const app = require('../app');
 const comment = require('./comment');
-const { updateSeriesKeyword } = require('./keyword');
 const user = require('./user')
 const series = require('./series');
 
