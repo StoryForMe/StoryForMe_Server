@@ -24,7 +24,6 @@ exports.getNameIter = (res, comments, index, callback) => {
 		conn.query(sql, function(err, users) {
 			conn.release();
 			if (err) {
-				console.log(err);
 				res.status(400).json({
 					error: "E002",
 					error_message: "query 문법 오류"

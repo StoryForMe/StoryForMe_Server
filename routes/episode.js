@@ -5,13 +5,12 @@ const series = require('../utils/series');
 const comment = require('../utils/comment');
 const episode = require('../utils/episode');
 
-router.get('/comment/:eid', (req, res) => {
+router.get('/:eid/comment', (req, res) => {
 	app.getConnectionPool((conn) => {
 		var sql = "select * from COMMENT where eid=" + req.params.eid;
 		conn.query(sql, function(err, comments) {
 			conn.release();
 			if(err) {
-				console.log(err);
 				res.status(400).json({
 				  error: "E002",
 				  error_message: "query 문법 오류"
