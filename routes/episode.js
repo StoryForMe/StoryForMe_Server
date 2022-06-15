@@ -15,12 +15,13 @@ router.get('/:eid/comment', (req, res) => {
 		conn.query(sql, function(err, comments) {
 			conn.release();
 			if(err) {
+				console.log(err);
 				res.status(400).json({
 				  error: "E002",
 				  error_message: "query 문법 오류"
 				})
 			}
-			else if(!comments) {console.log("no exist comment"); res.json({validation: 0});}
+			else if(comments.length == 0) {console.log("no exist comment"); res.json([]);}
 			else {
 				var _comments = [];
 				function getNameCallback(name, _comment, next_index) {
