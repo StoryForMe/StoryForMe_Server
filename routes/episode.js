@@ -16,7 +16,7 @@ router.get('/:eid/comment', (req, res) => {
 				  error_message: "query 문법 오류"
 				})
 			}
-			else if(comments.length == 0) {console.log("no exist comment"); res.json([]);}
+			else if(comments.length == 0) res.json([]);
 			else {
 				var _comments = [];
 				function getNameCallback(name, _comment, next_index) {
