@@ -5,21 +5,17 @@ const series = require('../utils/series');
 const comment = require('../utils/comment');
 const episode = require('../utils/episode');
 
-router.get('/:eid/:uid', (req, res) => {
-	episode.getEpisodeData(res, req.params.eid, req.params.uid, (episode_data) => res.json(episode_data));
-})
-
-router.get('/:eid/comment', (req, res) => {
+router.get('/comment/:eid', (req, res) => {
 	app.getConnectionPool((conn) => {
 		var sql = "select * from COMMENT where eid=" + req.params.eid;
 		conn.query(sql, function(err, comments) {
 			conn.release();
 			if(err) {
 				console.log(err);
-				// res.status(400).json({
-				//   error: "E002",
-				//   error_message: "query 문법 오류"
-				// })
+				res.status(400).json({
+				  error: "E002",
+				  error_message: "query 문법 오류"
+				})
 			}
 			else if(comments.length == 0) {console.log("no exist comment"); res.json([]);}
 			else {
@@ -39,6 +35,10 @@ router.get('/:eid/comment', (req, res) => {
 			}
 	   })
 	})
+})
+
+router.get('/:eid/:uid', (req, res) => {
+	episode.getEpisodeData(res, req.params.eid, req.params.uid, (episode_data) => res.json(episode_data));
 })
 
 router.post('/', (req,res) => {
