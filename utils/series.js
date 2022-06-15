@@ -236,7 +236,7 @@ exports.getSeriesData = (res, sid, callback) => {
 				})
 			}
 			else {
-				user.getNickname(series_list[0]["uid"], (nickname) => {
+				user.getNickname(res, series_list[0]["uid"], (nickname) => {
 					keyword.getSeriesKeyword(res, sid, (keywords) => {
 						episode.getEpisodeList(res, sid, (episodes) => {
 							var result = {
