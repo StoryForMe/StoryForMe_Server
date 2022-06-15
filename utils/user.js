@@ -81,6 +81,7 @@ exports.getNicknameIter = (res, uid, index, callback) => {
 		var sql = "select nickname from USER where id=" + uid;
 		conn.query(sql, function(err, users) {
 			conn.release();
+			console.log(users);
 			if(err) {
 				res.status(400).json({
 					error: "E002",
