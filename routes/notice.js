@@ -7,7 +7,12 @@ function getNoticeData(nid, callback) {
 		var sql = "select * from NOTICE where id=" + nid;
 		conn.query(sql, function(err, notices) {
 			conn.release();
-			if (err) console.log(err);
+			if(err) {
+				res.status(400).json({
+				  error: "E002",
+				  error_message: "query 문법 오류"
+				})
+			}
 			else {
 				callback({
 					nid: notices[0]["id"],
@@ -26,7 +31,12 @@ router.get('/', (req, res) => {
 		var sql = "select * from NOTICE";
 		conn.query(sql, function(err, notices) {
 			conn.release();
-			if(err) console.log(err);
+			if(err) {
+				res.status(400).json({
+				  error: "E002",
+				  error_message: "query 문법 오류"
+				})
+			}
 			else{
 				var result = [];
 				for (var notice of notices) {
@@ -48,7 +58,12 @@ router.get('/:nid', (req,res) => {
 		var sql = "update NOTICE SET hits = hits + 1 where id=" + req.params.nid;
 		conn.query(sql, function(err, notices) {
 			conn.release();
-			if(err) console.log(err);
+			if(err) {
+				res.status(400).json({
+				  error: "E002",
+				  error_message: "query 문법 오류"
+				})
+			}
 			else{
 				getNoticeData(req.params.nid, (notice) => res.json(notice));
 			}
@@ -67,7 +82,12 @@ router.post('/', (req,res) => {
 		}
 		conn.query(sql, values, function(err, results) {
 			conn.release();
-			if(err) console.log(err); 
+			if(err) {
+				res.status(400).json({
+				  error: "E002",
+				  error_message: "query 문법 오류"
+				})
+			}
 			else {
 				getNoticeData(results.insertId, (notice) => res.json(notice));
 			}
@@ -77,7 +97,7 @@ router.post('/', (req,res) => {
 
 router.patch('/', (req, res) => {
 	if (req.body.id == undefined) {
-		res.json({ 
+		res.status(400).json({ 
 			error: "E005",
 			error_message: "수정할 공지의 id 정보가 누락됨."
 		})
@@ -90,9 +110,14 @@ router.patch('/', (req, res) => {
 		}
 		conn.query(sql, values, function(err, results) {
 			conn.release();
-			if (err) console.log(err);
+			if(err) {
+				res.status(400).json({
+				  error: "E002",
+				  error_message: "query 문법 오류"
+				})
+			}
 			else if (results.affectedRows == 0) {
-				res.json({ 
+				res.status(400).json({ 
 					error: "E001",
 					error_message: "해당 공지가 존재하지 않음."
 				})
@@ -107,7 +132,12 @@ router.delete('/:id', (req, res) => {
 		var sql = "delete from NOTICE where id=" + req.params.id;
 		conn.query(sql, function(err, results) {
 			conn.release();
-			if(err) console.log(err);
+			if(err) {
+				res.status(400).json({
+				  error: "E002",
+				  error_message: "query 문법 오류"
+				})
+			}
 			else if (results.affectedRows == 0) res.json({ result: 0 }); 
 			else res.json({ result: 1 }); 
 		})

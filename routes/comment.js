@@ -14,7 +14,12 @@ router.post('/', (req,res) => {
 		}
 		conn.query(sql, values, function(err, results) {
 			conn.release();
-			if(err) console.log(err); 
+			if(err) {
+				res.status(400).json({
+				  error: "E002",
+				  error_message: "query 문법 오류"
+				})
+			}
 			else comment.getCommentData(res, results.insertId, (comment_data) => res.json(comment_data));
 		})	
 	})
@@ -35,9 +40,14 @@ router.patch('/', (req, res) => {
 		}
 		conn.query(sql, values, function(err, results) {
 			conn.release();
-			if (err) console.log(err);
+			if(err) {
+				res.status(400).json({
+				  error: "E002",
+				  error_message: "query 문법 오류"
+				})
+			}
 			else if (results.affectedRows == 0) {
-				res.json({ 
+				res.status(400).json({ 
 					error: "E001",
 					error_message: "해당 댓글이 존재하지 않음."
 				})
@@ -52,7 +62,12 @@ router.delete('/:id', (req, res) => {
 		var sql = "delete from COMMENT where id=" + req.params.id;
 		conn.query(sql, function(err, results) {
 			conn.release();
-			if(err) console.log(err);
+			if(err) {
+				res.status(400).json({
+				  error: "E002",
+				  error_message: "query 문법 오류"
+				})
+			}
 			else if (results.affectedRows == 0) res.json({ result: 0 }); 
 			else res.json({ result: 1 }); 
 		})

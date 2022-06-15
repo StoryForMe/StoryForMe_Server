@@ -75,12 +75,17 @@ const jobMonthZK = schedule.scheduleJob(ruleMonth, function(){
 });
 
 // sid에 해당하는 시리즈의 주인공이름
-exports.getCharacter = (sid, callback) => {
+exports.getCharacter = (res, sid, callback) => {
 	app.getConnectionPool((conn) => {
 		var sql = "select fname, lname from SERIES where id=" + sid;
 		conn.query(sql, function(err, results) {
 			conn.release();
-			if (err) console.log(err);
+			if(err) {
+				res.status(400).json({
+				  error: "E002",
+				  error_message: "query 문법 오류"
+				})
+			}
 			else callback(results[0]["fname"], results[0]["lname"]);
 		})
 	})
@@ -92,11 +97,11 @@ exports.updateHits = (res, sid, callback) => {
 		conn.query(sql, function(err, results) {
 			conn.release();
 			if (err) {
-        res.status(400).json({
-          error: "E002",
-          error_message: "query 문법 오류"
-        })
-      }
+				res.status(400).json({
+					error: "E002",
+					error_message: "query 문법 오류"
+				})
+			}
 			else callback(1);
 		})
 	})
@@ -108,11 +113,11 @@ exports.updateEpisodeNum = (res, sid, num, callback) => {
 		conn.query(sql, function(err, results) {
 			conn.release();
 			if (err) {
-        res.status(400).json({
-          error: "E002",
-          error_message: "query 문법 오류"
-        })
-      }
+				res.status(400).json({
+					error: "E002",
+					error_message: "query 문법 오류"
+				})
+			}
 			else callback(1);
 		})
 	})
@@ -174,7 +179,7 @@ exports.get_series_list_sql = (option, kid) => {
 exports.makeResForSeriesList = (series_list, req, res) => {
 	if(!series_list) {
 		console.log("no exist series"); 
-		res.json({ 
+		res.status(400).json({ 
 			error: "E001",
 			error_message: "시리즈가 존재하지 않습니다."
 		})
@@ -186,8 +191,8 @@ exports.makeResForSeriesList = (series_list, req, res) => {
 		results = [];
 		// 각각의 시리즈에 대해 필요한 정보들을 가져와서 results에 추가해줌.
 		function getNicknameIterCallback(nickname, index) {
-			user.getIs_zzimkkong(req.params.uid, series_list[index]["id"], (is_zzimkkong) => {
-				keyword.getSeriesKeyword(series_list[index]["id"], (keywords) => {
+			user.getIs_zzimkkong(res, req.params.uid, series_list[index]["id"], (is_zzimkkong) => {
+				keyword.getSeriesKeyword(res, series_list[index]["id"], (keywords) => {
 					results.push({
 						sid: series_list[index]["id"],
 						title: series_list[index]["title"],
@@ -203,12 +208,12 @@ exports.makeResForSeriesList = (series_list, req, res) => {
 						recent_update: series_list[index]["recent_update"]
 					});
 					if (index < series_list.length - 1)
-						user.getNicknameIter(series_list[index + 1]["uid"], index + 1, getNicknameIterCallback)
+						user.getNicknameIter(res, series_list[index + 1]["uid"], index + 1, getNicknameIterCallback)
 					else res.json( {series_list: results });
 				});
 			});
 		}
-		user.getNicknameIter(series_list[0]["uid"], 0, getNicknameIterCallback)
+		user.getNicknameIter(res, series_list[0]["uid"], 0, getNicknameIterCallback)
 	}
 }
 
@@ -219,11 +224,11 @@ exports.getSeriesData = (res, sid, callback) => {
 		conn.query(sql, function(err, series_list) {
 			conn.release();
 			if(err) {
-        res.status(400).json({
-          error: "E002",
-          error_message: "query 문법 오류"
-        })
-      }
+				res.status(400).json({
+					error: "E002",
+					error_message: "query 문법 오류"
+				})
+			}
 			else if(series_list.length == 0) {
 				res.status(400).json({ 
 					error: "E001",
@@ -231,9 +236,9 @@ exports.getSeriesData = (res, sid, callback) => {
 				})
 			}
 			else {
-				user.getNickname(series_list[0]["uid"], (nickname) => {
-					keyword.getSeriesKeyword(sid, (keywords) => {
-						episode.getEpisodeList(sid, (episodes) => {
+				user.getNickname(res, series_list[0]["uid"], (nickname) => {
+					keyword.getSeriesKeyword(res, sid, (keywords) => {
+						episode.getEpisodeList(res, sid, (episodes) => {
 							var result = {
 								sid: series_list[0]["id"],
 								title: series_list[0]["title"],

@@ -5,17 +5,18 @@ const series = require('../utils/series');
 const comment = require('../utils/comment');
 const episode = require('../utils/episode');
 
-router.get('/:eid/:uid', (req, res) => {
-	episode.getEpisodeData(res, req.params.eid, req.params.uid, (episode_data) => res.json(episode_data));
-})
-
 router.get('/:eid/comment', (req, res) => {
 	app.getConnectionPool((conn) => {
 		var sql = "select * from COMMENT where eid=" + req.params.eid;
 		conn.query(sql, function(err, comments) {
 			conn.release();
-			if(err) console.log(err);
-			else if(!comments) {console.log("no exist comment"); res.json({validation: 0});}
+			if(err) {
+				res.status(400).json({
+				  error: "E002",
+				  error_message: "query 문법 오류"
+				})
+			}
+			else if(comments.length == 0) res.json([]);
 			else {
 				var _comments = [];
 				function getNameCallback(name, _comment, next_index) {
@@ -33,6 +34,10 @@ router.get('/:eid/comment', (req, res) => {
 			}
 	   })
 	})
+})
+
+router.get('/:eid/:uid', (req, res) => {
+	episode.getEpisodeData(res, req.params.eid, req.params.uid, (episode_data) => res.json(episode_data));
 })
 
 router.post('/', (req,res) => {
@@ -53,10 +58,16 @@ router.post('/', (req,res) => {
 			conn.release();
 			if(err) {
 				if (err.code == 'ER_DUP_ENTRY') {
-				  res.json({ 
+				  res.status(400).json({ 
 					error: "E004",
 					error_message: "chapter 중복"
 				  })
+				}
+				else {
+					res.status(400).json({
+					  error: "E002",
+					  error_message: "query 문법 오류"
+					})
 				}
 			  }
 			else {
@@ -71,7 +82,7 @@ router.post('/', (req,res) => {
 
 router.patch('/', (req,res) => {
 	if (req.body.id == undefined) {
-		res.json({ 
+		res.status(400).json({ 
 			error: "E005",
 			error_message: "수정할 에피소드의 id 정보가 누락됨."
 		})
@@ -84,10 +95,15 @@ router.patch('/', (req,res) => {
 		}
 		conn.query(sql, values, function(err, results) {
 			conn.release();
-			if(err) console.log(err);
+			if(err) {
+				res.status(400).json({
+				  error: "E002",
+				  error_message: "query 문법 오류"
+				})
+			}
 			else { 
 				if (results.affectedRows == 0) {
-					res.json({ 
+					res.status(400).json({ 
 						error: "E001",
 						error_message: "해당 에피소드가 존재하지 않음."
 					})
@@ -103,7 +119,12 @@ router.delete('/:eid', (req, res) => {
 	app.getConnectionPool((conn) => {
 		var sql = "select * from EPISODE where id =" + req.params.eid;
 		conn.query(sql, function(err, episode) {
-			if(err) console.log(err);
+			if(err) {
+				res.status(400).json({
+				  error: "E002",
+				  error_message: "query 문법 오류"
+				})
+			}
 			else {
 				sql = "delete from EPISODE where id=" + req.params.eid;
 				conn.query(sql, function(err, results) {

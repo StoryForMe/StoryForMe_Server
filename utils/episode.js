@@ -1,7 +1,5 @@
-const res = require('express/lib/response');
 const app = require('../app');
 const comment = require('./comment');
-const { updateSeriesKeyword } = require('./keyword');
 const user = require('./user')
 const series = require('./series');
 
@@ -12,11 +10,11 @@ exports.getEpisodeList = (res, sid, callback) => {
 		conn.query(sql, function(err, episodes) {
 			conn.release();
 			if(err) {
-        res.status(400).json({
-          error: "E002",
-          error_message: "query 문법 오류"
-        })
-      }
+				res.status(400).json({
+					error: "E002",
+					error_message: "query 문법 오류"
+				})
+			}
 			else if (episodes.length == 0) callback([]);
 			else {
 				var result = [];
@@ -37,9 +35,9 @@ exports.getEpisodeList = (res, sid, callback) => {
 					// 마지막 episode면 callback함수 호출
 					if (index == episodes.length - 1) callback(result);
 					// 마지막 episode가 아니면 다음 에피소드의 comment 개수를 가져옴.
-					else comment.getEpisodeCommentNum(episodes[++index]["id"], getCommentNumIterCallback);
+					else comment.getEpisodeCommentNum(res, episodes[++index]["id"], getCommentNumIterCallback);
 				}
-				comment.getEpisodeCommentNum(episodes[index]["id"], getCommentNumIterCallback);
+				comment.getEpisodeCommentNum(res, episodes[index]["id"], getCommentNumIterCallback);
 			}
 		})
 	})
@@ -51,11 +49,11 @@ exports.getEpisodeData = (res, eid, uid, callback) => {
 		conn.query(sql, function(err, episode_list) {
 			conn.release();
 			if(err) {
-        res.status(400).json({
-          error: "E002",
-          error_message: "query 문법 오류"
-        })
-      }
+				res.status(400).json({
+					error: "E002",
+					error_message: "query 문법 오류"
+				})
+			}
 			else if(episode_list.length == 0) {
 				res.status(400).json({ 
 					error: "E001",
@@ -63,7 +61,7 @@ exports.getEpisodeData = (res, eid, uid, callback) => {
 				})
 			}
 			else {	
-				series.updateHits(episode_list[0]["sid"], (result) => {
+				series.updateHits(res, episode_list[0]["sid"], (result) => {
 					if (result == 1) {
 						var episode = {
 							eid: episode_list[0]["id"],
@@ -75,11 +73,11 @@ exports.getEpisodeData = (res, eid, uid, callback) => {
 							chapter: episode_list[0]["chapter"],
 							state: episode_list[0]["state"],
 						}
-						series.getCharacter(episode_list[0]["sid"], (fname, lname) => {
+						series.getCharacter(res, episode_list[0]["sid"], (fname, lname) => {
 							episode["fname"] = fname;
 							episode["lname"] = lname;
 							if (uid != -1) {
-								user.getUserData(uid, (user_data) => {
+								user.getUserData(res, uid, (user_data) => {
 									if (user_data["is_default_name"] == 0) {
 										episode["fname"] = user_data["fname"];
 										episode["lname"] = user_data["lname"];
