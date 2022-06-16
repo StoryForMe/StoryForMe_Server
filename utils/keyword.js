@@ -109,9 +109,9 @@ exports.getUserKeyword = (res, uid, callback) => {
 }
 
 // uid에 해당하는 시리즈에 kid_list에 있는 kid에 해당하는 키워드를 추가.
-exports.postUserKeyword = (uid, kid_list, index, callback) => {
+postUserKeyword = (res, uid, kid_list, index, callback) => {
 	app.getConnectionPool((conn) => {
-		var sql = "insert into `LIKE` values (" + uid + ", " + kid_list[index] + ")";
+		var sql = "insert into `LIKE` values (" + uid + ", '" + kid_list[index] + "')";
 		conn.query(sql, function(err, results) {
 			conn.release();
 			if(err) {
@@ -124,6 +124,7 @@ exports.postUserKeyword = (uid, kid_list, index, callback) => {
 		})
 	})
 }
+exports.postUserKeyword = this.postUserKeyword;
 
 // uid에 해당하는 시리즈의 기존 키워드를 삭제한 뒤 새로운 키워드 목록 추가.
 exports.updateUserKeyword = (res, uid, kid_list, callback) => {
@@ -140,7 +141,28 @@ exports.updateUserKeyword = (res, uid, kid_list, callback) => {
 			else if (kid_list == null) {
 				callback();
 			}
-			else postUserKeyword(uid, kid_list, 0, callback);
+			else postUserKeyword(res, uid, kid_list, 0, callback);
+		})
+	})
+}
+
+exports.getKeywordId = (res, keywords, index, callback) => {
+	app.getConnectionPool((conn) => {
+		var sql = "select * from KEYWORD where id='" + keywords[index] + "'";
+		conn.query(sql, function(err, keyword_list) {
+			conn.release();
+			if (err) {
+				res.status(400).json({
+					error: "E002",
+					error_message: "query 문법 오류"
+				})
+			}
+			else{
+				if(keyword_list.length == 0)
+					postKeyword(res, keywords[index], (kid) => { callback(kid, index + 1); });
+				else
+					callback(keyword_list[0]["id"], index + 1);
+			}
 		})
 	})
 }

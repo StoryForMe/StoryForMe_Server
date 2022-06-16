@@ -112,7 +112,7 @@ router.get('/:id/zzimkkong/series', (req, res) => {
           error_message: "query 문법 오류"
         })
       }
-      else if(!series) {
+      else if(!series_list) {
         res.status(400).json({
           error: "E001",
           error_message: "존재하지 않는 series"
@@ -174,7 +174,7 @@ router.get('/:id/series', (req, res) => {
           }
           else res.json({ series_list: results }) 
         }
-        keyword.getSeriesKeyword(seriesList[0]["id"], getSeriesKeywordIterCallback)
+        keyword.getSeriesKeyword(res, seriesList[0]["id"], getSeriesKeywordIterCallback)
       }
     })
   })
@@ -235,7 +235,7 @@ router.post('/', (req, res) => {
         error_message: "kakao access token 정보 조회 중 문제 발생"
       })
     } else {
-      console.log(JSON.parse(body).id)
+      console.log(JSON.parse(body))
       app.getConnectionPool((conn) => {
         var sql = "insert into USER SET ?";
         var values = {
