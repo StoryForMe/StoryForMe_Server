@@ -145,6 +145,27 @@ exports.updateUserKeyword = (res, uid, kid_list, callback) => {
 	})
 }
 
+exports.getKeywordId = (res, keywords, index, callback) => {
+	app.getConnectionPool((conn) => {
+		var sql = "select * from KEYWORD where id='" + keywords[index] + "'";
+		conn.query(sql, function(err, keyword_list) {
+			conn.release();
+			if (err) {
+				res.status(400).json({
+					error: "E002",
+					error_message: "query 문법 오류"
+				})
+			}
+			else{
+				if(keyword_list.length == 0)
+					postKeyword(res, keywords[index], (kid) => { callback(kid, index + 1); });
+				else
+					callback(keyword_list[0]["id"], index + 1);
+			}
+		})
+	})
+}
+
 /*************************************************************/
 /************************** KEYWORD **************************/
 /*************************************************************/
