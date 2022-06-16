@@ -109,7 +109,7 @@ exports.getUserKeyword = (res, uid, callback) => {
 }
 
 // uid에 해당하는 시리즈에 kid_list에 있는 kid에 해당하는 키워드를 추가.
-exports.postUserKeyword = (uid, kid_list, index, callback) => {
+exports.postUserKeyword = (res, uid, kid_list, index, callback) => {
 	app.getConnectionPool((conn) => {
 		var sql = "insert into `LIKE` values (" + uid + ", " + kid_list[index] + ")";
 		conn.query(sql, function(err, results) {
@@ -140,7 +140,7 @@ exports.updateUserKeyword = (res, uid, kid_list, callback) => {
 			else if (kid_list == null) {
 				callback();
 			}
-			else postUserKeyword(uid, kid_list, 0, callback);
+			else postUserKeyword(res, uid, kid_list, 0, callback);
 		})
 	})
 }
