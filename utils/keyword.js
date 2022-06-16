@@ -92,6 +92,7 @@ exports.getUserKeyword = (res, uid, callback) => {
 		conn.query(sql, function(err, rows) {
 			conn.release();
 			if(err) {
+        console.log("test : " + err);
 				res.status(400).json({
 					error: "E002",
 					error_message: "query 문법 오류"
@@ -115,6 +116,7 @@ postUserKeyword = (res, uid, kid_list, index, callback) => {
 		conn.query(sql, function(err, results) {
 			conn.release();
 			if(err) {
+        console.log("3 : " + err);
 				res.status(400).json({
 					error: "E002",
 					error_message: "query 문법 오류"
@@ -133,6 +135,7 @@ exports.updateUserKeyword = (res, uid, kid_list, callback) => {
 		conn.query(sql, function(err, results) {
 			conn.release();
 			if (err) {
+        console.log("2 : " + err);
 				res.status(400).json({
 					error: "E002",
 					error_message: "query 문법 오류"

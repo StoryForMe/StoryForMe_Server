@@ -58,9 +58,9 @@ exports.getPatchedUser = (res, uid, callback)=> {
         })
       }
       else {
-        keyword.getUserKeyword(uid, (keywords) => {
+        keyword.getUserKeyword(res, uid, (keywords) => {
           var result = {
-            id: user[0]["id"],    // id(우리 서버 기준)
+            id: user[0]["id"],
             nickname: user[0]["nickname"],
             profile_image: user[0]["profile_image"],
             fname: user[0]["fname"],
