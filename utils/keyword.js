@@ -93,10 +93,10 @@ exports.getUserKeyword = (res, uid, callback) => {
 			conn.release();
 			if(err) {
         console.log("test : " + err);
-				// res.status(400).json({
-				// 	error: "E002",
-				// 	error_message: "query 문법 오류"
-				// })
+				res.status(400).json({
+					error: "E002",
+					error_message: "query 문법 오류"
+				})
 			}
 			else {
 				var keywords = [];
