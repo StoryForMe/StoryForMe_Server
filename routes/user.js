@@ -112,7 +112,7 @@ router.get('/:id/zzimkkong/series', (req, res) => {
           error_message: "query 문법 오류"
         })
       }
-      else if(!series) {
+      else if(!series_list) {
         res.status(400).json({
           error: "E001",
           error_message: "존재하지 않는 series"
