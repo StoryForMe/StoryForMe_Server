@@ -174,7 +174,7 @@ router.get('/:id/series', (req, res) => {
           }
           else res.json({ series_list: results }) 
         }
-        keyword.getSeriesKeyword(seriesList[0]["id"], getSeriesKeywordIterCallback)
+        keyword.getSeriesKeyword(res, seriesList[0]["id"], getSeriesKeywordIterCallback)
       }
     })
   })
