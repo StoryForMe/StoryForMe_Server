@@ -43,6 +43,7 @@ router.get('/:eid/:uid', (req, res) => {
 router.post('/', (req,res) => {
 	app.getConnectionPool((conn) => {
 		var date = new Date();
+		console.log(date)
 		var sql = "insert into EPISODE SET ?";
 		var values = {
 			sid: req.body.sid,
