@@ -94,3 +94,21 @@ exports.getEpisodeData = (res, eid, uid, callback) => {
 	   })
 	})
 }
+
+exports.getEpisodeSid = (res, eid, callback) => {
+	app.getConnectionPool((conn) => {
+		var sql = "select * from EPISODE where id=" + eid;
+		conn.query(sql, function(err, episodes) {
+			conn.release();
+			if(err) {
+				res.status(400).json({
+					error: "E002",
+					error_message: "query 문법 오류"
+				})
+			}
+			else {
+				callback(episodes[0]["sid"]);
+			}
+		})
+	})
+}

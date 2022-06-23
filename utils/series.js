@@ -123,6 +123,24 @@ exports.updateEpisodeNum = (res, sid, num, callback) => {
 	})
 }
 
+exports.updateRecentUpdate = (res, sid, date, callback) => {
+	app.getConnectionPool((conn) => {
+		var sql = "update SERIES set ? where id=" + sid;
+		var values = {recent_update: date}
+		conn.query(sql, values, function(err, results) {
+			conn.release();
+			if(err) {
+				console.log(err);
+				res.status(400).json({
+					error: "E002",
+					error_message: "query 문법 오류"
+				})
+			}
+			else callback()
+		})
+	})
+}
+
 exports.updateZzimkkongNum = (res, sid, callback) => {
   app.getConnectionPool((conn) => {
     var sql = "update SERIES SET zzimkkong=zzimkkong+1, zzimkkong_month=zzimkkong_month+1, zzimkkong_week=zzimkkong_week+1 where id=" + sid;
@@ -176,7 +194,10 @@ exports.get_series_list_sql = (option, kid) => {
 	return (sql);
 }
 
-exports.makeResForSeriesList = (series_list, req, res) => {
+zzimkkong_list = ["zzimkkong", "zzimkkong_week", "zzimkkong_month"]
+hits_list = ["hits", "hits_week", "hits_month"]
+
+exports.makeResForSeriesList = (series_list, req, res, option) => {
 	if(!series_list) {
 		console.log("no exist series"); 
 		res.status(400).json({ 
@@ -200,8 +221,8 @@ exports.makeResForSeriesList = (series_list, req, res) => {
 						uid: series_list[index]["uid"],
 						image: series_list["image"],
 						keywords: keywords,
-						hits: series_list[index]["hits"],
-						zzimkkong: series_list[index]["zzimkkong"],
+						hits: series_list[index][hits_list[option]],
+						zzimkkong: series_list[index][zzimkkong_list[option]],
 						episode_num: series_list[index]["episode_num"],
 						is_zzimkkong: is_zzimkkong,
 						is_end: series_list[index]["is_end"],
@@ -216,7 +237,6 @@ exports.makeResForSeriesList = (series_list, req, res) => {
 		user.getNicknameIter(res, series_list[0]["uid"], 0, getNicknameIterCallback)
 	}
 }
-
 
 exports.getSeriesData = (res, sid, callback) => {
 	app.getConnectionPool((conn) => {

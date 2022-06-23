@@ -14,7 +14,7 @@ router.get('/list/:option/:uid', (req, res) => {
 				  error_message: "query 문법 오류"
 				})
 			}
-			series.makeResForSeriesList(series_list, req, res);
+			series.makeResForSeriesList(series_list, req, res, req.params.option);
 	   })
 	})
 })
@@ -29,7 +29,7 @@ router.get('/list/:option/:uid/:kid', (req, res) => {
 				  error_message: "query 문법 오류"
 				})
 			}
-			series.makeResForSeriesList(series_list, req, res);
+			series.makeResForSeriesList(series_list, req, res, req.params.option);
 	   })
 	})
 })
