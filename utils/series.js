@@ -125,7 +125,7 @@ exports.updateEpisodeNum = (res, sid, num, callback) => {
 
 exports.updateRecentUpdate = (res, sid, date, callback) => {
 	app.getConnectionPool((conn) => {
-		var sql = "update SERIES set recent_update=" + date + "where id=" + sid;
+		var sql = "update SERIES set recent_update='" + date + "' where id=" + sid;
 		conn.query(sql, function(err, results) {
 			conn.release();
 			if(err) {
