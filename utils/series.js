@@ -129,6 +129,7 @@ exports.updateRecentUpdate = (res, sid, date, callback) => {
 		conn.query(sql, function(err, results) {
 			conn.release();
 			if(err) {
+				console.log(err);
 				res.status(400).json({
 					error: "E002",
 					error_message: "query 문법 오류"
@@ -235,7 +236,6 @@ exports.makeResForSeriesList = (series_list, req, res, option) => {
 		user.getNicknameIter(res, series_list[0]["uid"], 0, getNicknameIterCallback)
 	}
 }
-
 
 exports.getSeriesData = (res, sid, callback) => {
 	app.getConnectionPool((conn) => {
