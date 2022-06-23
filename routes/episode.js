@@ -42,6 +42,7 @@ router.get('/:eid/:uid', (req, res) => {
 
 router.post('/', (req,res) => {
 	app.getConnectionPool((conn) => {
+		var date = new Date();
 		var sql = "insert into EPISODE SET ?";
 		var values = {
 			sid: req.body.sid,
@@ -52,7 +53,7 @@ router.post('/', (req,res) => {
 			image: req.body.image,
 			state: req.body.state,
 			chapter: req.body.chapter,
-			date: new Date()
+			date: date
 		}
 		conn.query(sql, values, function(err, results) {
 			conn.release();
@@ -71,7 +72,7 @@ router.post('/', (req,res) => {
 				}
 			  }
 			else {
-				series.updateEpisodeNum(res, req.body.sid, 1, (result) => {
+				series.updateEpisodeNum(res, req.body.sid, 1, date, (result) => {
 					if (result == 1) 
 						episode.getEpisodeData(res, results.insertId, -1, (episode_data) => res.json(episode_data)); 
 				})
@@ -132,7 +133,7 @@ router.delete('/:eid', (req, res) => {
 					if(err) console.log(err);
 					else if (results.affectedRows == 0) res.json({ result: 0 }); 
 					else {
-						series.updateEpisodeNum(res, episode[0]["sid"], -1, (result) => {
+						series.updateEpisodeNum(res, episode[0]["sid"], -1, null, (result) => {
 							res.json({ result: result }); 
 						})
 					}

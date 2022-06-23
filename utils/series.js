@@ -107,9 +107,13 @@ exports.updateHits = (res, sid, callback) => {
 	})
 }
 
-exports.updateEpisodeNum = (res, sid, num, callback) => {
+exports.updateEpisodeNum = (res, sid, num, date, callback) => {
 	app.getConnectionPool((conn) => {
-		var sql = "update SERIES set episode_num=episode_num + (" + num + ") where id=" + sid;
+		var sql;
+		if (date == null)
+			sql = "update SERIES set episode_num=episode_num + (" + num + ") where id=" + sid;
+		else 
+			sql = "update SERIES set episode_num=episode_num + (" + num + "), recent_update=" + date +" where id=" + sid;
 		conn.query(sql, function(err, results) {
 			conn.release();
 			if (err) {
