@@ -72,9 +72,11 @@ router.post('/', (req,res) => {
 				}
 			  }
 			else {
-				series.updateEpisodeNum(res, req.body.sid, 1, date, (result) => {
+				series.updateEpisodeNum(res, req.body.sid, 1, (result) => {
 					if (result == 1) 
-						episode.getEpisodeData(res, results.insertId, -1, (episode_data) => res.json(episode_data)); 
+						series.updateRecentUpdate(res, req.body.sid, date, () => {
+							episode.getEpisodeData(res, results.insertId, -1, (episode_data) => res.json(episode_data)); 
+						})
 				})
 			}
 		})	
@@ -91,9 +93,11 @@ router.patch('/', (req,res) => {
 	app.getConnectionPool((conn) => {
 		var sql = "update EPISODE SET ? where id=" + req.body.id;
 		var values = {};
+		var date = new Date();
 		for(var key in req.body) {
 			if (key != "id") values[key] = req.body[key]
 		}
+		values["date"] = date;
 		conn.query(sql, values, function(err, results) {
 			conn.release();
 			if(err) {
@@ -109,7 +113,11 @@ router.patch('/', (req,res) => {
 						error_message: "해당 에피소드가 존재하지 않음."
 					})
 				} 
-				else episode.getEpisodeData(res, req.body.id, -1, (episode_data) => res.json(episode_data)); 
+				else {
+					series.updateRecentUpdate(res, req.body.id, date, () => {
+						episode.getEpisodeData(res, req.body.id, -1, (episode_data) => res.json(episode_data)); 
+					});
+				}
 			}
 		})	
 		
@@ -133,7 +141,7 @@ router.delete('/:eid', (req, res) => {
 					if(err) console.log(err);
 					else if (results.affectedRows == 0) res.json({ result: 0 }); 
 					else {
-						series.updateEpisodeNum(res, episode[0]["sid"], -1, null, (result) => {
+						series.updateEpisodeNum(res, episode[0]["sid"], -1, (result) => {
 							res.json({ result: result }); 
 						})
 					}
