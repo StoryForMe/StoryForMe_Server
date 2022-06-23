@@ -114,8 +114,10 @@ router.patch('/', (req,res) => {
 					})
 				} 
 				else {
-					series.updateRecentUpdate(res, req.body.id, date, () => {
-						episode.getEpisodeData(res, req.body.id, -1, (episode_data) => res.json(episode_data)); 
+					episode.getEpisodeSid(req, req.body.id, (sid) => {
+						series.updateRecentUpdate(res, sid, date, () => {
+							episode.getEpisodeData(res, req.body.id, -1, (episode_data) => res.json(episode_data)); 
+						});
 					});
 				}
 			}
@@ -126,27 +128,18 @@ router.patch('/', (req,res) => {
 
 router.delete('/:eid', (req, res) => {
 	app.getConnectionPool((conn) => {
-		var sql = "select * from EPISODE where id =" + req.params.eid;
-		conn.query(sql, function(err, episode) {
-			if(err) {
-				res.status(400).json({
-				  error: "E002",
-				  error_message: "query 문법 오류"
-				})
-			}
-			else {
-				sql = "delete from EPISODE where id=" + req.params.eid;
-				conn.query(sql, function(err, results) {
-					conn.release();
-					if(err) console.log(err);
-					else if (results.affectedRows == 0) res.json({ result: 0 }); 
-					else {
-						series.updateEpisodeNum(res, episode[0]["sid"], -1, (result) => {
-							res.json({ result: result }); 
-						})
-					}
-				})
-			}
+		episode.getEpisodeSid(res, req.params.eid, (sid) => {
+			sql = "delete from EPISODE where id=" + req.params.eid;
+			conn.query(sql, function(err, results) {
+				conn.release();
+				if(err) console.log(err);
+				else if (results.affectedRows == 0) res.json({ result: 0 }); 
+				else {
+					series.updateEpisodeNum(res, sid, -1, (result) => {
+						res.json({ result: result }); 
+					})
+				}
+			})
 		})
 	})
 })
