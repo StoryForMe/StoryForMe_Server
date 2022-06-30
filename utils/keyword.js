@@ -72,7 +72,7 @@ exports.addKeywordToSeries = (res, sid, kid, callback) => {
 			}
 			else{
 				if(keyword_list.length == 0)
-					postKeyword(kid, () => { createNewRepresent(res, sid, kid, callback) });
+					postKeyword(res, kid, () => { createNewRepresent(res, sid, kid, callback) });
 				else
 					createNewRepresent(res, sid, kid, callback);
 			}
