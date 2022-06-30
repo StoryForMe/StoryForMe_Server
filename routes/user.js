@@ -347,7 +347,7 @@ router.patch('/', (req, res) => {
 
 router.delete('/:id', (req, res) => {
   app.getConnectionPool((conn) => {
-    var sql = "delete from SERIES where id=" + req.params.id;
+    var sql = "delete from USER where id=" + req.params.id;
     conn.query(sql, function(err, results) {
       conn.release();
       if(err) {
