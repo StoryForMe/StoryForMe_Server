@@ -38,6 +38,7 @@ router.post('/series', (req, res) => {
         res.status(400).json({ 
           error: "E001", 
           error_message: "시리즈(혹은 사용자)가 존재하지 않음"
+          // 쿼리가 틀린 거긴한데 대부분은 시리즈가 존재 하지 않는 경우가 아닐까?
         })
       }
       else {
