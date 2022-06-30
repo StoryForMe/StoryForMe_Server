@@ -4,7 +4,7 @@ const app = require('../app');
 
 router.post('/', (req, res) => {
   app.getConnectionPool((conn) => {
-    var sql = "insert into READ SET ?";
+    var sql = "insert into `READ` SET ?";
     var values = {
       uid: req.body.uid,
       sid: req.body.sid,
