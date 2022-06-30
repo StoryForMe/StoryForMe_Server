@@ -12,7 +12,12 @@ router.post('/writer', (req, res) => {
     }
     conn.query(sql, values, function(err, results) {
       conn.release();
-      if(err) res.status(400).json({ result: 0})
+      if(err) {
+        res.status(400).json({ 
+          error: "E001", 
+          error_message: "작가 혹은 사용자가 존재하지 않음"
+        })
+      }
       else {
         res.json({ result: 1 })
       }
@@ -29,7 +34,12 @@ router.post('/series', (req, res) => {
     }
     conn.query(sql, values, function(err, results) {
       conn.release();
-      if(err) res.status(400).json({ result: 0})
+      if(err) {
+        res.status(400).json({ 
+          error: "E001", 
+          error_message: "시리즈 혹은 사용자가 존재하지 않음"
+        })
+      }
       else {
         series.updateZzimkkongNum(res, req.body.sid, (result) => {
           res.json({ result: result })
