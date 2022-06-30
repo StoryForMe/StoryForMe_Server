@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 const app = require('../app');
 
-router.post('/read', (req, res) => {
+router.post('/', (req, res) => {
   app.getConnectionPool((conn) => {
     var sql = "insert into READ SET ?";
     var values = {
@@ -26,7 +26,7 @@ router.post('/read', (req, res) => {
   })
 })
 
-router.delete('/read/:uid/:sid', (req, res) => {
+router.delete('/:uid/:sid', (req, res) => {
   app.getConnectionPool((conn) => {
     var sql = "delete from READ where uid=" + req.params.uid + ' and sid=' + req.params.sid;
 
