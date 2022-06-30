@@ -8,7 +8,7 @@ router.post('/', (req, res) => {
     var values = {
       uid: req.body.uid,
       sid: req.body.sid,
-      eid: req.body.eid
+      recent_episode: req.body.chapter
     }
 
     conn.query(sql, values, function(err, results) {
