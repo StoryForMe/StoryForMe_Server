@@ -16,7 +16,7 @@ router.post('/', (req, res) => {
       if(err) {
         res.status(400).json({
           error: "E001",
-          error_message: "존재하지 않는 id가 있음"
+          error_message: err
         })
       }
       else {
