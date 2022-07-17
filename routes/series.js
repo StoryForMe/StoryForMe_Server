@@ -124,11 +124,11 @@ router.patch('/', (req, res) => {
 				series.getSeriesData(res, req.body.id, req.body.uid, (series_data) => res.json(series_data));
 			else {
 				keyword.getSeriesKeyword(res, req.body.id, (keyword_list) => {
-					var index = 0;
+					var index = -1;
 					function addKeywordToSeriesCallback() {
 						index++;
 						if (index == req.body.keywords.length) {
-							index = 0;
+							index = -1;
 							keyword.deleteKeywordFromSeries(res, req.body.id, keyword_list[index], deleteKeywordFromSeriesCallback);
 						}
 						else if (keyword_list.indexOf(req.body.keywords[index]) != -1) addKeywordToSeriesCallback()
