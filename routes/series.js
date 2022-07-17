@@ -104,6 +104,7 @@ router.patch('/', (req, res) => {
 		for(var key in req.body) {
 			if (key != "id" && key != "keywords" && key != "uid") values[key] = req.body[key]
 		}
+		values["recent_update"] = new Date();
 		conn.query(sql, values, function(err, results) {
 			conn.release();
 			if(err) {
