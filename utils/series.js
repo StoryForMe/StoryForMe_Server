@@ -244,6 +244,7 @@ exports.getSeriesData = (res, sid, uid, callback) => {
 		conn.query(sql, function(err, series_list) {
 			conn.release();
 			if(err) {
+				console.log(err);
 				res.status(400).json({
 					error: "E002",
 					error_message: "query 문법 오류"
