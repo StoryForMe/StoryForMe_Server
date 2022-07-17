@@ -102,7 +102,7 @@ router.patch('/', (req, res) => {
 		var sql = "update SERIES SET ? where id=" + req.body.id;
 		var values = {};
 		for(var key in req.body) {
-			if (key != "id" && key != "keywords") values[key] = req.body[key]
+			if (key != "id" && key != "keywords" && key != "uid") values[key] = req.body[key]
 		}
 		conn.query(sql, values, function(err, results) {
 			conn.release();
