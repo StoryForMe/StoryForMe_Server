@@ -238,7 +238,7 @@ exports.makeResForSeriesList = (series_list, req, res, option) => {
 	}
 }
 
-exports.getSeriesData = (res, sid, callback) => {
+exports.getSeriesData = (res, sid, uid, callback) => {
 	app.getConnectionPool((conn) => {
 		var sql = "select * from SERIES where id=" + sid;
 		conn.query(sql, function(err, series_list) {
@@ -258,23 +258,26 @@ exports.getSeriesData = (res, sid, callback) => {
 			else {
 				user.getNickname(res, series_list[0]["uid"], (nickname) => {
 					keyword.getSeriesKeyword(res, sid, (keywords) => {
-						episode.getEpisodeList(res, sid, (episodes) => {
-							var result = {
-								sid: series_list[0]["id"],
-								title: series_list[0]["title"],
-								image: series_list[0]["image"],
-								introduction: series_list[0]["introduction"],
-								writer: nickname,
-								wid: series_list[0]["uid"],
-								zzimkkong: series_list[0]["zzimkkong"],
-								coin_num: series_list[0]["coin_num"],
-								coin_full_num: series_list[0]["coin_full_num"],
-								ad_days: series_list[0]["ad_days"],
-								keywords: keywords,
-								is_end: series_list[0]["is_end"],
-								episodes: episodes
-							}
-							callback(result);
+						user.getIs_zzimkkong(res, uid, sid, (is_zzimkkong) => {
+							episode.getEpisodeList(res, sid, (episodes) => {
+								var result = {
+									sid: series_list[0]["id"],
+									title: series_list[0]["title"],
+									image: series_list[0]["image"],
+									introduction: series_list[0]["introduction"],
+									writer: nickname,
+									wid: series_list[0]["uid"],
+									zzimkkong: series_list[0]["zzimkkong"],
+									coin_num: series_list[0]["coin_num"],
+									coin_full_num: series_list[0]["coin_full_num"],
+									ad_days: series_list[0]["ad_days"],
+									keywords: keywords,
+									is_zzimkkong: is_zzimkkong,
+									is_end: series_list[0]["is_end"],
+									episodes: episodes
+								}
+								callback(result);
+							});
 						});
 					});
 				});
