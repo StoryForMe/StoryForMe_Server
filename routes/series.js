@@ -34,8 +34,8 @@ router.get('/list/:option/:uid/:kid', (req, res) => {
 	})
 })
 
-router.get('/:sid', (req, res) => {
-	series.getSeriesData(res, req.params.sid, (series_data) => res.json(series_data));
+router.get('/:sid/:uid', (req, res) => {
+	series.getSeriesData(res, req.params.sid, req.params.uid, (series_data) => res.json(series_data));
 })
 
 router.post('/', (req, res) => {
@@ -70,13 +70,13 @@ router.post('/', (req, res) => {
 				})
 			}
 			else if (req.body.keywords.length == 0) 
-				series.getSeriesData(res, results.insertId, (series_data) => res.json(series_data));
+				series.getSeriesData(res, results.insertId, req.body.uid, (series_data) => res.json(series_data));
 			else {
 				var index = 0;
 				function addKeywordToSeriesCallback() {
 					index++;
 					if (index == req.body.keywords.length) 
-						series.getSeriesData(res, results.insertId, (series_data) => res.json(series_data));
+						series.getSeriesData(res, results.insertId, req.body.uid, (series_data) => res.json(series_data));
 					else keyword.addKeywordToSeries(res, results.insertId, req.body.keywords[index], addKeywordToSeriesCallback);
 				}
 				keyword.addKeywordToSeries(res, results.insertId, req.body.keywords[index], addKeywordToSeriesCallback);
@@ -92,15 +92,23 @@ router.patch('/', (req, res) => {
 			error_message: "수정할 시리즈의 id 정보가 누락됨."
 		})
 	}
+	if (req.body.uid == undefined) {
+		res.status(400).json({ 
+			error: "E005",
+			error_message: "uid 정보가 누락됨. (유저의 시리즈 찜꽁 여부 조회를 위해 uid가 필요.)"
+		})
+	}
 	app.getConnectionPool((conn) => {
 		var sql = "update SERIES SET ? where id=" + req.body.id;
 		var values = {};
 		for(var key in req.body) {
-			if (key != "id" && key != "keywords") values[key] = req.body[key]
+			if (key != "id" && key != "keywords" && key != "uid") values[key] = req.body[key]
 		}
+		values["recent_update"] = new Date();
 		conn.query(sql, values, function(err, results) {
 			conn.release();
 			if(err) {
+				console.log(err);
 				res.status(400).json({
 				  error: "E002",
 				  error_message: "query 문법 오류"
@@ -113,14 +121,14 @@ router.patch('/', (req, res) => {
 				})
 			}
 			else if (req.body.keywords == null)
-				series.getSeriesData(res, req.body.id, (series_data) => res.json(series_data));
+				series.getSeriesData(res, req.body.id, req.body.uid, (series_data) => res.json(series_data));
 			else {
 				keyword.getSeriesKeyword(res, req.body.id, (keyword_list) => {
-					var index = 0;
+					var index = -1;
 					function addKeywordToSeriesCallback() {
 						index++;
 						if (index == req.body.keywords.length) {
-							index = 0;
+							index = -1;
 							keyword.deleteKeywordFromSeries(res, req.body.id, keyword_list[index], deleteKeywordFromSeriesCallback);
 						}
 						else if (keyword_list.indexOf(req.body.keywords[index]) != -1) addKeywordToSeriesCallback()
@@ -129,7 +137,7 @@ router.patch('/', (req, res) => {
 					function deleteKeywordFromSeriesCallback() {
 						index++;
 						if (index == keyword_list.length) {
-							series.getSeriesData(res, req.body.id, (series_data) => res.json(series_data));
+							series.getSeriesData(res, req.body.id, req.body.uid, (series_data) => res.json(series_data));
 						}
 						else if (req.body.keywords.indexOf(keyword_list[index]) != -1) deleteKeywordFromSeriesCallback()
 						else keyword.deleteKeywordFromSeries(res, req.body.id, keyword_list[index], deleteKeywordFromSeriesCallback);
