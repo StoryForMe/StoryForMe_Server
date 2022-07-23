@@ -30,7 +30,7 @@ router.get('/list/:option/:uid/:kid/:page', (req, res) => {
 				  error_message: "query 문법 오류"
 				})
 			}
-			series.makeResForSeriesList(series_list, req, res, req.params.option);
+			else series.makeResForSeriesList(series_list, req, res, req.params.option);
 	   })
 	})
 })
