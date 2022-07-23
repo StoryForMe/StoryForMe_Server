@@ -4,9 +4,9 @@ const app = require('../app');
 const keyword = require('../utils/keyword');
 const series = require('../utils/series');
 
-router.get('/list/:option/:uid', (req, res) => {
+router.get('/list/:option/:uid/:page', (req, res) => {
 	app.getConnectionPool((conn) => {
-		conn.query(series.get_series_list_sql(req.params.option, null), function(err, series_list) {
+		conn.query(series.get_series_list_sql(req.params.option, null, req.params.page), function(err, series_list) {
 			conn.release();
 			if(err) {
 				res.status(400).json({
@@ -19,9 +19,9 @@ router.get('/list/:option/:uid', (req, res) => {
 	})
 })
 
-router.get('/list/:option/:uid/:kid', (req, res) => {
+router.get('/list/:option/:uid/:kid/:page', (req, res) => {
 	app.getConnectionPool((conn) => {
-		conn.query(series.get_series_list_sql(req.params.option, req.params.kid), function(err, series_list) {
+		conn.query(series.get_series_list_sql(req.params.option, req.params.kid, req.params.page), function(err, series_list) {
 			conn.release();
 			if(err) {
 				res.status(400).json({
