@@ -187,10 +187,13 @@ sql_post = [
 ]
 
 // 옵션에 따라 정렬기준을 다르게 함.
-exports.get_series_list_sql = (option, kid) => {
+exports.get_series_list_sql = (option, kid, page) => {
 	var sql; 
-	if (kid == null) sql = sql_pre[option] + "from SERIES" + sql_post[option];
-	else sql = sql_pre[option] + "from SERIES as s join REPRESENT as r on s.id=r.sid where kid='" + kid + "'" + sql_post[option];
+	let page_size = 20;
+	var offset = page_size * page;
+
+	if (kid == null) sql = sql_pre[option] + "from SERIES" + sql_post[option] + " LIMIT " + offset + "," + page_size;
+	else sql = sql_pre[option] + "from SERIES as s join REPRESENT as r on s.id=r.sid where kid='" + kid + "'" + sql_post[option] + " LIMIT " + offset + "," + page_size;
 	return (sql);
 }
 
