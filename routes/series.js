@@ -20,7 +20,7 @@ router.get('/list/:option/:uid/:page', (req, res) => {
 	})
 })
 
-router.get('/list/:option/:uid/:kid/:page', (req, res) => {
+router.get('/list/:option/:uid/:page/:kid', (req, res) => {
 	app.getConnectionPool((conn) => {
 		conn.query(series.get_series_list_sql(req.params.option, req.params.kid, req.params.page), function(err, series_list) {
 			conn.release();
