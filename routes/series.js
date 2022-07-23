@@ -25,6 +25,7 @@ router.get('/list/:option/:uid/:page/:kid', (req, res) => {
 		conn.query(series.get_series_list_sql(req.params.option, req.params.kid, req.params.page), function(err, series_list) {
 			conn.release();
 			if(err) {
+				console.log(err);
 				res.status(400).json({
 				  error: "E002",
 				  error_message: "query 문법 오류"
