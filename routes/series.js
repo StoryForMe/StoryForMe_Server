@@ -9,12 +9,13 @@ router.get('/list/:option/:uid/:page', (req, res) => {
 		conn.query(series.get_series_list_sql(req.params.option, null, req.params.page), function(err, series_list) {
 			conn.release();
 			if(err) {
+				console.log(err);
 				res.status(400).json({
 				  error: "E002",
 				  error_message: "query 문법 오류"
 				})
 			}
-			series.makeResForSeriesList(series_list, req, res, req.params.option);
+			else series.makeResForSeriesList(series_list, req, res, req.params.option);
 	   })
 	})
 })
