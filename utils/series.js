@@ -189,7 +189,7 @@ sql_post = [
 // 옵션에 따라 정렬기준을 다르게 함.
 exports.get_series_list_sql = (option, kid, page) => {
 	var sql; 
-	let page_size = 2;
+	let page_size = 5;
 	var offset = page_size * (page - 1);
 
 	if (kid == null) sql = sql_pre[option] + "from SERIES" + sql_post[option] + " LIMIT " + offset + "," + page_size;
