@@ -199,9 +199,8 @@ router.get('/:id/read', (req, res) => {
           series.getSeriesData(res, seriesList[index]["sid"], (series_data) => {
             results.push({
               sid: seriesList[index]["sid"],
-              // eid: eid,
               chapter: seriesList[index]["recent_episode"],
-              image: series_date["image"],
+              image: series_data["image"],
               title: series_data["title"],
               writer: series_data["writer"],
               keywords: keywords,
