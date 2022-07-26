@@ -47,7 +47,7 @@ function updateReadInfo(uid, sid, eid, chapter, date, callback) {
       if (err) {
         console.log(err)
       } else {
-        callback();
+        callback;
       }
     })
   })
@@ -69,7 +69,7 @@ function addReadInfo(uid, sid, eid, chapter, date, callback) {
       if (err) {
         // console.log(err)
       } else {
-        callback();
+        callback;
       }
     })
   })
