@@ -243,6 +243,7 @@ exports.makeResForSeriesList = (series_list, req, res, option) => {
 
 exports.getSeriesData = (res, sid, uid, callback) => {
 	app.getConnectionPool((conn) => {
+    console.log("herehere")
 		var sql = "select * from SERIES where id=" + sid;
 		conn.query(sql, function(err, series_list) {
 			conn.release();
