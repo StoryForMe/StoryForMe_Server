@@ -32,41 +32,33 @@ exports.recordReadInfo = (res, uid, sid, eid, chapter, date, callback) => {
 }
 
 function updateReadInfo(uid, sid, eid, chapter, date, callback) {
-  var sql = "update `READ` SET ? where uid=" + uid + " and sid=" + sid;
-  var values = {
-    eid: eid,
-    recent_episode: chapter,
-    date: date
-  }
-  conn.query(sql, values, function(err, results) {
-    conn.release();
-
-    if(err) {
-      console.log(err)
-    } else {
-      callback();
+  app.getConnectionPool((conn) => {
+    var sql = "update `READ` SET ? where uid=" + uid + " and sid=" + sid;
+    var values = {
+      eid: eid,
+      recent_episode: chapter,
+      date: date
     }
+    conn.query(sql, values, function(err, results) {
+      conn.release();
+    })
   })
 }
 exports.updateReadInfo = updateReadInfo;
 
 function addReadInfo (uid, sid, eid, chapter, date, callback) {
-  var sql = "insert into `READ` SET ? ";
-  var values = {
-    uid: uid,
-    eid: eid,
-    sid: sid,
-    recent_episode: chapter,
-    date: date
-  }
-  conn.query(sql, values, function(err, results) {
-    conn.release();
-
-    if(err) {
-      console.log(err)
-    } else {
-      callback();
+  app.getConnectionPool((conn) => {
+    var sql = "insert into `READ` SET ? ";
+    var values = {
+      uid: uid,
+      eid: eid,
+      sid: sid,
+      recent_episode: chapter,
+      date: date
     }
+    conn.query(sql, values, function(err, results) {
+      conn.release();
+    })
   })
 }
 exports.addReadInfo = addReadInfo;
