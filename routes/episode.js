@@ -43,7 +43,8 @@ router.get('/:eid/:uid', (req, res) => {
     console.log("1 " + req.params.uid);
     episode.getEpisodeSid(res, req.params.eid, (sid) => {
       console.log("2 " + req.params.uid);
-      read.addReadInfo(res, req.params.uid, sid, req.params.eid, episode_data["chapter"], new Date(), (result) => {
+      let uid = req.params.uid;
+      read.addReadInfo(res, uid, sid, req.params.eid, episode_data["chapter"], new Date(), (result) => {
         console.log("3 " + req.params.uid);
         res.json(episode_data)
       })
