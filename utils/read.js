@@ -48,6 +48,7 @@ function updateReadInfo(uid, sid, eid, chapter, date, callback) {
     }
   })
 }
+exports.updateReadInfo = updateReadInfo;
 
 function addReadInfo (uid, sid, eid, chapter, date, callback) {
   var sql = "insert into `READ` SET ? ";
@@ -68,3 +69,4 @@ function addReadInfo (uid, sid, eid, chapter, date, callback) {
     }
   })
 }
+exports.addReadInfo = addReadInfo;
