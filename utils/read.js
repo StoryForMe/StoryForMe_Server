@@ -31,7 +31,7 @@ exports.recordReadInfo = (res, uid, sid, eid, chapter, date, callback) => {
   })
 }
 
-function updateReadInfo (uid, sid, eid, chapter, date) {
+function updateReadInfo(uid, sid, eid, chapter, date, callback) {
   var sql = "update `READ` SET ? where uid=" + uid + " and sid=" + sid;
   var values = {
     eid: eid,
@@ -40,10 +40,16 @@ function updateReadInfo (uid, sid, eid, chapter, date) {
   }
   conn.query(sql, values, function(err, results) {
     conn.release();
+
+    if(err) {
+      console.log(err)
+    } else {
+      callback();
+    }
   })
 }
 
-function addReadInfo (uid, sid, eid, chapter, date) {
+function addReadInfo (uid, sid, eid, chapter, date, callback) {
   var sql = "insert into `READ` SET ? ";
   var values = {
     uid: uid,
@@ -54,5 +60,11 @@ function addReadInfo (uid, sid, eid, chapter, date) {
   }
   conn.query(sql, values, function(err, results) {
     conn.release();
+
+    if(err) {
+      console.log(err)
+    } else {
+      callback();
+    }
   })
 }
