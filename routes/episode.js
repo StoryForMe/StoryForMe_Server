@@ -4,6 +4,7 @@ const app = require('../app');
 const series = require('../utils/series');
 const comment = require('../utils/comment');
 const episode = require('../utils/episode');
+const read = require('../utils/read');
 
 router.get('/:eid/comment', (req, res) => {
 	app.getConnectionPool((conn) => {
@@ -37,7 +38,13 @@ router.get('/:eid/comment', (req, res) => {
 })
 
 router.get('/:eid/:uid', (req, res) => {
-	episode.getEpisodeData(res, req.params.eid, req.params.uid, (episode_data) => res.json(episode_data));
+	episode.getEpisodeData(res, req.params.eid, req.params.uid, (episode_data) => {
+    episode.getEpisodeSid(res, req.params.eid, (sid) => {
+      read.recordReadInfo(res, req.params.uid, sid, req.params.eid, episode_data["chapter"], new Date().toISOString().replace(/T/, ' ').replace(/\..+/, ''), (result) => {
+        res.json(episode_data)
+      })
+    })
+  });
 })
 
 router.post('/', (req,res) => {
