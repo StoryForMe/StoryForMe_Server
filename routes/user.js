@@ -4,6 +4,7 @@ var router = express.Router();
 const app = require('../app');
 const keyword = require('../utils/keyword');
 const user = require('../utils/user');
+const series = require('../utils/series');
 
 router.get('/login', (req, res) => {
   const options = {
@@ -142,7 +143,6 @@ router.get('/:id/zzimkkong/series', (req, res) => {
   })
 })
         
-
 router.get('/:id/series', (req, res) => {
   app.getConnectionPool((conn) => {
     var sql = "select * from SERIES where uid=" + req.params.id;
@@ -175,6 +175,45 @@ router.get('/:id/series', (req, res) => {
           else res.json({ series_list: results }) 
         }
         keyword.getSeriesKeyword(res, seriesList[0]["id"], getSeriesKeywordIterCallback)
+      }
+    })
+  })
+})
+
+router.get('/:id/read', (req, res) => {
+  app.getConnectionPool((conn) => {
+    let max = 10;
+    var sql = "select * from `READ` where uid=" + req.params.id + " order by date desc LIMIT " + max;
+    conn.query(sql, function(err, seriesList) {
+      conn.release();
+      if(err) {
+        res.status(400).json({
+          error: "E002",
+          error_message: "query 문법 오류"
+        })
+      }
+      else {
+        var results = []
+        var index = 0
+
+        function getSeriesDataIterCallback(series_data) {
+            results.push({
+              sid: series_data["sid"],
+              eid: seriesList[index]["eid"],
+              chapter: seriesList[index]["recent_episode"],
+              image: series_data["image"],
+              title: series_data["title"],
+              writer: series_data["writer"],
+              keywords: series_data["keywords"],
+              is_zzimkkong: series_data["is_zzimkkong"]
+            })
+            if (index < seriesList.length - 1) {
+              index++;
+              series.getSeriesData(res, seriesList[index]["sid"], req.params.id, getSeriesDataIterCallback)
+            }
+            else res.json({ series_list: results }) 
+        }
+        series.getSeriesData(res, seriesList[0]["sid"], req.params.id, getSeriesDataIterCallback)
       }
     })
   })
