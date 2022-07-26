@@ -188,8 +188,7 @@ router.get('/:id/read', (req, res) => {
       if(err) {
         res.status(400).json({
           error: "E002",
-          // error_message: "query 문법 오류"
-          error_message: err
+          error_message: "query 문법 오류"
         })
       }
       else {
@@ -201,6 +200,7 @@ router.get('/:id/read', (req, res) => {
         function getSeriesDataIterCallback(series_data) {
             results.push({
               sid: series_data["sid"],
+              eid: sereisList[index]["eid"],
               chapter: seriesList[index]["recent_episode"],
               image: series_data["image"],
               title: series_data["title"],
