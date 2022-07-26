@@ -182,7 +182,7 @@ router.get('/:id/series', (req, res) => {
 
 router.get('/:id/read', (req, res) => {
   app.getConnectionPool((conn) => {
-    var sql = "select * from `READ` where uid=" + req.params.id;
+    var sql = "select * from `READ` where uid=" + req.params.id + "oerder by date desc";
     conn.query(sql, function(err, seriesList) {
       conn.release();
       if(err) {
@@ -193,7 +193,7 @@ router.get('/:id/read', (req, res) => {
       }
       else {
         console.log(seriesList);
-        
+
         var results = []
         var index = 0
 
@@ -205,7 +205,6 @@ router.get('/:id/read', (req, res) => {
               title: series_data["title"],
               writer: series_data["writer"],
               keywords: series_data["keywords"],
-              episode_num: series_data["episode_num"],
               is_zzimkkong: series_data["is_zzimkkong"]
             })
             if (index < seriesList.length - 1) {
