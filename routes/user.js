@@ -192,6 +192,8 @@ router.get('/:id/read', (req, res) => {
         })
       }
       else {
+        console.log(seriesList);
+        
         var results = []
         var index = 0
 
