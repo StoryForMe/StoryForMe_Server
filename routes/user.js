@@ -182,8 +182,8 @@ router.get('/:id/series', (req, res) => {
 
 router.get('/:id/read', (req, res) => {
   app.getConnectionPool((conn) => {
-    let max = 10;
-    var sql = "select * from `READ` where uid=" + req.params.id + " order by date desc LIMIT " + offset + "," + max;
+    let max = 1;
+    var sql = "select * from `READ` where uid=" + req.params.id + " order by date desc LIMIT " + max;
     conn.query(sql, function(err, seriesList) {
       conn.release();
       if(err) {
