@@ -17,18 +17,19 @@ exports.recordReadInfo = (res, uid, sid, eid, chapter, date, callback) => {
       }
     })
 
-    conn.query(sql, values, function(err, results) {
-      conn.release();
-      if(err) {
-        res.status(400).json({
-          error: "E001",
-          error_message: err
-        })
-      }
-      else {
-        callback({ result: 1 })
-      }
-    })
+  //   conn.query(sql, values, function(err, results) {
+  //     conn.release();
+  //     if(err) {
+  //       res.status(400).json({
+  //         error: "E001",
+  //         error_message: err
+  //       })
+  //     }
+  //     else {
+  //       callback({ result: 1 })
+  //     }
+  //   })
+  // })
   })
 }
 
