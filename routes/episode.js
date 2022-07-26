@@ -38,6 +38,7 @@ router.get('/:eid/comment', (req, res) => {
 })
 
 router.get('/:eid/:uid', (req, res) => {
+  console.log("0 " + req.params.uid);
 	episode.getEpisodeData(res, req.params.eid, req.params.uid, (episode_data) => {
     console.log("1 " + req.params.uid);
     episode.getEpisodeSid(res, req.params.eid, (sid) => {
