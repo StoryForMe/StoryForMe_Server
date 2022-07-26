@@ -9,27 +9,17 @@ exports.recordReadInfo = (res, uid, sid, eid, chapter, date, callback) => {
 
       if(err) {
         console.log("here");
-        addReadInfo(uid, sid, eid, chapter, date);
+        addReadInfo(uid, sid, eid, chapter, date, (result) => {
+          callback(result);
+        });
       }
       else {
         console.log("no here");
-        updateReadInfo(uid, sid, eid, chapter, date);
+        updateReadInfo(uid, sid, eid, chapter, date, (result) => {
+          callback(result);
+        });
       }
     })
-
-  //   conn.query(sql, values, function(err, results) {
-  //     conn.release();
-  //     if(err) {
-  //       res.status(400).json({
-  //         error: "E001",
-  //         error_message: err
-  //       })
-  //     }
-  //     else {
-  //       callback({ result: 1 })
-  //     }
-  //   })
-  // })
   })
 }
 
@@ -47,7 +37,7 @@ function updateReadInfo(uid, sid, eid, chapter, date, callback) {
       if (err) {
         console.log(err)
       } else {
-        callback;
+        callback({ result: 1 });
       }
     })
   })
@@ -69,7 +59,7 @@ function addReadInfo(uid, sid, eid, chapter, date, callback) {
       if (err) {
         // console.log(err)
       } else {
-        callback;
+        callback({ result: 1 });
       }
     })
   })
