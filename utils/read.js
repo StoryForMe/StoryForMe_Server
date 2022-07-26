@@ -4,7 +4,7 @@ exports.recordReadInfo = (res, uid, sid, eid, chapter, date, callback) => {
   app.getConnectionPool((conn) => {
     console.log("special " + uid);
     var sql = "select * from `READ` where uid=" + uid + " and sid=" + sid;
-    conn.query(sql, values, function(err, results) {
+    conn.query(sql, function(err, results) {
       conn.release();
 
       if(err) {
