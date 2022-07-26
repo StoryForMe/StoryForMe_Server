@@ -54,7 +54,7 @@ exports.updateReadInfo = updateReadInfo;
 
 function addReadInfo(uid, sid, eid, chapter, date, callback) {
   app.getConnectionPool((conn) => {
-    // console.log(uid);
+    console.log("special " + uid);
     var sql = "insert into `READ` SET ? ";
     var values = {
       uid: uid,
