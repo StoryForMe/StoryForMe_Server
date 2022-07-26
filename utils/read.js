@@ -41,6 +41,11 @@ function updateReadInfo(uid, sid, eid, chapter, date, callback) {
     }
     conn.query(sql, values, function(err, results) {
       conn.release();
+      if (err) {
+        console.log(err)
+      } else {
+        callback();
+      }
     })
   })
 }
@@ -58,6 +63,11 @@ function addReadInfo (uid, sid, eid, chapter, date, callback) {
     }
     conn.query(sql, values, function(err, results) {
       conn.release();
+      if (err) {
+        console.log(err)
+      } else {
+        callback();
+      }
     })
   })
 }
