@@ -182,7 +182,7 @@ router.get('/:id/series', (req, res) => {
 
 router.get('/:id/read', (req, res) => {
   app.getConnectionPool((conn) => {
-    var sql = "select * from `READ` where uid=" + req.params.id + "oerder by date desc";
+    var sql = "select * from `READ` where uid=" + req.params.id + " oerder by `date` desc";
     conn.query(sql, function(err, seriesList) {
       conn.release();
       if(err) {
