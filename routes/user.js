@@ -200,7 +200,7 @@ router.get('/:id/read', (req, res) => {
         function getSeriesDataIterCallback(series_data) {
             results.push({
               sid: series_data["sid"],
-              eid: sereisList[index]["eid"],
+              eid: seriesList[index]["eid"],
               chapter: seriesList[index]["recent_episode"],
               image: series_data["image"],
               title: series_data["title"],
