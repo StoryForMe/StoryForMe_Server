@@ -7,7 +7,6 @@ const Episode = require('./episode');
 const Comment = require('./comment');
 const Notice = require('./notice');
 const Zzimkkong = require('./zzimkkong');
-const Read = require('./read');
 
 router.use('/user', User);
 router.use('/series', Series);
