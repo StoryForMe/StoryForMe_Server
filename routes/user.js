@@ -4,6 +4,7 @@ var router = express.Router();
 const app = require('../app');
 const keyword = require('../utils/keyword');
 const user = require('../utils/user');
+const series = require('../utils/series');
 
 router.get('/login', (req, res) => {
   const options = {
@@ -142,7 +143,6 @@ router.get('/:id/zzimkkong/series', (req, res) => {
   })
 })
         
-
 router.get('/:id/series', (req, res) => {
   app.getConnectionPool((conn) => {
     var sql = "select * from SERIES where uid=" + req.params.id;
@@ -175,6 +175,47 @@ router.get('/:id/series', (req, res) => {
           else res.json({ series_list: results }) 
         }
         keyword.getSeriesKeyword(res, seriesList[0]["id"], getSeriesKeywordIterCallback)
+      }
+    })
+  })
+})
+
+router.get('/:id/read', (req, res) => {
+  app.getConnectionPool((conn) => {
+    var sql = "select * from READ where uid=" + req.params.id;
+    conn.query(sql, function(err, seriesList) {
+      conn.release();
+      if(err) {
+        res.status(400).json({
+          error: "E002",
+          error_message: "query 문법 오류"
+        })
+      }
+      else {
+        var results = []
+        var index = 0
+
+        function getSeriesKeywordIterCallback(keywords) {
+          series.getSeriesData(res, seriesList[index]["sid"], (series_data) => {
+            results.push({
+              sid: seriesList[index]["sid"],
+              // eid: eid,
+              chapter: seriesList[index]["recent_episode"],
+              image: series_date["image"],
+              title: series_data["title"],
+              writer: series_data["writer"],
+              keywords: keywords,
+              episode_num: series_data["episode_num"],
+              is_zzimkkong: series_data["is_zzimkkong"]
+            })
+            if (index < seriesList.length - 1) {
+              index++;
+              keyword.getSeriesKeyword(res, seriesList[index]["sid"], getSeriesKeywordIterCallback)
+            }
+            else res.json({ series_list: results }) 
+          })
+        }
+        keyword.getSeriesKeyword(res, seriesList[0]["sid"], getSeriesKeywordIterCallback)
       }
     })
   })
