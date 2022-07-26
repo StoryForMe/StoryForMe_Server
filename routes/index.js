@@ -15,7 +15,6 @@ router.use('/episode', Episode);
 router.use('/comment', Comment);
 router.use('/notice', Notice);
 router.use('/zzimkkong', Zzimkkong);
-router.use('/read', Read);
 
 router.get('/', function(req, res, next) {
   res.send('hello world!!');
