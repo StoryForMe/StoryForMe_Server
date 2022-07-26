@@ -31,7 +31,7 @@ exports.recordReadInfo = (res, uid, sid, eid, chapter, date, callback) => {
   })
 }
 
-let updateReadInfo = (uid, sid, eid, chapter, date) => {
+function updateReadInfo (uid, sid, eid, chapter, date) {
   var sql = "update `READ` SET ? where uid=" + uid + " and sid=" + sid;
   var values = {
     eid: eid,
@@ -43,7 +43,7 @@ let updateReadInfo = (uid, sid, eid, chapter, date) => {
   })
 }
 
-let addReadInfo = (uid, sid, eid, chapter, date) => {
+function addReadInfo (uid, sid, eid, chapter, date) {
   var sql = "insert into `READ` SET ? ";
   var values = {
     uid: uid,
