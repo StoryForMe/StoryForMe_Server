@@ -1,11 +1,12 @@
 const app = require('../app');
 
-exports.addReadInfo = (res, uid, sid, eid, chapter, callback) => {
+exports.addReadInfo = (res, uid, sid, eid, chapter, date, callback) => {
   app.getConnectionPool((conn) => {
     var sql = "update `READ` SET ? where uid=" + uid + " and sid=" + sid;
     var values = {
       eid: eid,
-      recent_episode: chapter
+      recent_episode: chapter,
+      date: date
     }
 
     conn.query(sql, values, function(err, results) {
@@ -17,7 +18,7 @@ exports.addReadInfo = (res, uid, sid, eid, chapter, callback) => {
         })
       }
       else {
-        res.json({ result: 1 })
+        callback({ result: 1 })
       }
     })
   })
