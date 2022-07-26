@@ -2,7 +2,7 @@ const app = require('../app');
 
 exports.recordReadInfo = (res, uid, sid, eid, chapter, date, callback) => {
   app.getConnectionPool((conn) => {
-    console.log(uid);
+    console.log("special " + uid);
     var sql = "select * from `READ` where uid=" + uid + " and sid=" + sid;
     conn.query(sql, values, function(err, results) {
       conn.release();
@@ -34,6 +34,7 @@ exports.recordReadInfo = (res, uid, sid, eid, chapter, date, callback) => {
 
 function updateReadInfo(uid, sid, eid, chapter, date, callback) {
   app.getConnectionPool((conn) => {
+    console.log("problem " + uid);
     var sql = "update `READ` SET ? where uid=" + uid + " and sid=" + sid;
     var values = {
       eid: eid,
@@ -54,7 +55,6 @@ exports.updateReadInfo = updateReadInfo;
 
 function addReadInfo(uid, sid, eid, chapter, date, callback) {
   app.getConnectionPool((conn) => {
-    console.log("special " + uid);
     var sql = "insert into `READ` SET ? ";
     var values = {
       uid: uid,
