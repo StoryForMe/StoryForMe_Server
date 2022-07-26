@@ -208,11 +208,11 @@ router.get('/:id/read', (req, res) => {
             })
             if (index < seriesList.length - 1) {
               index++;
-              series.getSeriesData(res, seriesList[index]["sid"], getSeriesDataIterCallback)
+              series.getSeriesData(res, seriesList[index]["sid"], req.params.id, getSeriesDataIterCallback)
             }
             else res.json({ series_list: results }) 
         }
-        series.getSeriesData(res, seriesList[0]["sid"], getSeriesDataIterCallback)
+        series.getSeriesData(res, seriesList[0]["sid"], req.params.id, getSeriesDataIterCallback)
       }
     })
   })
