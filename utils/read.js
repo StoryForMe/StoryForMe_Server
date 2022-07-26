@@ -9,6 +9,8 @@ exports.recordReadInfo = (res, uid, sid, eid, chapter, date, callback) => {
 
       if(err) {
         res.json({ err: err })
+      } else {
+        callback(results);
       }
 
       // if(err) {
