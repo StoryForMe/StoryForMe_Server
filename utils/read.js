@@ -7,9 +7,11 @@ exports.recordReadInfo = (res, uid, sid, eid, chapter, date, callback) => {
       conn.release();
 
       if(err) {
+        console.log("here");
         addReadInfo(uid, sid, eid, chapter, date);
       }
       else {
+        console.log("no here");
         updateReadInfo(uid, sid, eid, chapter, date);
       }
     })
