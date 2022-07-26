@@ -3,8 +3,15 @@ const app = require('../app');
 exports.recordReadInfo = (res, uid, sid, eid, chapter, date, callback) => {
   app.getConnectionPool((conn) => {
     console.log("special " + uid);
-    var sql = "insert into `READ` values(" + uid + ", " + sid + ", " + eid + ", " + chapter + ", " + date + ") on duplicate key update uid=" + uid + ", sid=" + sid + ", eid=" + eid + ", chapter=" + chapter + ", date=" + date;
-    conn.query(sql, function(err, results) {
+    var sql = "insert into `READ` ? on duplicate key update uid=" + uid + ", sid=" + sid + ", eid=" + eid + ", chapter=" + chapter + ", date=" + date;
+    values = {
+      uid: uid,
+      sid: sid,
+      eid: eid,
+      chapter: chapter,
+      date: date
+    }
+    conn.query(sql, values, function(err, results) {
       conn.release();
 
       if(err) {
