@@ -19,7 +19,7 @@ exports.findOne = (id) => {
             }
             if(!results[0]) {
                 return {
-                    code: this.UserModelCodes.USER_NOT_FOUND,
+                    code: UserModelCodes.USER_NOT_FOUND,
                 }
             }
             return {

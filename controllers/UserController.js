@@ -7,6 +7,7 @@ const KeywordModel = require('../models/KeywordModel')
 
 exports.getUser = (req, res) => {
     let getUserResponse = UserModel.findOne(req.params.id);
+    console.log(getUserResponse)
     if (getUserResponse['code'] === UserModel.UserModelCodes.USER_NOT_FOUND) {
         res.status(HTTP.StatusCodes.NOT_FOUND).json({
             error: "E001",
