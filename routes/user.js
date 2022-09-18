@@ -149,36 +149,13 @@ router.get('/:id/series', (req, res) => {
     var sql = "select * from SERIES where uid=" + req.params.id;
     conn.query(sql, function(err, seriesList) {
       conn.release();
-      console.log(seriesList)
       if(err) {
         res.status(400).json({
           error: "E002",
           error_message: "query 문법 오류"
         })
       }
-      else series.makeResForSeriesList(series_list, req, res, req.params.option);
-    //   else {
-    //     var results = []
-    //     var index = 0
-
-    //     function getSeriesKeywordIterCallback(keywords) {
-    //       results.push({
-    //         sid: seriesList[index]["id"],
-    //         title: seriesList[index]["title"],
-    //         keywords: keywords,
-    //         recent_update: seriesList[index]["recent_update"],
-    //         hits: seriesList[index]["hits"],
-    //         zzimkkong: seriesList[index]["zzimkkong"],
-    //         episode_num: seriesList[index]["episode_num"]
-    //       })
-    //       if (index < seriesList.length - 1) {
-    //         index++;
-    //         keyword.getSeriesKeyword(res, seriesList[index]["id"], getSeriesKeywordIterCallback)
-    //       }
-    //       else res.json({ series_list: results }) 
-    //     }
-    //     keyword.getSeriesKeyword(res, seriesList[0]["id"], getSeriesKeywordIterCallback)
-    //   }
+      else series.makeResForSeriesList(seriesList, req, res, req.params.option);
     })
   })
 })
