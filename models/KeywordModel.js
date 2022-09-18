@@ -1,25 +1,25 @@
 const app = require('../app');
 
-exports.KeywordModelCodes = {
+const KeywordModelCodes = {
     SUCCESS: 'SUCCESS',
     DB_QEURY_ERROR: 'query 문법 오류',
-}
+};
+exports.KeywordModelCodes = KeywordModelCodes;
 
 exports.findAll = (uid) => {
-    app.getConnectionPool(async (conn) => {
+    app.getConnectionPool((conn) => {
         var sql = "select * from KEYWORD as k join `LIKE` as l on k.id=l.kid where uid=" + uid;
-        [err, results] = await conn.query(sql);
-        console.log(err)
-        console.log(results)
-        conn.release();
-        if (err) {
-            return {
-                code: KeywordModelCodes.DB_QEURY_ERROR,
+        conn.query(sql, (err, results) => {
+            conn.release();
+            if (err) {
+                return {
+                    code: KeywordModelCodes.DB_QEURY_ERROR,
+                }
             }
-        }
-        return {
-            code: KeywordModelCodes.SUCCESS,
-            keywords: results,
-        }
+            return {
+                code: KeywordModelCodes.SUCCESS,
+                keywords: results,
+            }
+        });
     });
 }
