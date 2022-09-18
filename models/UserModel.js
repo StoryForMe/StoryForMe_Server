@@ -7,7 +7,7 @@ const UserModelCodes = {
 };
 exports.UserModelCodes = UserModelCodes;
 
-exports.findOne = (id) => {
+exports.findOne = async (id) => {
     app.getConnectionPool((conn) => {
         var sql = "select * from USER where id=" + id;
         conn.query(sql, (err, results) => {
