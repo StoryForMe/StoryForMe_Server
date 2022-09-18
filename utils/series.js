@@ -201,6 +201,7 @@ zzimkkong_list = ["zzimkkong", "zzimkkong_week", "zzimkkong_month"]
 hits_list = ["hits", "hits_week", "hits_month"]
 
 exports.makeResForSeriesList = (series_list, req, res, option) => {
+    console.log(series_list)
 	if(!series_list) {
 		console.log("no exist series"); 
 		res.status(400).json({ 
