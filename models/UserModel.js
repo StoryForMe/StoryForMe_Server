@@ -7,9 +7,12 @@ exports.UserModelCodes = {
 }
 
 exports.findOne = (id) => {
+    console.log('dlwldnjs qkqh')
     app.getConnectionPool(async (conn) => {
+        console.log("!!!!!!")
         var sql = "select * from USER where id=" + id;
         [err, results] = await conn.query(sql);
+        console.log('??????')
         console.log(err)
         console.log(results)
         conn.release();
