@@ -216,7 +216,7 @@ exports.makeResForSeriesList = (series_list, req, res, option) => {
 		results = [];
 		// 각각의 시리즈에 대해 필요한 정보들을 가져와서 results에 추가해줌.
 		function getNicknameIterCallback(nickname, index) {
-			user.getIs_zzimkkong(res, req.params.uid, series_list[index]["id"], (is_zzimkkong) => {
+			user.getIs_zzimkkong(res, req.params.uid ? req.params.uid : series_list[0]['uid'], series_list[index]["id"], (is_zzimkkong) => {
 				keyword.getSeriesKeyword(res, series_list[index]["id"], (keywords) => {
 					results.push({
 						sid: series_list[index]["id"],
