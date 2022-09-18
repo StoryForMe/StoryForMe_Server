@@ -8,27 +8,28 @@ exports.UserModelCodes = {
 
 exports.findOne = (id) => {
     console.log('dlwldnjs qkqh')
-    app.getConnectionPool(async (conn) => {
+    app.getConnectionPool((conn) => {
         console.log("!!!!!!")
         var sql = "select * from USER where id=" + id;
-        [err, results] = await conn.query(sql);
-        console.log('??????')
-        console.log(err)
-        console.log(results)
-        conn.release();
-        if (err) {
-            return {
-                code: UserModelCodes.DB_QEURY_ERROR,
+        conn.query(sql, (err, results) => {
+            console.log('??????')
+            console.log(err)
+            console.log(results)
+            conn.release();
+            if (err) {
+                return {
+                    code: UserModelCodes.DB_QEURY_ERROR,
+                }
             }
-        }
-        if(!results[0]) {
-            return {
-                code: this.UserModelCodes.USER_NOT_FOUND,
+            if(!results[0]) {
+                return {
+                    code: this.UserModelCodes.USER_NOT_FOUND,
+                }
             }
-        }
-        return {
-            code: UserModelCodes.SUCCESS,
-            user: results[0],
-        }
+            return {
+                code: UserModelCodes.SUCCESS,
+                user: results[0],
+            }
+        });
     });
 }
