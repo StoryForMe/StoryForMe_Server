@@ -1,10 +1,12 @@
 var request = require('request');
 var express = require('express');
 var router = express.Router();
+
 const app = require('../app');
 const keyword = require('../utils/keyword');
 const user = require('../utils/user');
 const series = require('../utils/series');
+const UserController = require('../controllers/UserController')
 
 router.get('/login', (req, res) => {
   const options = {
@@ -208,36 +210,7 @@ router.get('/:id/keywords', (req, res) => {
   })
 })
 
-router.get('/:id', (req, res) => {
-  app.getConnectionPool((conn) => {
-    var sql = "select * from USER where id=" + req.params.id;
-    conn.query(sql, function(err, [user]) {
-      conn.release();
-      if(err) {
-        res.status(400).json({
-          error: "E002",
-          error_message: "query 문법 오류"
-        })
-      }
-      else if(!user) {
-        res.json({ id: -1 })
-      } else {
-        keyword.getUserKeyword(res, req.params.id, (keywords) => {
-          var result = {
-            nickname: user["nickname"],
-            introduction: user["introduction"],
-            profile_image: user["profile_image"],
-            fname: user["fname"],
-            lname: user["lname"],
-            coin: user["coin"],
-            keywords: keywords
-          }
-          res.json(result);
-        })
-      }
-    })
-  })
-})
+router.get('/:id', UserController.getUser)
 
 router.post('/', (req, res) => {
   const options = {
