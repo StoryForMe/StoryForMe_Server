@@ -6,8 +6,8 @@ exports.UserModelCodes = {
     USER_NOT_FOUND: 'id에 해당하는 유저가 존재하지 않습니다.'
 }
 
-exports.findOne = async (id) => {
-    app.getConnectionPool((conn) => {
+exports.findOne = (id) => {
+    app.getConnectionPool(async (conn) => {
         var sql = "select * from USER where id=" + id;
         [err, results] = await conn.query(sql);
         conn.release();

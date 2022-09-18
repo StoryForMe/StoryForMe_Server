@@ -5,8 +5,8 @@ exports.KeywordModelCodes = {
     DB_QEURY_ERROR: 'query 문법 오류',
 }
 
-exports.findAll = async (uid) => {
-    app.getConnectionPool((conn) => {
+exports.findAll = (uid) => {
+    app.getConnectionPool(async (conn) => {
         var sql = "select * from KEYWORD as k join `LIKE` as l on k.id=l.kid where uid=" + uid;
         [err, results] = await conn.query(sql);
         conn.release();
