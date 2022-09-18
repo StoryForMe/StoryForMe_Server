@@ -10,6 +10,8 @@ exports.findOne = (id) => {
     app.getConnectionPool(async (conn) => {
         var sql = "select * from USER where id=" + id;
         [err, results] = await conn.query(sql);
+        console.log(err)
+        console.log(results)
         conn.release();
         if (err) {
             return {
